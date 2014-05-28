@@ -1,7 +1,17 @@
-#' Piotr Sobczyk IMiI
+#' Simulating subspace clustering data
+#' 
 #' Generating random data for subspace clustering simulation
-#' Result is matrix X
-
+#' 
+#' @param n number of observations
+#' @param SNR signal to noise ratio
+#' @param K number of subspaces
+#' @param numbPoints number of variables in each subspace
+#' @param max.dim maximum dimension of subspace
+#' @return a list consisting of
+#' \item{X}{generated data}
+#' \item{signals}{data without noise}
+#' \item{dims}{dimensions of subspaces}
+#' \item{s}{true clustering}
 dataSIMULATION <- function(n = 100, SNR, K = 20, numbPoints = 50, max_dim = 1){
   #draw dimensions of subspaces
   sigma = 1/(SNR*sqrt(n*K*numbPoints))

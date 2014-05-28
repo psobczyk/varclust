@@ -1,3 +1,16 @@
+#' Subspace clustering based on multiple principal components
+#'
+#' Performs subspace clustering
+#'
+#' @param X data
+#' @param numberClusters number of clusters to be used
+#' @param stop.criterion
+#' @param max.iter
+#' @param maxSubspaceDim
+#' @param initial.segmentation
+#' @return a list consisting of
+#' \item{segmentation}{of points to clusters}
+#' \item{pcas}{basis of each cluster}
 MPCV <- function(X, numberClusters = 2, stop.criterion  = 1, max.iter = 40, maxSubspaceDim=4, initial.segmentation=NULL){
   X = scale(X)
   numbVars = dim(X)[2]
@@ -24,9 +37,11 @@ MPCV <- function(X, numberClusters = 2, stop.criterion  = 1, max.iter = 40, maxS
       }
       else{
         m <- as.numeric(names(sort(table(new.segmentation),decreasing=T)))[1] #most populous cluster
-        podzial <- kmeansvar(X[,new.segmentation==m],init=2)$cluster
-        new.segmentation[which(new.segmentation==m)[podzial==2]] = i
-        segmentation[which(new.segmentation==m)[podzial==2]] = i
+        try({
+          podzial <- kmeansvar(X[,new.segmentation==m],init=2)$cluster
+          new.segmentation[which(new.segmentation==m)[podzial==2]] = i
+          segmentation[which(new.segmentation==m)[podzial==2]] = i
+        })
         if(length(X[,segmentation==i])<maxSubspaceDim*rowNumb)
           pcas[[i]] = matrix(rnorm(rowNumb*maxSubspaceDim), nrow=rowNumb)
         else{

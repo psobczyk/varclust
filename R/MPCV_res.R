@@ -1,6 +1,5 @@
-require(mclust)
 
-MPCV.reps <- function(X, numb.Clusters=2, numb.runs=20, stop.criterion=1, max.iter=20, max.dim=1, method='h', scale=T){
+MPCV.reps <- function(X, true.segmentation, numb.Clusters=2, numb.runs=20, stop.criterion=1, max.iter=20, max.dim=1, method='h', scale=T){
   if(scale){
     dane = scale(X)
   }
@@ -42,7 +41,7 @@ MPCV.reps <- function(X, numb.Clusters=2, numb.runs=20, stop.criterion=1, max.it
     Hs[i] = H
     Res[i] = R 
     missclassifications[i] <- missclassify.heuristic(current.segmentation, dim(dane)[2]/numb.Clusters, n=numb.Clusters)
-    adjs[i] <- adjustedRandIndex(current.segmentation, results)
+    adjs[i] <- adjustedRandIndex(current.segmentation, true.segmentation)
     BICs[i] <- myBIC(dane, current.segmentation,max.dim, numb.Clusters)
     segmentations[[i]] <- current.segmentation
     if(i%%10==0) print(paste("Done ", i))
