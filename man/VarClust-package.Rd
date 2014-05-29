@@ -25,9 +25,12 @@ Maintainer: Piotr Sobczyk <piotr.sobczyk@pwr.edu.pl>
 
 }
 \references{
-~~ Literature or other references for background information ~~
+Ulrike von Luxburg 2007 \emph{A Tutorial on Spectral Clustering} 
+
+Brian McWilliams, Giovanni Montana 2012 \emph{Subspace clustering of high-dimensional data: a predictive approach} 
+
+Marie Chavent, Benoit Liquet, Vanessa Kuentz-Simonet, Jerome Saracco 2013 \emph{ClustOfVar: An R Package for the Clustering of Variables} 
 }
-~~ Optionally other standard keywords, one per line, from file KEYWORDS in the R documentation directory ~~
 \keyword{ package }
 \seealso{
 ~~ Optional links to other man pages, e.g. ~~

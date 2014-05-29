@@ -14,3 +14,4 @@ test_that('noisy subspace is not low rank', {
   expect_true(which.max(summary(prcomp(w$X[,1:50]))$importance[3,]==1)>2)
   expect_true(which.max(summary(prcomp(w$X[,51:100]))$importance[3,]==1)>2)
 })
+
