@@ -3,7 +3,7 @@
 \alias{dataSIMULATION}
 \title{Simulating subspace clustering data}
 \usage{
-dataSIMULATION(n = 100, SNR, K = 20, numbPoints = 50, max_dim = 1)
+dataSIMULATION(n = 100, SNR, K = 20, numbPoints = 50, max.dim = 1)
 }
 \arguments{
 \item{n}{number of observations}

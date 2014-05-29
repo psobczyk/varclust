@@ -1,6 +1,6 @@
-\name{MPCV-package}
-\alias{MPCV-package}
-\alias{MPCV}
+\name{VarClust-package}
+\alias{VarClust-package}
+\alias{VarClust}
 \docType{package}
 \title{
 Variable Clustering
@@ -11,7 +11,7 @@ Variable Clustering based on k-means algorithm. In each step cluster center is a
 }
 \details{
 \tabular{ll}{
-Package: \tab MPCV\cr
+Package: \tab VarClust\cr
 Type: \tab Package\cr
 Version: \tab 1.0\cr
 Date: \tab 2014-04-16\cr
