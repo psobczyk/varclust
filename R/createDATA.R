@@ -12,10 +12,10 @@
 #' \item{signals}{data without noise}
 #' \item{dims}{dimensions of subspaces}
 #' \item{s}{true clustering}
-dataSIMULATION <- function(n = 100, SNR, K = 20, numbPoints = 50, max_dim = 1){
+dataSIMULATION <- function(n = 100, SNR, K = 20, numbPoints = 50, max.dim = 1){
   #draw dimensions of subspaces
   sigma = 1/(SNR*sqrt(n*K*numbPoints))
-  dims = rep(1, K) #sample(1:max_dim, K, replace=T) 
+  dims = rep(max.dim, K) #sample(1:max.dim, K, replace=T) 
   
   X = NULL
   Y = NULL

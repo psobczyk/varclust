@@ -1,4 +1,11 @@
-
+#' Choose subspace closest to the given variable
+#' 
+#' The most similar subspace is choosen based on R^2
+#' 
+#' @param varaible
+#' @param pcas orthogonal basis for different subspaces
+#' @param numberClusters number of subspaces (clusters)
+#' @return index number of subspace closest to variable
 choose.cluster <- function(variable, pcas, numberClusters){
   rSquare <- NULL
   v1 = var(variable)
