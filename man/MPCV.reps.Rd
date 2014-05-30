@@ -26,7 +26,7 @@ MPCV.reps(X, numb.Clusters = 2, numb.runs = 20, stop.criterion = 1,
 \value{
 a list consisting of
 \item{segmentation}{of points to clusters}
-\item{BIC}{Value of BIC criterion}
+\item{BIC}{Value of \code{\link{myBIC}} criterion}
 }
 \description{
 Performs MPCC multiple times and chooses the best run based on residual variance

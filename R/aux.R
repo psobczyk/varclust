@@ -19,7 +19,15 @@ choose.cluster <- function(variable, pcas, numberClusters){
   which.max(rSquare)
 }
 
-
+#' Compute missclasification rate for subspace clustering
+#' 
+#' As getting exact value requires checking all permutations a heuristic approach is proposed
+#' It is assumed that there are n cluster each of N elements and that they are sorted.
+#' 
+#' @param group proposed clustering
+#' @param N number of elements in each cluster
+#' @param n number of clusters
+#' @return mis misclassification rate
 missclassify.heuristic <-function(group, N, n){
   forbidden = NULL;
   suma = 0;
@@ -41,6 +49,16 @@ missclassify.heuristic <-function(group, N, n){
   return(mis)
 }
 
+#' Compute missclasification rate for subspace clustering
+#' 
+#' As getting exact value requires checking all permutations a heuristic approach is proposed
+#' It is assumed that there are n cluster each of N elements and that they are sorted.
+#' 
+#' @param group proposed clustering
+#' @param true_group true clustering
+#' @param N maximal assumed number of elements in cluster
+#' @param n number of clusters
+#' @return mis misclassification rate
 missclassify.heuristic2 <-function(group, true_group, N, n){
   forbidden = NULL;
   suma = 0;
