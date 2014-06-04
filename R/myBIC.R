@@ -25,7 +25,7 @@ myBIC <- function(X, segmentation, max.dim, numb.clusters){
     }
   }
   #penalty on all clusters
-  penalty = log(D)/2*max.dim*(numb.clusters*D + numb.clusters*max.dim +p)
+  penalty = log(p)/2*max.dim*(numb.clusters*D - numb.clusters*max.dim +p)
   BIC <- sum(likelihoods) - penalty
   return(BIC)
 }
