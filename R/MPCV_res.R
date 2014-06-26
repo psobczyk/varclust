@@ -13,7 +13,14 @@
 #' @return a list consisting of
 #' \item{segmentation}{of points to clusters}
 #' \item{BIC}{Value of \code{\link{myBIC}} criterion}
-MPCV.reps <- function(X, numb.Clusters=2, numb.runs=20, stop.criterion=1, max.iter=20, max.dim=1, method='h', scale=T){
+MPCV.reps <- function(X, numb.Clusters=2, numb.runs=20, stop.criterion=1, max.iter=20, 
+                      max.dim=1, method=c("likelihood", "singular", "residual"), scale=T, verbose=F){
+  if(verbose){
+    # create progress bar
+    pb <- txtProgressBar(min = 0, max = numb.runs, style = 3)
+  }
+  
+  method <- match.arg(method)
   if(scale){
     dane = scale(X)
   }
@@ -54,22 +61,13 @@ MPCV.reps <- function(X, numb.Clusters=2, numb.runs=20, stop.criterion=1, max.it
     Res[i] = R #sum.residuals(dane, current.segmentation, max.dim, numb.Clusters)
     BICs[i] <- myBIC(dane, current.segmentation, max.dim, numb.Clusters)
     segmentations[[i]] <- current.segmentation
-    if(i%%10==0) print(paste("Done ", i))
-  }  
-  if(method=='h'){
-    return(list(segmentation = segmentations[[which.max(Hs)]],
-                #misclassification = missclassifications[which.max(Hs)],
-                BIC = BICs[which.max(Hs)]))
+    if(verbose) setTxtProgressBar(pb, i)
   }
-  else if(method=='r'){
-    return(list(segmentation = segmentations[[which.min(Res)]],
-                #misclassification = missclassifications[which.min(Res)],
-                BIC = BICs[which.min(Res)]))
-  }
-  else{
-    return(list(segmentation = segmentations[[which.max(BICs)]],
-                BIC = BICs[which.max(BICs)]))
-  }
+  if(verbose) close(pb)
+  switch(method,
+    singular   = return(list(segmentation = segmentations[[which.max(Hs)]],   BIC = BICs[which.max(Hs)])),
+    residual   = return(list(segmentation = segmentations[[which.min(Res)]],  BIC = BICs[which.min(Res)])),
+    likelihood = return(list(segmentation = segmentations[[which.max(BICs)]], BIC = BICs[which.max(BICs)])))
 }
 
 sum.explained.variance <- function(dane, current.segmentation, max.dim, numb.Clusters){
