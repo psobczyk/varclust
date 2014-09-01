@@ -1,29 +1,17 @@
 # README #
 
-This README would normally document whatever steps are necessary to get your application up and running.
 
 ### What is this repository for? ###
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+* VarClust is a R package for clustering Variables
+* 0.4
 
 ### How do I get set up? ###
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
-
-### Contribution guidelines ###
-
-* Writing tests
-* Code review
-* Other guidelines
+* Download the package and install it manually from R command line
+* No configuration is needed
+* Dependencies install automatically
 
 ### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
+* standard R manual should be enough to use the package
+* If not please contact Piotr.Sobczyk[malpka]pwr.edu.pl
