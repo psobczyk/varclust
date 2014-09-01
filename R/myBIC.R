@@ -7,7 +7,7 @@
 #' @param max.dim maximum dimension of subspace
 #' @param numb.clusters number of clusters
 #' @return BIC value of BIC criterion
-myBIC <- function(X, segmentation, max.dim, numb.clusters){
+myBIC <- function(X, segmentation, max.dim, numb.clusters, sigma=NULL){
   D = dim(X)[1]
   p = dim(X)[2]
   RES.sigma <- 0
@@ -23,7 +23,10 @@ myBIC <- function(X, segmentation, max.dim, numb.clusters){
       RES.sigma = RES.sigma + sum((Xk - SIGNAL)^2)
     }
   }
-  sigma <- sqrt(RES.sigma/((D-1)*(p-1)))
+  if(is.null(sigma)){
+    degrees.freedom <- D*p-p-D*max.dim-p*max.dim+max.dim^2+max.dim
+    sigma <- sqrt(RES.sigma/degrees.freedom)
+  }
   likelihoods <- rep(0, numb.clusters)  
   for(k in 1:numb.clusters){
     #one cluster
