@@ -31,6 +31,8 @@ MPCV <- function(X, numberClusters = 2, stop.criterion  = 1, max.iter = 40, maxS
     for (i in 1:numberClusters){
       if(is.matrix(X[,segmentation==i]) && (dim(X[,segmentation==i])[2]>=maxSubspaceDim)){
         a <- summary(prcomp(x=X[,segmentation==i]))
+        #cut <- which.max(lapply(1:maxSubspaceDim, function(x) myBIC(X[,segmentation==i], rep(1,sum(segmentation==i)), max.dim=x,numb.clusters=1)))
+        #which.max(lapply(1:maxSubspaceDim, function(x) myBIC(X[,segmentation==i], rep(1,sum(segmentation==i)), max.dim=x,numb.clusters=1)))
         cut <- maxSubspaceDim
         #cut <- min(maxSubspaceDim, which.min(a$importance[3,]<var.threshold))
         pcas[[i]] = matrix(a$x[,1:cut], nrow=rowNumb)
