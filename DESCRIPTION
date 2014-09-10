@@ -1,6 +1,6 @@
-Package: VarClust
+Package: VarClustExp
 Type: Package
-Title: Variable Clustering
+Title: Variable Clustering, Experimental Version
 Version: 0.8
 Date: 2014-05-29
 Author: Piotr Sobczyk
