@@ -11,13 +11,36 @@ choose.cluster <- function(variable, pcas, numberClusters){
   v1 = var(variable)
   for(i in 1:numberClusters){
     v2 <- var(fastLmPure(pcas[[i]], variable, method = 0L)$residuals)
-    p <- ncol(pcas[[i]])
-    n <- length(variable)
+    #p <- ncol(pcas[[i]])
+    #n <- length(variable)
     #rSquare[i] <- 1 - ( 1- (v1-v2)/v1) *(n-1)/(n-p-1)
     rSquare[i] <- (v1-v2)/v1
   }
   which.max(rSquare)
 }
+
+#' Choose subspace closest to the given variable
+#' 
+#' The most similar subspace is choosen based on BIC criterion
+#' 
+#' @param varaible
+#' @param pcas orthogonal basis for different subspaces
+#' @param numberClusters number of subspaces (clusters)
+#' @return index number of subspace closest to variable
+choose.cluster.BIC <- function(variable, pcas, numberClusters, sigma){
+  BICs <- NULL
+  v1 = var(variable)
+  for(i in 1:numberClusters){
+    p <- ncol(pcas[[i]])
+    n <- length(variable)
+    res <- fastLmPure(pcas[[i]], variable, method = 0L)$residuals
+    sigma.hat <- var(res)/n
+    loglik <- sum(dnorm(residuals, 0, sigma, log=T))
+    BICs[i] <- loglik - p*log(n)/2
+  }
+  which.max(BICs)
+}
+
 
 #' Compute missclasification rate for subspace clustering
 #' 
