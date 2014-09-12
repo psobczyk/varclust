@@ -13,7 +13,7 @@
 #' @return a list consisting of
 #' \item{segmentation}{of points to clusters}
 #' \item{BIC}{Value of \code{\link{myBIC}} criterion}
-MPCV.reps <- function(X, numb.Clusters=2, numb.runs=20, stop.criterion=1, max.iter=20, max.dim=1, 
+MPCV.reps <- function(X, numb.Clusters=2, numb.runs=40, stop.criterion=1, max.iter=40, max.dim=4, 
                       method=c("likelihood", "singular", "residual"), scale=T, verbose=F, estimateDimensions=FALSE, known.sigma=1){
   if(verbose){
     # create progress bar
@@ -36,7 +36,8 @@ MPCV.reps <- function(X, numb.Clusters=2, numb.runs=20, stop.criterion=1, max.it
     H <- 0 #explained variance
     R <- 0 #residual variance
     
-    MPCV.res <- MPCV(X=dane, numberClusters=numb.Clusters, maxSubspaceDim=max.dim, estimateDimensions=estimateDimensions, sigma=known.sigma)
+    MPCV.res <- MPCV(X=dane, numberClusters=numb.Clusters, maxSubspaceDim=max.dim, max.iter=max.iter,
+                     estimateDimensions=estimateDimensions, known.sigma=known.sigma)
     current.segmentation <- MPCV.res$segmentation
     current.pcas <- MPCV.res$pcas
    

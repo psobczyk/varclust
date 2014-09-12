@@ -31,12 +31,12 @@ choose.cluster.BIC <- function(variable, pcas, numberClusters, sigma){
   BICs <- NULL
   v1 = var(variable)
   for(i in 1:numberClusters){
-    p <- ncol(pcas[[i]])
+    nparams <- ncol(pcas[[i]])
     n <- length(variable)
     res <- fastLmPure(pcas[[i]], variable, method = 0L)$residuals
     sigma.hat <- var(res)/n
     loglik <- sum(dnorm(res, 0, sigma, log=T))
-    BICs[i] <- loglik - p*log(n)/2
+    BICs[i] <- loglik - nparams*log(n)/2
   }
   which.max(BICs)
 }
