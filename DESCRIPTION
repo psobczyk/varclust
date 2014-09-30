@@ -5,7 +5,7 @@ Version: 0.8
 Date: 2014-05-29
 Author: Piotr Sobczyk
 Maintainer: Piotr Sobczyk <piotr.sobczyk@pwr.edu.pl>
-Depends: RcppEigen, mclust
+Depends: RcppEigen, mclust, ClustOfVar, foreach, doMC
 Suggests: MASS
 Description: Variable Clustering based on k-means algorithm. In each step cluster center is a number of PCA components
   of points in that cluster. Than distance is defined as R^2 in least-squares.
