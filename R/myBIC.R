@@ -10,19 +10,29 @@
 myBIC <- function(X, segmentation, max.dim, numb.clusters, sigma=NULL){
   D = dim(X)[1]
   p = dim(X)[2]
-  RES.sigma <- 0
-  for(k in 1:numb.clusters){
-    #one cluster
-    Xk = X[,segmentation==k]
+  RES.sigma <- sum(vapply(1:numb.clusters, function(k) {
+    Xk = X[,segmentation==k];
     if(length(unlist(Xk))>max.dim*D){ #length because it might be onedimensional
-      svdSIGNAL= svd(Xk)  
-      #print(sqrt(sum(svdSIGNAL$d[1:max.dim])))
+      svdSIGNAL= svd(Xk); 
       SIGNAL = matrix(svdSIGNAL$u[, 1:max.dim], ncol=max.dim) %*% 
         diag(svdSIGNAL$d[1:max.dim], nrow=max.dim) %*% 
-        t(matrix(svdSIGNAL$v[, 1:max.dim], ncol=max.dim))
-      RES.sigma = RES.sigma + sum((Xk - SIGNAL)^2)
+        t(matrix(svdSIGNAL$v[, 1:max.dim], ncol=max.dim));
+      return(sum((Xk - SIGNAL)^2))
     }
-  }
+    return(0)
+  }, 0.9))  
+#   for(k in 1:numb.clusters){
+#     #one cluster
+#     Xk = X[,segmentation==k]
+#     if(length(unlist(Xk))>max.dim*D){ #length because it might be onedimensional
+#       svdSIGNAL= svd(Xk)  
+#       #print(sqrt(sum(svdSIGNAL$d[1:max.dim])))
+#       SIGNAL = matrix(svdSIGNAL$u[, 1:max.dim], ncol=max.dim) %*% 
+#         diag(svdSIGNAL$d[1:max.dim], nrow=max.dim) %*% 
+#         t(matrix(svdSIGNAL$v[, 1:max.dim], ncol=max.dim))
+#       RES.sigma = RES.sigma + sum((Xk - SIGNAL)^2)
+#     }
+#   }
   if(is.null(sigma)){
     degrees.freedom <- D*p-p-D*max.dim-p*max.dim+max.dim^2+max.dim
     sigma <- sqrt(RES.sigma/degrees.freedom)
