@@ -7,17 +7,26 @@
 #' @param numberClusters number of subspaces (clusters)
 #' @return index number of subspace closest to variable
 choose.cluster <- function(variable, pcas, numberClusters){
-  rSquare <- NULL
   v1 = var(variable)
-  for(i in 1:numberClusters){
-    v2 <- var(fastLmPure(pcas[[i]], variable, method = 0L)$residuals)
-    p <- ncol(pcas[[i]])
-    n <- length(variable)
-    #rSquare[i] <- 1 - ( 1- (v1-v2)/v1) *(n-1)/(n-p-1)
-    rSquare[i] <- (v1-v2)/v1
-  }
-  which.max(rSquare)
+  which.max( vapply(1:numberClusters, function(i){
+    v2 <- var(fastLmPure(pcas[[i]], variable, method = 0L)$residuals);
+    p <- ncol(pcas[[i]]); 
+    n <- length(variable);
+    (v1-v2)/v1
+  }, 0.9) )
 }
+# choose.cluster <- function(variable, pcas, numberClusters){
+#   rSquare <- NULL
+#   v1 = var(variable)
+#   for(i in 1:numberClusters){
+#     v2 <- var(fastLmPure(pcas[[i]], variable, method = 0L)$residuals)
+#     p <- ncol(pcas[[i]])
+#     n <- length(variable)
+#     #rSquare[i] <- 1 - ( 1- (v1-v2)/v1) *(n-1)/(n-p-1)
+#     rSquare[i] <- (v1-v2)/v1
+#   }
+#   which.max(rSquare)
+# }
 
 #' Compute missclasification rate for subspace clustering
 #' 
