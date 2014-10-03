@@ -13,7 +13,7 @@
 #' @return a list consisting of
 #' \item{segmentation}{of points to clusters}
 #' \item{BIC}{Value of \code{\link{myBIC}} criterion}
-MPCV.reps <- function(X, numb.Clusters=2, numb.runs=20, stop.criterion=1, max.iter=20, 
+MPCV.reps <- function(X, numb.Clusters=2, numb.runs=20, stop.criterion=1, max.iter=20, initial.segmentation=NULL,
                       max.dim=1, method=c("likelihood", "singular", "residual"), scale=T, verbose=F){
   if(verbose){
     # create progress bar
@@ -31,8 +31,8 @@ MPCV.reps <- function(X, numb.Clusters=2, numb.runs=20, stop.criterion=1, max.it
   BICs <- NULL 
   
   segmentations <- NULL
-  foreach(i=1:numb.runs) %dopar% {
-    MPCV.res <- MPCV(X=dane, numberClusters=numb.Clusters, maxSubspaceDim=max.dim, max.iter=max.iter)
+  segmentations <- foreach(i=(1:numb.runs)) %dopar% {
+    MPCV.res <- MPCV(X=dane, numberClusters=numb.Clusters, maxSubspaceDim=max.dim, max.iter=max.iter, initial.segmentation=initial.segmentation)
     current.segmentation <- MPCV.res$segmentation
     current.pcas <- MPCV.res$pcas
     
@@ -60,16 +60,16 @@ MPCV.reps <- function(X, numb.Clusters=2, numb.runs=20, stop.criterion=1, max.it
       }
       Res[i] = R #sum.residuals(dane, current.segmentation, max.dim, numb.Clusters)
     }
-    
-    BICs[i] <- myBIC(dane, current.segmentation, max.dim, numb.Clusters)
-    segmentations[[i]] <- current.segmentation
     if(verbose) setTxtProgressBar(pb, i)
+    list(current.segmentation, myBIC(dane, current.segmentation, max.dim, numb.Clusters))
   }
+  BICs <- unlist(lapply(segmentations, function(x) x[2]))
+  segmentations <- lapply(segmentations, function(x) x[[1]])
   if(verbose) close(pb)
   switch(method,
-    singular   = return(list(segmentation = segmentations[[which.max(Hs)]],   BIC = BICs[which.max(Hs)])),
-    residual   = return(list(segmentation = segmentations[[which.min(Res)]],  BIC = BICs[which.min(Res)])),
-    likelihood = return(list(segmentation = segmentations[[which.max(BICs)]], BIC = BICs[which.max(BICs)])))
+         singular   = return(list(segmentation = segmentations[[which.max(Hs)]],   BIC = BICs[which.max(Hs)])),
+         residual   = return(list(segmentation = segmentations[[which.min(Res)]],  BIC = BICs[which.min(Res)])),
+         likelihood = return(list(segmentation = segmentations[[which.max(BICs)]], BIC = BICs[which.max(BICs)])))
 }
 
 sum.explained.variance <- function(dane, current.segmentation, max.dim, numb.Clusters){
