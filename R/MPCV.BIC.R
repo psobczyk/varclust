@@ -4,7 +4,7 @@
 #'
 #' @param X data
 #' @param numb.Clusters clusters numbers to check
-#' @param numb.runs number of runs of MLCC
+#' @param number.runs number of runs of MLCC
 #' @param stop.criterion how many changes in partitions triggers stopping the algorithm
 #' @param max.iter maxium number of iteratations
 #' @param max.dim maximum considered dimension of subspaces
@@ -20,6 +20,8 @@ MPCV.BIC <- function(X, numb.Clusters=1:10, number.runs=20, stop.criterion=1, ma
                      method=c("likelihood", "singular", "residual"), scale=T, numbCores=1, greedy=TRUE, estimateDimensions=T){
 
   registerDoMC(numbCores)
+  n=nrow(X)
+  p=ncol(X)
   results <- vapply(numb.Clusters, function(numb.clusters){                                                                                                      
       MPCV.fit <- MPCV.reps(X=X, numb.Clusters=numb.clusters, numb.runs=number.runs, max.dim=max.dim, method='l')
       BIC.sum <- 0

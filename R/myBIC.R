@@ -6,6 +6,7 @@
 #' @param segmentation segmentation for which likelihood is computed
 #' @param max.dim maximum dimension of subspace
 #' @param numb.clusters number of clusters
+#' @param sigma (optional) pre-computed value of sigma
 #' @return BIC value of BIC criterion
 myBIC <- function(X, segmentation, max.dim, numb.clusters, sigma=NULL){
   D = dim(X)[1]

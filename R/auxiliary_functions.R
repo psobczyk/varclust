@@ -1,13 +1,15 @@
-##' Computing joint sigma for all clusters
+##' @title Computing joint sigma for all clusters
 ##'
-##' @title 
+##' Computes unbiased noise estimator under assumption that 
+##' all subspaces are of the same dimension
+##'
 ##' @param X data
-##' @param segmentation 
-##' @param max.dim 
+##' @param segmentation variable segmentation
+##' @param max.dim maximal subspace dimension
 ##' @param n number of rows
 ##' @param p number of variables
-##' @param numb.clusters
-##' @return 
+##' @param numb.clusters total number of clusters
+##' @return unbiased noise estimator
 ##' @author Piotr Sobczyk
 getSigma <- function(X, segmentation, max.dim, n, p, numb.clusters){
   RES.sigma=0
@@ -23,6 +25,7 @@ getSigma <- function(X, segmentation, max.dim, n, p, numb.clusters){
   }
   degrees.freedom <- n*p-p-n*max.dim-p*max.dim+max.dim^2+max.dim
   sigma <- sqrt(RES.sigma/degrees.freedom)
+  sigma
 }
 
 
@@ -30,7 +33,7 @@ getSigma <- function(X, segmentation, max.dim, n, p, numb.clusters){
 #' 
 #' The most similar subspace is choosen based on R^2
 #' 
-#' @param varaible
+#' @param variable variable to be assigned
 #' @param pcas orthogonal basis for different subspaces
 #' @param numberClusters number of subspaces (clusters)
 #' @return index number of subspace closest to variable
