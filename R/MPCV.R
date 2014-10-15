@@ -4,14 +4,14 @@
 #'
 #' @param X data
 #' @param numberClusters number of clusters to be used
-#' @param stop.criterion
-#' @param max.iter
-#' @param maxSubspaceDim
-#' @param initial.segmentation
+#' @param stop.criterion how many changes in partitions triggers stopping the algorithm
+#' @param max.iter maximum number of k-means iterations
+#' @param maxSubspaceDim maximum dimension of subspaces
+#' @param initial.segmentation initial segmentation of variable to clusters
 #' @return a list consisting of
 #' \item{segmentation}{of points to clusters}
 #' \item{pcas}{basis of each cluster}
-MPCV <- function(X, numberClusters = 2, stop.criterion  = 1, max.iter = 40, maxSubspaceDim=4, initial.segmentation=NULL){
+MPCV <- function(X, numberClusters=2, stop.criterion=1, max.iter=40, maxSubspaceDim=4, initial.segmentation=NULL){
   X = scale(X)
   numbVars = dim(X)[2]
   rowNumb = dim(X)[1]

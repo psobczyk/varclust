@@ -4,12 +4,14 @@
 #'
 #' @param X data
 #' @param numberClusters number of clusters to be used
-#' @param numb.runs number of runs of MPCV
-#' @param stop.criterion
-#' @param max.iter
-#' @param max.dim
-#' @param method method to be used to determine best run. Possible values are 'h' and 'r'
+#' @param numb.runs number of runs of MLCC
+#' @param stop.criterion how many changes in partitions triggers stopping the algorithm
+#' @param max.iter maxium number of iteratations
+#' @param initial.segmentation initial segmentation of variable to clusters
+#' @param max.dim maximum considered dimension of subspaces
+#' @param method method to be used to determine best run. Possible values are "likelihood", "singular", "residual"
 #' @param scale Should data be scaled?
+#' @param verbose Should a progress bar be visible?
 #' @return a list consisting of
 #' \item{segmentation}{of points to clusters}
 #' \item{BIC}{Value of \code{\link{myBIC}} criterion}
