@@ -1,3 +1,31 @@
+##' Computing joint sigma for all clusters
+##'
+##' @title 
+##' @param X data
+##' @param segmentation 
+##' @param max.dim 
+##' @param n number of rows
+##' @param p number of variables
+##' @param numb.clusters
+##' @return 
+##' @author Piotr Sobczyk
+getSigma <- function(X, segmentation, max.dim, n, p, numb.clusters){
+  RES.sigma=0
+  for(k in 1:numb.clusters){
+    Xk = X[,segmentation==k]
+    if(length(unlist(Xk))>max.dim*p){ #length because it might be onedimensional
+      svdSIGNAL= svd(Xk)  
+      SIGNAL = matrix(svdSIGNAL$u[, 1:max.dim], ncol=max.dim) %*% 
+        diag(svdSIGNAL$d[1:max.dim], nrow=max.dim) %*% 
+        t(matrix(svdSIGNAL$v[, 1:max.dim], ncol=max.dim))
+      RES.sigma = RES.sigma + sum((Xk - SIGNAL)^2)
+    }
+  }
+  degrees.freedom <- n*p-p-n*max.dim-p*max.dim+max.dim^2+max.dim
+  sigma <- sqrt(RES.sigma/degrees.freedom)
+}
+
+
 #' Choose subspace closest to the given variable
 #' 
 #' The most similar subspace is choosen based on R^2
