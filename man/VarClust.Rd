@@ -16,6 +16,9 @@ the number of clusters use function \code{\link{MPCV.reps}}
 
 Version: 0.9
 }
+\examples{
+\dontrun{MPCV.reps(data)}
+}
 \author{
 Piotr Sobczyk
 

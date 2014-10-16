@@ -13,6 +13,7 @@
 #' @param numbCores Number of cores to be used
 #' @param greedy Should number of clusters be estimated in a greedy way
 #' @param estimateDimensions Should subspaces dimensions be estimated as well?
+#' @export
 #' @return a list consisting of
 #' \item{segmentation}{of points to clusters}
 #' \item{BIC}{Value of \code{\link{myBIC}} criterion}

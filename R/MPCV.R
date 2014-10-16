@@ -8,6 +8,7 @@
 #' @param max.iter maximum number of k-means iterations
 #' @param maxSubspaceDim maximum dimension of subspaces
 #' @param initial.segmentation initial segmentation of variable to clusters
+#' @export
 #' @return a list consisting of
 #' \item{segmentation}{of points to clusters}
 #' \item{pcas}{basis of each cluster}

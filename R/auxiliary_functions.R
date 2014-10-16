@@ -98,6 +98,7 @@ missclassify.heuristic <-function(group, N, n){
 #' @param true_group true clustering
 #' @param N maximal assumed number of elements in cluster
 #' @param n number of clusters
+#' @export
 #' @return mis misclassification rate
 missclassify.heuristic2 <-function(group, true_group, N, n){
   forbidden = NULL;

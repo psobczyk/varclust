@@ -7,6 +7,7 @@
 #' @param K number of subspaces
 #' @param numbPoints number of variables in each subspace
 #' @param max.dim maximum dimension of subspace
+#' @export
 #' @return a list consisting of
 #' \item{X}{generated data}
 #' \item{signals}{data without noise}

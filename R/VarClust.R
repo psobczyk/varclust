@@ -11,11 +11,18 @@
 #' @docType package
 #' @name VarClust
 #' @details Version: 0.9
-#' @importFrom RcppEigen, mclust, ClustOfVar, foreach, doMC
+#' @importFrom RcppEigen fastLmPure
+#' @importFrom ClustOfVar kmeansvar
+#' @importFrom mclust adjustedRandIndex
+#' @importFrom doMC registerDoMC
+#' @import foreach
 #' @author Piotr Sobczyk
 #' 
 #' Maintainer: Piotr Sobczyk \email{Piotr.Sobczyk@@pwr.edu.pl}
 #' @references Ulrike von Luxburg 2007 \emph{A Tutorial on Spectral Clustering} 
 #' 
 #' Marie Chavent, Benoit Liquet, Vanessa Kuentz-Simonet, Jerome Saracco 2013 \emph{ClustOfVar: An R Package for the Clustering of Variables} 
+#' 
+#' @examples
+#' \dontrun{MPCV.reps(data)}
 NULL

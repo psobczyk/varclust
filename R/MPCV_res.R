@@ -11,6 +11,7 @@
 #' @param max.dim maximum considered dimension of subspaces
 #' @param method method to be used to determine best run. Possible values are "likelihood", "singular", "residual"
 #' @param scale Should data be scaled?
+#' @export
 #' @return a list consisting of
 #' \item{segmentation}{of points to clusters}
 #' \item{BIC}{Value of \code{\link{myBIC}} criterion}
@@ -44,7 +45,7 @@ MPCV.reps <- function(X, numb.Clusters=2, numb.runs=20, stop.criterion=1, max.it
           H <- H+1 #all variance in that cluster is explained
         }
       }
-      Hs[i] = H #sum.explained.variance(dane, current.segmentation, max.dim, numb.Clusters)
+      list(current.segmentation, myBIC(dane, current.segmentation, max.dim, numb.Clusters), H)
     }
     
     if(method=="residual"){
@@ -55,9 +56,11 @@ MPCV.reps <- function(X, numb.Clusters=2, numb.runs=20, stop.criterion=1, max.it
           R <- R + sum(lm(dane[,current.segmentation==j] ~ current.pcas[[j]])$residuals^2)
         } #otherwise we have a perfect fit
       }
-      Res[i] = R #sum.residuals(dane, current.segmentation, max.dim, numb.Clusters)
+      list(current.segmentation, myBIC(dane, current.segmentation, max.dim, numb.Clusters), R)
     }
-    list(current.segmentation, myBIC(dane, current.segmentation, max.dim, numb.Clusters))
+    else{
+      list(current.segmentation, myBIC(dane, current.segmentation, max.dim, numb.Clusters))
+    }
   }
   BICs <- unlist(lapply(segmentations, function(x) x[2]))
   segmentations <- lapply(segmentations, function(x) x[[1]])
