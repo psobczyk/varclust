@@ -13,7 +13,6 @@ Imports:
   ClustOfVar, 
   foreach,
   doMC
-
 Description: Variable Clustering based on k-means algorithm. In each step cluster center is a number of PCA components
   of points in that cluster. Than distance is defined as R^2 in least-squares.
 License: GPL-3
