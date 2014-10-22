@@ -25,30 +25,38 @@ MPCV.BIC <- function(X, numb.Clusters=1:10, numb.runs=20, stop.criterion=1, max.
   method <- match.arg(method)
   n=nrow(X)
   p=ncol(X)
-  results <- vapply(numb.Clusters, function(numb.clusters){                                                                                                      
-      MPCV.fit <- MPCV.reps(X=X, numb.Clusters=numb.clusters, numb.runs=numb.runs, max.dim=max.dim, method=method, scale=F, numbCores=1)
-      BIC.sum <- 0
-      if(estimateDimensions){
-        sigma <- NULL
-        #SIGMA estimated jointly
-        sigma <- getSigma(X, MPCV.fit$segmentation, max.dim, n, p, numb.clusters)
-        #SIGMA estimated jointly 
-        dimensions <- list() 
-        for(k in 1:numb.clusters){
-          temp <- 1
-          for(d in 1:max.dim){ 
-            temp[d] <- myBIC(X[,MPCV.fit$segmentation==k], rep(1, sum(MPCV.fit$segmentation==k)), d, 1, sigma=sigma)
-          } 
-          BIC.sum <- BIC.sum + max(temp[!is.nan(temp)]) 
-          dimensions <- append(dimensions, which.max(temp)) 
+  results <- list()
+  for(i in 1:length(numb.Clusters)){
+    numb.clusters <- numb.Clusters[i]                                                                                                 
+    MPCV.fit <- MPCV.reps(X=X, numb.Clusters=numb.clusters, numb.runs=numb.runs, max.dim=max.dim, method=method, scale=F, numbCores=numbCores)
+    BIC.sum <- 0
+    if(estimateDimensions){
+      sigma <- NULL
+      #SIGMA estimated jointly
+      sigma <- getSigma(X, MPCV.fit$segmentation, max.dim, n, p, numb.clusters)
+      #SIGMA estimated jointly 
+      dimensions <- list() 
+      for(k in 1:numb.clusters){
+        temp <- 1
+        for(d in 1:max.dim){ 
+          temp[d] <- myBIC(X[,MPCV.fit$segmentation==k], rep(1, sum(MPCV.fit$segmentation==k)), d, 1, sigma=sigma)
         } 
-        list(segmentation=MPCV.fit$segmentation, BIC=BIC.sum, subspacesDimensions=dimensions, nClusters=numb.clusters)
+        BIC.sum <- BIC.sum + max(temp[!is.nan(temp)]) 
+        dimensions <- append(dimensions, which.max(temp)) 
+      } 
+      results[[i]] <- list(segmentation=MPCV.fit$segmentation, BIC=BIC.sum, subspacesDimensions=dimensions, nClusters=numb.clusters)
+    }
+    else{
+      results[[i]] <- list(segmentation=MPCV.fit$segmentation, BIC=MPCV.fit$BIC, subspacesDimensions=NULL, nClusters=numb.clusters)
+    }
+    if(greedy & (i>2)){ 
+      if( (results[[i]]$BIC < results[[i-2]]$BIC) & 
+          (results[[i-1]]$BIC < results[[i-2]]$BIC)){
+        break
       }
-      else{
-        list(segmentation=MPCV.fit$segmentation, BIC=MPCV.fit$BIC, subspacesDimensions=NULL, nClusters=numb.clusters)
-      }
-  }, list(rep(1,ncol(X)), 0.9, list(rep(1,3)), 1))
-  
-  results[,which.max(unlist(results[2,]))]
+    }
+  }
+  BICs <- lapply(results, function(res) res$BIC)
+  results[[which.max(BICs)]]
   
 }
