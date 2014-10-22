@@ -65,9 +65,10 @@ MPCV.reps <- function(X, numb.Clusters=2, numb.runs=20, stop.criterion=1, max.it
     }
   }
   BICs <- unlist(lapply(segmentations, function(x) x[2]))
+  keep <- segmentations
   segmentations <- lapply(segmentations, function(x) x[[1]])
   switch(method,
-         singular   = return(list(segmentation = segmentations[[which.max(Hs)]],   BIC = BICs[which.max(unlist(lapply(segmentations, function(x) x[3])))])),
-         residual   = return(list(segmentation = segmentations[[which.min(Res)]],  BIC = BICs[which.min(unlist(lapply(segmentations, function(x) x[3])))])),
+         singular   = return(list(segmentation = segmentations[[which.max(Hs)]],   BIC = BICs[which.max(unlist(lapply(keep, function(x) x[3])))])),
+         residual   = return(list(segmentation = segmentations[[which.min(Res)]],  BIC = BICs[which.min(unlist(lapply(keep, function(x) x[3])))])),
          likelihood = return(list(segmentation = segmentations[[which.max(BICs)]], BIC = BICs[which.max(BICs)])))
 }
