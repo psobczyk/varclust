@@ -1,0 +1,9 @@
+<!--
+%\VignetteEngine{knitr}
+%\VignetteIndexEntry{VarClust tutorial}
+-->
+
+
+```{r}
+library(VarClust)
+```

@@ -1,7 +1,7 @@
 Package: VarClust
 Type: Package
 Title: Variable Clustering
-Version: 0.9.2
+Version: 0.9.3
 Date: 2014-10-15
 Author: Piotr Sobczyk
 Maintainer: Piotr Sobczyk <piotr.sobczyk@pwr.edu.pl>
@@ -13,6 +13,8 @@ Imports:
   ClustOfVar, 
   foreach,
   doMC
+Suggests: knitr
+VignetteBuilder: knitr
 Description: Variable Clustering based on k-means algorithm. In each step cluster center is a number of PCA components
   of points in that cluster. Than distance is defined as R^2 in least-squares.
 License: GPL-3

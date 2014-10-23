@@ -1,0 +1,33 @@
+<!--
+%\VignetteEngine{knitr}
+%\VignetteIndexEntry{VarClust tutorial}
+-->
+
+---
+title: "VarClust package tutorial"
+author: "Piotr Sobczyk"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+VarClust is a package that enables dimension
+reduction via variables clustering.
+This tutorial will enable you to use package VarClust and
+familiarize with it's options.
+
+You can install VarClust from either CRAN or github.
+
+```{r, results='hide'}
+library(VarClust)
+library(mclust)
+```
+
+We're going to use FactoMineR package data.
+
+```{r}
+comp <- read.table("http://factominer.free.fr/docs/gene.csv",sep=";",header=T,row.names=1) 
+benchamrkClustering <- c(rep(1, 68), rep(2, 356))    
+comp <- data.frame(comp[,-ncol(comp)])    
+mlcc.fit <- MPCV.BIC(comp, numb.Clusters = 1:3, numb.runs = 100, max.dim = 2, numbCores=4, greedy=F, estimateDimensions=F)
+
+```

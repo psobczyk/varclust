@@ -4,7 +4,7 @@
 #'
 #' @param X data
 #' @param numb.Clusters clusters numbers to check
-#' @param number.runs number of runs of MLCC
+#' @param numb.runs number of runs of MLCC
 #' @param stop.criterion how many changes in partitions triggers stopping the algorithm
 #' @param max.iter maxium number of iteratations
 #' @param max.dim maximum considered dimension of subspaces

@@ -11,6 +11,7 @@
 #' @param max.dim maximum considered dimension of subspaces
 #' @param method method to be used to determine best run. Possible values are "likelihood", "singular", "residual"
 #' @param scale Should data be scaled?
+#' @param numbCores Number of cores to be used
 #' @export
 #' @return a list consisting of
 #' \item{segmentation}{of points to clusters}
