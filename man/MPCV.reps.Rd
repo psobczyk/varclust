@@ -5,7 +5,8 @@
 \usage{
 MPCV.reps(X, numb.Clusters = 2, numb.runs = 20, stop.criterion = 1,
   max.iter = 20, initial.segmentation = NULL, max.dim = 1,
-  method = c("likelihood", "singular", "residual"), scale = T)
+  method = c("likelihood", "singular", "residual"), scale = T,
+  numbCores = 1)
 }
 \arguments{
 \item{X}{data}
@@ -25,6 +26,8 @@ MPCV.reps(X, numb.Clusters = 2, numb.runs = 20, stop.criterion = 1,
 \item{method}{method to be used to determine best run. Possible values are "likelihood", "singular", "residual"}
 
 \item{scale}{Should data be scaled?}
+
+\item{numbCores}{Number of cores to be used}
 }
 \value{
 a list consisting of

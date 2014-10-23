@@ -3,7 +3,7 @@
 \alias{MPCV.BIC}
 \title{Subspace clustering based on multiple principal components}
 \usage{
-MPCV.BIC(X, numb.Clusters = 1:10, number.runs = 20, stop.criterion = 1,
+MPCV.BIC(X, numb.Clusters = 1:10, numb.runs = 20, stop.criterion = 1,
   max.iter = 20, max.dim = 1, method = c("likelihood", "singular",
   "residual"), scale = T, numbCores = 1, greedy = TRUE,
   estimateDimensions = T)
@@ -13,7 +13,7 @@ MPCV.BIC(X, numb.Clusters = 1:10, number.runs = 20, stop.criterion = 1,
 
 \item{numb.Clusters}{clusters numbers to check}
 
-\item{number.runs}{number of runs of MLCC}
+\item{numb.runs}{number of runs of MLCC}
 
 \item{stop.criterion}{how many changes in partitions triggers stopping the algorithm}
 
