@@ -1,7 +1,7 @@
 Package: VarClust
 Type: Package
 Title: Variable Clustering
-Version: 0.9.5
+Version: 0.9.6
 Date: 2014-10-15
 Author: Piotr Sobczyk
 Maintainer: Piotr Sobczyk <piotr.sobczyk@pwr.edu.pl>

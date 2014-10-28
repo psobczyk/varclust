@@ -10,6 +10,9 @@
 #' @export
 #' @return BIC value of BIC criterion
 myBIC <- function(X, segmentation, max.dim, numb.clusters, sigma=NULL){
+  if(!is.matrix(X)){ # if X is one variable it is stored as vector
+    X <- matrix(X, ncol=1)
+  }
   D = dim(X)[1]
   p = dim(X)[2]
   RES.sigma <- sum(vapply(1:numb.clusters, function(k) {
@@ -54,11 +57,11 @@ myBIC <- function(X, segmentation, max.dim, numb.clusters, sigma=NULL){
       #sigma = sqrt(sum(RESIDUAL^2)/((D-1)*(ncol(Xk)-1)))
       likelihoods[k] <- sum(dnorm(as.matrix((RESIDUAL[,]), nrow=1), mean=0 , sd=sigma, log=T))
       mk <- ncol(Xk)
-      penalties[k] <- 1/2*log(mk)*(1+max.dim*(D - max.dim +mk))
+      penalties[k] <- 1/2*log(mk)*(max.dim*(D - max.dim +mk))
     }
     else{
-      mk <- ncol(Xk)
-      penalties[k] <- 1/2*log(mk)*(1+max.dim*(D - max.dim +mk))
+      mk <- ncol(matrix(Xk, nrow=D))
+      penalties[k] <- 1/2*log(mk)*(max.dim*(D - max.dim +mk))
     }
   }
   #penalty on all clusters
