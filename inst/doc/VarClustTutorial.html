@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
-<title></title>
+<title>output: html_document</title>
 
 <script type="text/javascript">
 window.onload = function() {
@@ -206,7 +206,31 @@ hr {
 %\VignetteIndexEntry{VarClust tutorial}
 -->
 
+<hr/>
+
+<p>title: &ldquo;VarClust package tutorial&rdquo;
+author: &ldquo;Piotr Sobczyk&rdquo;
+date: &ldquo;2014-10-23&rdquo;</p>
+
+<h2>output: html_document</h2>
+
+<p>VarClust is a package that enables dimension
+reduction via variables clustering.
+This tutorial will enable you to use package VarClust and
+familiarize with it&#39;s options.</p>
+
+<p>You can install VarClust from either CRAN or github.</p>
+
 <pre><code class="r">library(VarClust)
+library(mclust)
+</code></pre>
+
+<p>We&#39;re going to use FactoMineR package data.</p>
+
+<pre><code class="r">comp &lt;- read.table(&quot;http://factominer.free.fr/docs/gene.csv&quot;,sep=&quot;;&quot;,header=T,row.names=1) 
+benchamrkClustering &lt;- c(rep(1, 68), rep(2, 356))    
+comp &lt;- data.frame(comp[,-ncol(comp)])    
+mlcc.fit &lt;- MPCV.BIC(comp, numb.Clusters = 1:3, numb.runs = 100, max.dim = 2, numbCores=4, greedy=F, estimateDimensions=F)
 </code></pre>
 
 </body>
