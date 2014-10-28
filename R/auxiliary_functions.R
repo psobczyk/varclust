@@ -67,6 +67,7 @@ choose.cluster <- function(variable, pcas, numberClusters){
 #' @param group proposed clustering
 #' @param N number of elements in each cluster
 #' @param n number of clusters
+#' @export
 #' @return mis misclassification rate
 missclassify.heuristic <-function(group, N, n){
   forbidden = NULL;
