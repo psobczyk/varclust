@@ -23,7 +23,7 @@
 #' @details Version: 0.9.8
 #' @importFrom RcppEigen fastLmPure
 #' @importFrom doMC registerDoMC
-#' @importFrom doMC detectCores
+#' @importFrom parallel detectCores
 #' @import foreach
 #' @author Piotr Sobczyk,
 #'         Julie Josse
@@ -35,7 +35,7 @@
 #' 
 #' @examples
 #' \donttest{
-#' data <- dataSIMULATION(n=100, SNR=1, K=5, numbVars=30, max.dim=2)
+#' data <- data.simulation(n=100, SNR=1, K=5, numbVars=30, max.dim=2)
 #' mlcc.bic(data$X, numb.clusters=1:5, numb.runs=20)
 #' mlcc.reps(data$X, numb.clusters=5, numb.runs=20, max.dim=3)}
 NULL

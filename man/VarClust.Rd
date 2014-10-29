@@ -28,7 +28,7 @@ Version: 0.9.8
 }
 \examples{
 \donttest{
-data <- dataSIMULATION(n=100, SNR=1, K=5, numbVars=30, max.dim=2)
+data <- data.simulation(n=100, SNR=1, K=5, numbVars=30, max.dim=2)
 mlcc.bic(data$X, numb.clusters=1:5, numb.runs=20)
 mlcc.reps(data$X, numb.clusters=5, numb.runs=20, max.dim=3)}
 }

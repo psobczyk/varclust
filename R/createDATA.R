@@ -15,9 +15,9 @@
 #' \item{dims}{vector, dimensions of subspaces}
 #' \item{s}{vector, true partiton of variables}
 #' @examples
-#' data <- dataSIMULATION()
-#' data2 <- dataSIMULATION(n=30, SNR=2, K=5, numb.vars=20, max.dim=3, equal.dims=FALSE)
-dataSIMULATION <- function(n = 100, SNR=1, K = 10, numb.vars = 30, max.dim = 2, equal.dims=T){
+#' data <- data.simulation()
+#' data2 <- data.simulation(n=30, SNR=2, K=5, numb.vars=20, max.dim=3, equal.dims=FALSE)
+data.simulation <- function(n = 100, SNR=1, K = 10, numb.vars = 30, max.dim = 2, equal.dims=T){
   #draw dimensions of subspaces
   sigma = 1/SNR
   if(equal.dims)

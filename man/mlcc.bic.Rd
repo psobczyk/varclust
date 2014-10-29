@@ -41,11 +41,11 @@ An object of class mlcc.fit consisting of
 Estimate the number of clusters according to the BIC. Basic k-means based
 Multiple Latent Components Clustering (MLCC) algorithm (\code{\link{mlcc.kmeans}}) is run a
 given number of times (\emph{numb.runs}) for each number of clusters in numb.Clusters.
-The best partition is choosen with BIC (see \code{\link{MLCC} function})
+The best partition is choosen with BIC (see \code{\link{mlcc.reps} function})
 }
 \examples{
 \donttest{
-data <- dataSIMULATION(n=100, SNR=1, K=5, numbVars=30, max.dim=2)
+data <- data.simulation(n=100, SNR=1, K=5, numb.vars=30, max.dim=2)
 mlcc.bic(data$X, numb.clusters=1:10, numb.runs=20)}
 }
 

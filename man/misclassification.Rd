@@ -29,8 +29,8 @@ Additional requirement is that classes labels are from range [1, K].
 }
 \examples{
 \donttest{
-data <- dataSIMULATION(n=100, SNR=1, K=5, numbVars=30, max.dim=2)
-mlcc.fit <- MPCV.reps(data$X, numb.clusters=5, numb.runs=20, max.dim=2)
+data <- data.simulation(n=100, SNR=1, K=5, numb.vars=30, max.dim=2)
+mlcc.fit <- mlcc.reps(data$X, numb.clusters=5, numb.runs=20, max.dim=2)
 misclassification(mlcc.fit$segmentation,data$s, 30, 5)
 }
 

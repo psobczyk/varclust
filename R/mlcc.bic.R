@@ -25,8 +25,9 @@
 #' \item{all.fit}{a list, segmentation, BIC, subspaces dimension for all numbers of clusters considered}
 #' @examples
 #' \donttest{
-#' data <- dataSIMULATION(n=100, SNR=1, K=5, numbVars=30, max.dim=2)
-#' mlcc.bic(data$X, numb.clusters=1:10, numb.runs=20)}
+#' data <- data.simulation(n=100, SNR=1, K=5, numb.vars=30, max.dim=2)
+#' mlcc.bic(data$X, numb.clusters=1:10, numb.runs=20)
+#' }
 mlcc.bic <- function(X, numb.clusters=1:10, numb.runs=20, stop.criterion=1, max.iter=20, max.dim=4, 
                     scale=T, numb.cores=NULL, greedy=TRUE, estimate.dimensions=T){
   if (is.data.frame(X)) {

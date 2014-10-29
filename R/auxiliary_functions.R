@@ -78,7 +78,6 @@ cluster.BIC <- function(X, segmentation, max.dim, numb.clusters, sigma=NULL, est
 ##' @param p number of variables
 ##' @param numb.clusters total number of clusters
 ##' @return unbiased noise estimator
-##' @author Piotr Sobczyk
 ##' @keywords internal
 getSigma <- function(X, segmentation, max.dim, n, p, numb.clusters){
   RES.sigma=0
@@ -136,8 +135,8 @@ choose.cluster <- function(variable, pcas, numberClusters){
 #' @return misclassification rate
 #' @examples
 #' \donttest{
-#' data <- dataSIMULATION(n=100, SNR=1, K=5, numbVars=30, max.dim=2)
-#' mlcc.fit <- MPCV.reps(data$X, numb.clusters=5, numb.runs=20, max.dim=2)
+#' data <- data.simulation(n=100, SNR=1, K=5, numb.vars=30, max.dim=2)
+#' mlcc.fit <- mlcc.reps(data$X, numb.clusters=5, numb.runs=20, max.dim=2)
 #' misclassification(mlcc.fit$segmentation,data$s, 30, 5)
 #' }
 #' 

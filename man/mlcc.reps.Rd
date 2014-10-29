@@ -42,7 +42,7 @@ The best partition is selected according to the BIC.
 }
 \examples{
 \donttest{
-data <- dataSIMULATION(n=100, SNR=1, K=5, numbVars=30, max.dim=2)
+data <- data.simulation(n=100, SNR=1, K=5, numb.vars=30, max.dim=2)
 mlcc.reps(data$X, numb.clusters=5, numb.runs=20)}
 }
 
