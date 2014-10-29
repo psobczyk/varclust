@@ -1,34 +1,57 @@
-#' Subspace clustering based on multiple principal components
+#' Subspace clustering with automatic estimation of number of clusters
+#' and their dimension.
 #'
-#' Performs MPCC multiple times and chooses the best run based on residual variance
+#' Estimate the number of clusters according to the BIC. Basic k-means based 
+#' Multiple Latent Components Clustering (MLCC) algorithm is run a 
+#' specified number of times (numb.runs) for each number of clusters in numb.Clusters
 #'
-#' @param X data
-#' @param numb.Clusters clusters numbers to check
-#' @param numb.runs number of runs of MLCC
-#' @param stop.criterion how many changes in partitions triggers stopping the algorithm
-#' @param max.iter maxium number of iteratations
-#' @param max.dim maximum considered dimension of subspaces
-#' @param method method to be used to determine best run. Possible values are "likelihood", "singular", "residual"
-#' @param scale Should data be scaled?
-#' @param numbCores Number of cores to be used
-#' @param greedy Should number of clusters be estimated in a greedy way
-#' @param estimateDimensions Should subspaces dimensions be estimated as well?
+#' @param X a data frame or a matrix with only continuous variables
+#' @param numb.Clusters a vector, numbers of clusters to be checked
+#' @param numb.runs an integer, number of runs of MLCC
+#' @param stop.criterion an integer, indicating how many changes in partitions triggers stopping the MLCC algorithm
+#' @param max.iter an integer, maximum number of iterations of MLCC algorithm
+#' @param max.dim an integer, maximum dimension of subspaces to be considered
+#' @param scale a boolean, if TRUE (value set by default) then data are scaled to unit variance
+#' @param numbCores an integer, number of cores to be used, by default all cores are used
+#' @param greedy a boolean, if TRUE (value set by default) the clusters are estimated in a greedy way
+#' @param estimateDimensions a boolean, if TRUE (value set by default) subspaces dimensions are estimated
 #' @export
-#' @return a list consisting of
-#' \item{segmentation}{of points to clusters}
-#' \item{BIC}{Value of \code{\link{myBIC}} criterion}
+#' @return An object of class mlcc.fit consisting of
+#' \item{segmentation}{a vector containing the partition of the variables}
+#' \item{BIC}{double, value of \code{\link{myBIC}} criterion}
+#' \item{subspacesDimensions}{a list containing dimensions of the subspaces}
+#' \item{nClusters}{an integer, estimated number of clusters}
+#' @examples
+#' \donttest{
+#' data <- dataSIMULATION(n=100, SNR=1, K=5, numbVars=30, max.dim=2)
+#' MPCV.BIC(data$X, numb.Clusters=1:10, numb.runs=20)}
 MPCV.BIC <- function(X, numb.Clusters=1:10, numb.runs=20, stop.criterion=1, max.iter=20, max.dim=1, 
-                     method=c("likelihood", "singular", "residual"), scale=T, numbCores=1, greedy=TRUE, estimateDimensions=T){
-  if(scale){
-    dane = scale(X)
+                    scale=T, numbCores=1, greedy=TRUE, estimateDimensions=T){
+  if (is.data.frame(X)) {
+    warnings("X is not a matrix. Casting to matrix.")
+    X = as.matrix(X)
   }
-  method <- match.arg(method)
+  if(any(is.na(X))) {
+    warnings("Missing values are imputed by the mean of the variable")
+    X[is.na(X)] = matrix(apply(X, 2, mean, na.rm = TRUE), ncol = ncol(X), nrow = nrow(X), byrow = TRUE)[is.na(X)]
+  }
+  if (any(!sapply(X, is.numeric))) {
+    auxi = NULL
+    for (j in 1:ncol(X)) if (!is.numeric(X[, j])) 
+      auxi = c(auxi, j)
+    stop(paste("\nThe following variables are not quantitative: ", 
+               auxi))
+  }
+  if(scale){
+    X = scale(X)
+  }
   n=nrow(X)
   p=ncol(X)
   results <- list()
+  cat(paste("Number of clusters \t BIC \n"))
   for(i in 1:length(numb.Clusters)){
     numb.clusters <- numb.Clusters[i]                                                                                                 
-    MPCV.fit <- MPCV.reps(X=X, numb.Clusters=numb.clusters, numb.runs=numb.runs, max.dim=max.dim, method=method, scale=F, numbCores=numbCores)
+    MPCV.fit <- MPCV.reps(X=X, numb.Clusters=numb.clusters, numb.runs=numb.runs, max.dim=max.dim, scale=F, numbCores=numbCores)
     BIC.sum <- 0
     if(estimateDimensions){
       sigma <- NULL
@@ -39,7 +62,7 @@ MPCV.BIC <- function(X, numb.Clusters=1:10, numb.runs=20, stop.criterion=1, max.
       for(k in 1:numb.clusters){
         temp <- 1
         for(d in 1:max.dim){ 
-          temp[d] <- myBIC(X[,MPCV.fit$segmentation==k], rep(1, sum(MPCV.fit$segmentation==k)), d, 1, sigma=sigma)
+          temp[d] <- myBIC(X[,MPCV.fit$segmentation==k, drop=F], rep(1, sum(MPCV.fit$segmentation==k)), d, 1, sigma=sigma)
         } 
         BIC.sum <- BIC.sum + max(temp[!is.nan(temp)]) 
         dimensions <- append(dimensions, which.max(temp)) 
@@ -55,8 +78,13 @@ MPCV.BIC <- function(X, numb.Clusters=1:10, numb.runs=20, stop.criterion=1, max.
         break
       }
     }
+    cat(paste("\t \t \t", numb.clusters, "\t \t \t \t", formatC(results[[i]]$BIC, digits=ceiling(log(abs(results[[i]]$BIC),10))), "\n"))
   }
   BICs <- lapply(results, function(res) res$BIC)
-  results[[which.max(BICs)]]
+  plot(numb.Clusters, BICs, type="b", xaxt="n", ylab="BIC", xlab="Number of clusters")
+  axis(side = 1, labels = numb.Clusters, at=numb.Clusters)
   
+  result <- results[[which.max(BICs)]]
+  class(result) <- "mlcc.fit"
+  return(result)
 }
