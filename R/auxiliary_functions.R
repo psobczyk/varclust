@@ -1,4 +1,4 @@
-##' @title Computing joint sigma for all clusters
+##' Computing joint sigma for all clusters
 ##'
 ##' Computes unbiased noise estimator under assumption that 
 ##' all subspaces are of the same dimension
@@ -49,63 +49,43 @@ choose.cluster <- function(variable, pcas, numberClusters){
   }, 0.9) )
 }
 
-#' Compute missclasification rate for subspace clustering
-#' 
-#' As getting exact value requires checking all permutations a heuristic approach is proposed
-#' It is assumed that there are n cluster each of N elements and that they are sorted.
-#' 
-#' @param group proposed clustering
-#' @param N number of elements in each cluster
-#' @param n number of clusters
-#' @export
-#' @return mis misclassification rate
-missclassify.heuristic <-function(group, N, n){
-  forbidden = NULL;
-  suma = 0;
-  nG = max(group);
-  for (i in N:1){ #differnet concordance levels
-    for(j in 1:nG){ #subspaces numbers (found)
-      if (sum(j==forbidden)==0){ #subspace not yet used
-        for (k in 1:n){ # subspaces numbers (true)
-          if (sum(j==group[((k-1)*N+1):(k*N)])==i){
-            suma = suma + i
-            forbidden = c(forbidden, j)
-            break;
-          }
-        }
-      }
-    }
-  }
-  mis = 1-suma/(N*n)
-  return(mis)
-}
-
 #' Computes missclasification rate.
 #' 
+#' Missclasification is commonly used performance measure in subspace clustering.
+#' It allows to compare two partitions with the same number of clusters.
+#'  
 #' As getting exact value of missclasification requires checking all permutations 
-#' and is therefore intrackable even for modest number of classes, a heuristic approach is proposed.
-#' It is assumed that there are n classes of maximum N elements. 
-#' Additional requirement is that classes identifiers are from range [1, n]
+#' and is therefore intrackable even for modest number of clusters, a heuristic approach is proposed.
+#' It is assumed that there are K classes of maximum M elements. 
+#' Additional requirement is that classes labels are from range [1, K].
 #' 
 #' @param group a vector, first partiton
 #' @param true_group a vector, second (reference) partition
-#' @param N an integer, maximal number of elements in one class
-#' @param n an integer, number of classes
+#' @param M an integer, maximal number of elements in one class
+#' @param K an integer, number of classes
+#' @references {R Vidal. Subspace clustering. Signal Processing Magazine, IEEE, 28(2):52–68, 2011.}
 #' @export
 #' @return misclassification rate
 #' @examples
-#' partition1 <- sample(10, 300, replace=T)
-#' partition2 <- sample(10, 300, replace=T)
-#' missclassify.heuristic2(partition1, partition1, max(table(partition1)), 10)
-#' missclassify.heuristic2(partition1, partition2, max(table(partition2)), 10)
-missclassify.heuristic2 <-function(group, true_group, N, n){
+#' \donttest{
+#' data <- dataSIMULATION(n=100, SNR=1, K=5, numbVars=30, max.dim=2)
+#' mlcc.fit <- MPCV.reps(data$X, numb.clusters=5, numb.runs=20, max.dim=2)
+#' missclasification(mlcc.fit$segmentation,data$s, 30, 5)
+#' }
+#' 
+#' #one can use this function not only for clusters
+#' partition1 <- sample(10, 300, replace=TRUE)
+#' partition2 <- sample(10, 300, replace=TRUE)
+#' missclasification(partition1, partition1, max(table(partition1)), 10)
+#' missclasification(partition1, partition2, max(table(partition2)), 10)
+missclasification <-function(group, true_group, M, K){
   forbidden = NULL;
   suma = 0;
   nG = max(group);
-  for (i in N:1){ #differnet concordance levels
+  for (i in M:1){ #differnet concordance levels
     for(j in 1:nG){ #subspaces numbers (found)
       if (sum(j==forbidden)==0){ #subspace not yet used
-        for (k in 1:n){ # subspaces numbers (true)
+        for (k in 1:K){ # subspaces numbers (true)
           if (sum(j==group[true_group==k])==i){
             suma = suma + i
             forbidden = c(forbidden, j)
