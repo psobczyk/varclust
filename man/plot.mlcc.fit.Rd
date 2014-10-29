@@ -7,6 +7,8 @@
 }
 \arguments{
 \item{x}{mlcc.fit class object}
+
+\item{...}{Further arguments to be passed to or from other methods. They are ignored in this function.}
 }
 \description{
 Plot mlcc.fit class object

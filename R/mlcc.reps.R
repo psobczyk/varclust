@@ -11,11 +11,11 @@
 #' @param X a data frame or a matrix with only continuous variables
 #' @param numb.clusters an integer, number of cluster
 #' @param numb.runs an integer, number of runs of \code{\link{mlcc.kmeans} algorithm} with random initialization
-#' @param stop.criterion an integer, indicating how many changes in partitions triggers stopping the \code{\link{mlcc.kmeans} algorithm}
+#' @param stop.criterion an integer, indicating how many changes in partitions triggers stopping \code{\link{mlcc.kmeans} algorithm}
 #' @param max.iter an integer, maximum number of iterations of \code{\link{mlcc.kmeans} algorithm}
 #' @param initial.segmentations a list of vectors, segmentations that user wants to be used as an initial segmentation in \code{\link{mlcc.kmeans} algorithm}
-#' @param max.dim an integer, maximum dimension of subspaces to be considered
-#' @param scale a boolean, if TRUE (value set by default) then data are scaled to unit variance
+#' @param max.dim an integer, dimension of subspaces (all are assumed to be equal)
+#' @param scale a boolean, if TRUE (value set by default) then variables in dataset are scaled to zero mean and unit variance
 #' @param numb.cores an integer, number of cores to be used, by default all cores are used
 #' @export
 #' @return A list consisting of

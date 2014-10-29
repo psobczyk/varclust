@@ -4,8 +4,8 @@
 \title{Subspace clustering assuming that the number of clusters is known}
 \usage{
 mlcc.reps(X, numb.clusters = 2, numb.runs = 20, stop.criterion = 1,
-  max.iter = 20, initial.segmentations = NULL, max.dim = 2, scale = T,
-  numb.cores = NULL)
+  max.iter = 20, initial.segmentations = NULL, max.dim = 2,
+  scale = TRUE, numb.cores = NULL)
 }
 \arguments{
 \item{X}{a data frame or a matrix with only continuous variables}
@@ -14,15 +14,15 @@ mlcc.reps(X, numb.clusters = 2, numb.runs = 20, stop.criterion = 1,
 
 \item{numb.runs}{an integer, number of runs of \code{\link{mlcc.kmeans} algorithm} with random initialization}
 
-\item{stop.criterion}{an integer, indicating how many changes in partitions triggers stopping the \code{\link{mlcc.kmeans} algorithm}}
+\item{stop.criterion}{an integer, indicating how many changes in partitions triggers stopping \code{\link{mlcc.kmeans} algorithm}}
 
 \item{max.iter}{an integer, maximum number of iterations of \code{\link{mlcc.kmeans} algorithm}}
 
 \item{initial.segmentations}{a list of vectors, segmentations that user wants to be used as an initial segmentation in \code{\link{mlcc.kmeans} algorithm}}
 
-\item{max.dim}{an integer, maximum dimension of subspaces to be considered}
+\item{max.dim}{an integer, dimension of subspaces (all are assumed to be equal)}
 
-\item{scale}{a boolean, if TRUE (value set by default) then data are scaled to unit variance}
+\item{scale}{a boolean, if TRUE (value set by default) then variables in dataset are scaled to zero mean and unit variance}
 
 \item{numb.cores}{an integer, number of cores to be used, by default all cores are used}
 }

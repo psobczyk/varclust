@@ -6,7 +6,8 @@
 #' @param SNR a double, signal to noise ratio measured as variance of variable to variance of noise
 #' @param K an integer, number of subspaces
 #' @param numb.vars an integer, number of variables in each subspace
-#' @param max.dim an integer, maximum dimension of subspace
+#' @param max.dim an integer, if equal.dims is TRUE then max.dim is dimension of each subspace.
+#'        If equal.dims is FALSE then subspaces dimensions are drawn from uniform distribution on [1,max.dim]
 #' @param equal.dims a boolean, if TRUE (value set by default) all clusters are of the same dimension
 #' @export
 #' @return A list consisting of:

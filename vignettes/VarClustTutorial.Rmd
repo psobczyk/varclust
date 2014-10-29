@@ -22,7 +22,7 @@ familiarize with its options.
 You can install VarClust from either CRAN (stable version) or github (the current development version).
 
 ```{r, results='hide'}
-library(VarClustPoprawka)
+library(varclust)
 library(mclust)
 ```
 

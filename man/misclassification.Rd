@@ -6,7 +6,7 @@
 misclassification(group, true_group, M, K)
 }
 \arguments{
-\item{group}{a vector, first partiton}
+\item{group}{a vector, first partition}
 
 \item{true_group}{a vector, second (reference) partition}
 

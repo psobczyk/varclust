@@ -5,8 +5,8 @@
 and their dimension.}
 \usage{
 mlcc.bic(X, numb.clusters = 1:10, numb.runs = 20, stop.criterion = 1,
-  max.iter = 20, max.dim = 4, scale = T, numb.cores = NULL,
-  greedy = TRUE, estimate.dimensions = T)
+  max.iter = 20, max.dim = 4, scale = TRUE, numb.cores = NULL,
+  greedy = TRUE, estimate.dimensions = TRUE, graphical.output = TRUE)
 }
 \arguments{
 \item{X}{a data frame or a matrix with only continuous variables}
@@ -15,19 +15,23 @@ mlcc.bic(X, numb.clusters = 1:10, numb.runs = 20, stop.criterion = 1,
 
 \item{numb.runs}{an integer, number of runs of \code{\link{mlcc.kmeans}}}
 
-\item{stop.criterion}{an integer, indicating how many changes in partitions triggers stopping the \code{\link{mlcc.kmeans} algorithm}}
+\item{stop.criterion}{an integer, indicating how many changes in partitions triggers stopping \code{\link{mlcc.kmeans} algorithm}}
 
 \item{max.iter}{an integer, maximum number of iterations of \code{\link{mlcc.kmeans} algorithm}}
 
-\item{max.dim}{an integer, maximum dimension of subspaces to be considered}
+\item{max.dim}{an integer, if estimate.dimensions is FALSE then max.dim is dimension of each subspace.
+If estimate.dimensions is TRUE then subspaces dimensions are estimated from the range [1, max.dim]}
 
-\item{scale}{a boolean, if TRUE (value set by default) then data are scaled to unit variance}
+\item{scale}{a boolean, if TRUE (value set by default) then variables in dataset are scaled to zero mean and unit variance}
 
 \item{numb.cores}{an integer, number of cores to be used, by default all cores are used}
 
 \item{greedy}{a boolean, if TRUE (value set by default) the clusters are estimated in a greedy way}
 
 \item{estimate.dimensions}{a boolean, if TRUE (value set by default) subspaces dimensions are estimated}
+
+\item{graphical.output}{a boolean, if TRUE (value set by default) plot with BIC values for different
+numbers of clusters is produced}
 }
 \value{
 An object of class mlcc.fit consisting of
@@ -35,7 +39,7 @@ An object of class mlcc.fit consisting of
 \item{BIC}{double, value of \code{\link{cluster.BIC}} criterion}
 \item{subspacesDimensions}{a list containing dimensions of the subspaces}
 \item{nClusters}{an integer, estimated number of clusters}
-\item{all.fit}{a list, segmentation, BIC, subspaces dimension for all numbers of clusters considered}
+\item{all.fit}{a list of segmentation, BIC, subspaces dimension for all numbers of clusters considered}
 }
 \description{
 Estimate the number of clusters according to the BIC. Basic k-means based

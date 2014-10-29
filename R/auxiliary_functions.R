@@ -126,7 +126,7 @@ choose.cluster <- function(variable, pcas, numberClusters){
 #' It is assumed that there are K classes of maximum M elements. 
 #' Additional requirement is that classes labels are from range [1, K].
 #' 
-#' @param group a vector, first partiton
+#' @param group a vector, first partition
 #' @param true_group a vector, second (reference) partition
 #' @param M an integer, maximal number of elements in one class
 #' @param K an integer, number of classes

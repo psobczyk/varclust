@@ -2,25 +2,25 @@
 #'
 #' Variable Clustering with Multiple Latent Components Clustering is based on k-means algorithm. 
 #' In each step cluster centers are few PCA components, computed for variables in that cluster. 
-#' Than distance is defined by R^2 (obtained by performing least-squares).
+#' The distance is defined by R^2 (obtained by performing least-squares).
 #'
-#' The main function of package \pkg{VarClust} is
-#' \code{\link{mlcc.bic}} which allows you to cluster data 
+#' The main function of package \pkg{varclust} is
+#' \code{\link{mlcc.bic}} which allows clustering variables in a data 
 #' with unknown number of clusters. Variable partition is computed
 #' with k-means based algorithm. Number of clusters and their dimensions
 #' are computed using BIC criterion.
-#' If user knows the number of clusters one might use function \code{\link{mlcc.reps}},
+#' If the number of clusters is known one might use function \code{\link{mlcc.reps}},
 #' which takes number of clusters as a parameter. For \code{\link{mlcc.reps}} one might 
 #' specify as well some initial segmentation for k-means algorithm. This can be useful if
 #' user has some apriori knowledge about clustering.
 #' 
 #' We also provide function \code{\link{misclassification}} that computes misclassification
-#' rate between two partitions in which might have different labelings. This performance measure is 
-#' extensively used in application to computer vision.
+#' rate between two partitions. This performance measure is 
+#' extensively used in image segmentation.
 #'
 #' @docType package
-#' @name VarClust
-#' @details Version: 0.9.8
+#' @name varclust
+#' @details Version: 0.9.11
 #' @importFrom RcppEigen fastLmPure
 #' @importFrom doMC registerDoMC
 #' @importFrom parallel detectCores

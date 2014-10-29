@@ -15,7 +15,8 @@ data.simulation(n = 100, SNR = 1, K = 10, numb.vars = 30, max.dim = 2,
 
 \item{numb.vars}{an integer, number of variables in each subspace}
 
-\item{max.dim}{an integer, maximum dimension of subspace}
+\item{max.dim}{an integer, if equal.dims is TRUE then max.dim is dimension of each subspace.
+If equal.dims is FALSE then subspaces dimensions are drawn from uniform distribution on [1,max.dim]}
 
 \item{equal.dims}{a boolean, if TRUE (value set by default) all clusters are of the same dimension}
 }
