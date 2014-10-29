@@ -11,22 +11,33 @@ of points in that cluster. Than distance is defined as R^2 in least-squares.
 \details{
 The main function of package \pkg{VarClust} is
 \code{\link{MPCV.BIC}} which allows you to cluster data
-with unknown number of clusters. If you have know
-the number of clusters use function \code{\link{MPCV.reps}}
+with unknown number of clusters. Variable partition is computed
+with k-means based algorithm. Number of clusters and their dimensions
+are computed using BIC criterion.
+If user knows the number of clusters one might use function \code{\link{MPCV.reps}},
+which takes number of clusters as a parameter. For \code{\link{MPCV.reps}} one might
+specify as well some initial segmentation for k-means algorithm. This can be useful if
+user has some apriori knowledge about clustering.
 
-Version: 0.9
+We also provide function \code{\link{missclassify.heuristic2}} that computes missclasification
+rate between two partitions in which might have different labelings. This performance measure is
+extensively used in application to computer vision.
+
+Version: 0.9.7
 }
 \examples{
-\dontrun{MPCV.reps(data)}
+\donttest{
+data <- dataSIMULATION(n=100, SNR=1, K=5, numbVars=30, max.dim=2)
+MPCV.reps(data$X, numb.Clusters=5, numb.runs=20)}
 }
 \author{
-Piotr Sobczyk
+Piotr Sobczyk,
+        Julie Josse,
+        Malgorzata Bogdan
 
 Maintainer: Piotr Sobczyk \email{Piotr.Sobczyk@pwr.edu.pl}
 }
 \references{
-Ulrike von Luxburg 2007 \emph{A Tutorial on Spectral Clustering}
-
 Marie Chavent, Benoit Liquet, Vanessa Kuentz-Simonet, Jerome Saracco 2013 \emph{ClustOfVar: An R Package for the Clustering of Variables}
 }
 
