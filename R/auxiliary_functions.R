@@ -102,12 +102,12 @@ misclassification <-function(group, true_group, M, K){
 
 #' Plot mlcc.fit class object
 #' 
-#' @param obj mlcc.fit class object
+#' @param x mlcc.fit class object
 #' @export
 #' @keywords internal
-plot.mlcc.fit <- function(obj){
-  clusterNumbs <- lapply(obj$all.fit, function(x) x$nClusters)
-  BICVals <- lapply(obj$all.fit, function(x) x$BIC)
+plot.mlcc.fit <- function(x,...){
+  clusterNumbs <- lapply(x$all.fit, function(y) y$nClusters)
+  BICVals <- lapply(x$all.fit, function(y) y$BIC)
   plot.default(clusterNumbs, BICVals, type="b", xaxt="n", ylab="BIC", xlab="Number of clusters")
   axis(side = 1, labels = clusterNumbs, at=clusterNumbs)
 }

@@ -3,10 +3,10 @@
 \alias{plot.mlcc.fit}
 \title{Plot mlcc.fit class object}
 \usage{
-\method{plot}{mlcc.fit}(obj)
+\method{plot}{mlcc.fit}(x, ...)
 }
 \arguments{
-\item{obj}{mlcc.fit class object}
+\item{x}{mlcc.fit class object}
 }
 \description{
 Plot mlcc.fit class object
