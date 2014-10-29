@@ -15,7 +15,7 @@
 #' @export
 #' @return A list consisting of
 #' \item{segmentation}{a vector containing the partition of the variables}
-#' \item{BIC}{double, value of \code{\link{myBIC}} criterion}
+#' \item{BIC}{double, value of \code{\link{cluster.BIC}} criterion}
 #' @examples
 #' \donttest{
 #' data <- dataSIMULATION(n=100, SNR=1, K=5, numbVars=30, max.dim=2)
@@ -55,14 +55,14 @@ MPCV.reps <- function(X, numb.clusters=2, numb.runs=20, stop.criterion=1, max.it
     MPCV.res <- MPCV(X=X, numberClusters=numb.clusters, maxSubspaceDim=max.dim, max.iter=max.iter)
     current.segmentation <- MPCV.res$segmentation
     current.pcas <- MPCV.res$pcas
-    list(current.segmentation, myBIC(X, current.segmentation, max.dim, numb.clusters))
+    list(current.segmentation, cluster.BIC(X, current.segmentation, max.dim, numb.clusters))
   }
   i <- NULL
   segmentations2 <- foreach(i=(1:length(initial.segmentations))) %dopar% { #running user specified clusters
     MPCV.res <- MPCV(X=X, numberClusters=numb.clusters, maxSubspaceDim=max.dim, max.iter=max.iter, initial.segmentation=initial.segmentations[[i]])
     current.segmentation <- MPCV.res$segmentation
     current.pcas <- MPCV.res$pcas
-    list(current.segmentation, myBIC(X, current.segmentation, max.dim, numb.clusters))
+    list(current.segmentation, cluster.BIC(X, current.segmentation, max.dim, numb.clusters))
   }
   segmentations <- append(segmentations, segmentations2)
   BICs <- unlist(lapply(segmentations, function(x) x[2]))

@@ -29,7 +29,7 @@ MPCV.reps(X, numb.clusters = 2, numb.runs = 20, stop.criterion = 1,
 \value{
 A list consisting of
 \item{segmentation}{a vector containing the partition of the variables}
-\item{BIC}{double, value of \code{\link{myBIC}} criterion}
+\item{BIC}{double, value of \code{\link{cluster.BIC}} criterion}
 }
 \description{
 For a fixed number of cluster and fixed number of components per cluster,

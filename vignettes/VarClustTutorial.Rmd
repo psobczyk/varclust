@@ -29,24 +29,24 @@ library(mclust)
 First let us consider some real genomic data. We're going to use FactoMineR package data.
 This data consists of two types of variables. First group are gene expression data.
 The second is RNA data.
-Please note that, because k-means algorithm is run 300 times, it takes few minutes to compute the following code:
+Please note that it may take few minutes to run the following code:
 ```{r}
 comp <- read.table("http://factominer.free.fr/docs/gene.csv",sep=";",header=T,row.names=1) 
 benchmarkClustering <- c(rep(1, 68), rep(2, 356))    
 comp <- data.frame(comp[,-ncol(comp)])    
-mlcc.fit <- MPCV.BIC(comp, numb.Clusters = 1:3, numb.runs = 20, max.dim = 3, greedy=F, estimateDimensions=T)
+mlcc.fit <- MPCV.BIC(comp, numb.clusters = 1:3, numb.runs = 20, max.dim = 3, greedy=F, estimate.dimensions=T, numb.cores=1)
 summary(mlcc.fit)
 mclust::adjustedRandIndex(mlcc.fit$segmentation, benchmarkClustering)
 ```
 
 If you know what is the true number of clusters you might use MPCV.reps function instead.
 ```{r}
-mlcc.fit2 <- MPCV.reps(comp, numb.Clusters = 2, numb.runs = 20, max.dim = 4)
+mlcc.fit2 <- MPCV.reps(X=comp, numb.clusters = 2, numb.runs = 20, max.dim = 4, numb.cores=1)
 mclust::adjustedRandIndex(mlcc.fit2$segmentation, benchmarkClustering)
 ```
 You should also use MPCV.reps function if you have some apriori knowledge regarding true segmentation.
 You can enforce starting point
 ```{r}
-mlcc.fit3 <- MPCV.reps(comp, numb.Clusters = 2, numb.runs = 0, max.dim = 2, initial.segmentations=list(benchmarkClustering))
+mlcc.fit3 <- MPCV.reps(comp, numb.clusters = 2, numb.runs = 0, max.dim = 2, initial.segmentations=list(benchmarkClustering), numb.cores=1)
 mclust::adjustedRandIndex(mlcc.fit3$segmentation, benchmarkClustering)
 ```

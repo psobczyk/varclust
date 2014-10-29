@@ -14,7 +14,7 @@
 #' specify as well some initial segmentation for k-means algorithm. This can be useful if
 #' user has some apriori knowledge about clustering.
 #' 
-#' We also provide function \code{\link{missclassification}} that computes missclasification
+#' We also provide function \code{\link{misclassification}} that computes misclassification
 #' rate between two partitions in which might have different labelings. This performance measure is 
 #' extensively used in application to computer vision.
 #'
@@ -29,10 +29,11 @@
 #' 
 #' Maintainer: Piotr Sobczyk \email{Piotr.Sobczyk@@pwr.edu.pl}
 #' @references 
-#' Marie Chavent, Benoit Liquet, Vanessa Kuentz-Simonet, Jerome Saracco 2013 \emph{ClustOfVar: An R Package for the Clustering of Variables} 
+#' Malgorzata Bogdan, Julie Josse, Piotr Sobczyk, \emph{Clustering around latent variables - a technical report}, 2014, \url{www.im.pwr.edu.pl/~sobczyk/research/} 
 #' 
 #' @examples
 #' \donttest{
 #' data <- dataSIMULATION(n=100, SNR=1, K=5, numbVars=30, max.dim=2)
-#' MPCV.reps(data$X, numb.clusters=5, numb.runs=20)}
+#' MPCV.BIC(data$X, numb.clusters=1:5, numb.runs=20)
+#' MPCV.reps(data$X, numb.clusters=5, numb.runs=20, max.dim=3)}
 NULL
