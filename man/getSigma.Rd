@@ -33,4 +33,5 @@ all subspaces are of the same dimension
 \author{
 Piotr Sobczyk
 }
+\keyword{internal}
 

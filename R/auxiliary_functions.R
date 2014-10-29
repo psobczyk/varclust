@@ -11,11 +11,12 @@
 ##' @param numb.clusters total number of clusters
 ##' @return unbiased noise estimator
 ##' @author Piotr Sobczyk
+##' @keywords internal
 getSigma <- function(X, segmentation, max.dim, n, p, numb.clusters){
   RES.sigma=0
   for(k in 1:numb.clusters){
-    Xk = X[,segmentation==k]
-    if(length(unlist(Xk))>max.dim*p){ #length because it might be onedimensional
+    Xk = X[,segmentation==k, drop=F]
+    if(dim(Xk)[2]>max.dim){ #length because it might be onedimensional
       svdSIGNAL= svd(Xk)  
       SIGNAL = matrix(svdSIGNAL$u[, 1:max.dim], ncol=max.dim) %*% 
         diag(svdSIGNAL$d[1:max.dim], nrow=max.dim) %*% 
@@ -37,6 +38,7 @@ getSigma <- function(X, segmentation, max.dim, n, p, numb.clusters){
 #' @param pcas orthogonal basis for different subspaces
 #' @param numberClusters number of subspaces (clusters)
 #' @return index number of subspace closest to variable
+#' @keywords internal
 choose.cluster <- function(variable, pcas, numberClusters){
   v1 = var(variable)
   which.max( vapply(1:numberClusters, function(i){
@@ -46,18 +48,6 @@ choose.cluster <- function(variable, pcas, numberClusters){
     (v1-v2)/v1
   }, 0.9) )
 }
-# choose.cluster <- function(variable, pcas, numberClusters){
-#   rSquare <- NULL
-#   v1 = var(variable)
-#   for(i in 1:numberClusters){
-#     v2 <- var(fastLmPure(pcas[[i]], variable, method = 0L)$residuals)
-#     p <- ncol(pcas[[i]])
-#     n <- length(variable)
-#     #rSquare[i] <- 1 - ( 1- (v1-v2)/v1) *(n-1)/(n-p-1)
-#     rSquare[i] <- (v1-v2)/v1
-#   }
-#   which.max(rSquare)
-# }
 
 #' Compute missclasification rate for subspace clustering
 #' 
@@ -90,17 +80,24 @@ missclassify.heuristic <-function(group, N, n){
   return(mis)
 }
 
-#' Compute missclasification rate for subspace clustering
+#' Computes missclasification rate.
 #' 
-#' As getting exact value requires checking all permutations a heuristic approach is proposed
-#' It is assumed that there are n cluster each of N elements and that they are sorted.
+#' As getting exact value of missclasification requires checking all permutations 
+#' and is therefore intrackable even for modest number of classes, a heuristic approach is proposed.
+#' It is assumed that there are n classes of maximum N elements. 
+#' Additional requirement is that classes identifiers are from range [1, n]
 #' 
-#' @param group proposed clustering
-#' @param true_group true clustering
-#' @param N maximal assumed number of elements in cluster
-#' @param n number of clusters
+#' @param group a vector, first partiton
+#' @param true_group a vector, second (reference) partition
+#' @param N an integer, maximal number of elements in one class
+#' @param n an integer, number of classes
 #' @export
-#' @return mis misclassification rate
+#' @return misclassification rate
+#' @examples
+#' partition1 <- sample(10, 300, replace=T)
+#' partition2 <- sample(10, 300, replace=T)
+#' missclassify.heuristic2(partition1, partition1, max(table(partition1)), 10)
+#' missclassify.heuristic2(partition1, partition2, max(table(partition2)), 10)
 missclassify.heuristic2 <-function(group, true_group, N, n){
   forbidden = NULL;
   suma = 0;
