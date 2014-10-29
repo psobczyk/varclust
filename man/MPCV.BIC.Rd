@@ -4,14 +4,14 @@
 \title{Subspace clustering with automatic estimation of number of clusters
 and their dimension.}
 \usage{
-MPCV.BIC(X, numb.Clusters = 1:10, numb.runs = 20, stop.criterion = 1,
-  max.iter = 20, max.dim = 1, scale = T, numbCores = 1, greedy = TRUE,
-  estimateDimensions = T)
+MPCV.BIC(X, numb.clusters = 1:10, numb.runs = 20, stop.criterion = 1,
+  max.iter = 20, max.dim = 4, scale = T, numb.cores = NULL,
+  greedy = TRUE, estimate.dimensions = T)
 }
 \arguments{
 \item{X}{a data frame or a matrix with only continuous variables}
 
-\item{numb.Clusters}{a vector, numbers of clusters to be checked}
+\item{numb.clusters}{a vector, numbers of clusters to be checked}
 
 \item{numb.runs}{an integer, number of runs of MLCC}
 
@@ -23,18 +23,19 @@ MPCV.BIC(X, numb.Clusters = 1:10, numb.runs = 20, stop.criterion = 1,
 
 \item{scale}{a boolean, if TRUE (value set by default) then data are scaled to unit variance}
 
-\item{numbCores}{an integer, number of cores to be used, by default all cores are used}
+\item{numb.cores}{an integer, number of cores to be used, by default all cores are used}
 
 \item{greedy}{a boolean, if TRUE (value set by default) the clusters are estimated in a greedy way}
 
-\item{estimateDimensions}{a boolean, if TRUE (value set by default) subspaces dimensions are estimated}
+\item{estimate.dimensions}{a boolean, if TRUE (value set by default) subspaces dimensions are estimated}
 }
 \value{
 An object of class mlcc.fit consisting of
 \item{segmentation}{a vector containing the partition of the variables}
-\item{BIC}{double, value of \code{\link{myBIC}} criterion}
+\item{BIC}{double, value of \code{\link{cluster.BIC}} criterion}
 \item{subspacesDimensions}{a list containing dimensions of the subspaces}
 \item{nClusters}{an integer, estimated number of clusters}
+\item{all.fit}{a list, segmentation, BIC, subspaces dimension for all numbers of clusters considered}
 }
 \description{
 Estimate the number of clusters according to the BIC. Basic k-means based
@@ -44,6 +45,6 @@ specified number of times (numb.runs) for each number of clusters in numb.Cluste
 \examples{
 \donttest{
 data <- dataSIMULATION(n=100, SNR=1, K=5, numbVars=30, max.dim=2)
-MPCV.BIC(data$X, numb.Clusters=1:10, numb.runs=20)}
+MPCV.BIC(data$X, numb.clusters=1:10, numb.runs=20)}
 }
 
