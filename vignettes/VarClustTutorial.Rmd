@@ -1,33 +1,52 @@
-<!--
-%\VignetteEngine{knitr}
-%\VignetteIndexEntry{VarClust tutorial}
--->
 
 ---
 title: "VarClust package tutorial"
 author: "Piotr Sobczyk"
 date: "`r Sys.Date()`"
-output: html_document
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{VarClust tutorial}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
 ---
 
 VarClust is a package that enables dimension
-reduction via variables clustering.
-This tutorial will enable you to use package VarClust and
-familiarize with it's options.
+reduction via variables clustering. Classical methods for
+dimensionality reduction are based on removing variables that
+are redundant. Here we assume that for certain group of variables 
+one can define few latent variables that describe our data.
 
-You can install VarClust from either CRAN or github.
+This tutorial will gently introduce you to usage of package **VarClust** and
+familiarize with its options.
+
+You can install VarClust from either CRAN (stable version) or github (the current development version).
 
 ```{r, results='hide'}
-library(VarClust)
+library(VarClustPoprawka)
 library(mclust)
 ```
 
-We're going to use FactoMineR package data.
-
+First let us consider some real genomic data. We're going to use FactoMineR package data.
+This data consists of two types of variables. First group are gene expression data.
+The second is RNA data.
+Please note that, because k-means algorithm is run 300 times, it takes few minutes to compute the following code:
 ```{r}
-## comp <- read.table("http://factominer.free.fr/docs/gene.csv",sep=";",header=T,row.names=1) 
-## benchamrkClustering <- c(rep(1, 68), rep(2, 356))    
-## comp <- data.frame(comp[,-ncol(comp)])    
-## mlcc.fit <- MPCV.BIC(comp, numb.Clusters = 1:3, numb.runs = 100, max.dim = 2, numbCores=4, greedy=F, estimateDimensions=F)
+comp <- read.table("http://factominer.free.fr/docs/gene.csv",sep=";",header=T,row.names=1) 
+benchmarkClustering <- c(rep(1, 68), rep(2, 356))    
+comp <- data.frame(comp[,-ncol(comp)])    
+mlcc.fit <- MPCV.BIC(comp, numb.Clusters = 1:3, numb.runs = 20, max.dim = 3, greedy=F, estimateDimensions=T)
+summary(mlcc.fit)
+mclust::adjustedRandIndex(mlcc.fit$segmentation, benchmarkClustering)
+```
 
+If you know what is the true number of clusters you might use MPCV.reps function instead.
+```{r}
+mlcc.fit2 <- MPCV.reps(comp, numb.Clusters = 2, numb.runs = 20, max.dim = 4)
+mclust::adjustedRandIndex(mlcc.fit2$segmentation, benchmarkClustering)
+```
+You should also use MPCV.reps function if you have some apriori knowledge regarding true segmentation.
+You can enforce starting point
+```{r}
+mlcc.fit3 <- MPCV.reps(comp, numb.Clusters = 2, numb.runs = 0, max.dim = 2, initial.segmentations=list(benchmarkClustering))
+mclust::adjustedRandIndex(mlcc.fit3$segmentation, benchmarkClustering)
 ```
