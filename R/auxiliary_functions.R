@@ -170,6 +170,7 @@ misclassification <-function(group, true_group, M, K){
 #' Plot mlcc.fit class object
 #' 
 #' @param x mlcc.fit class object
+#' @param ... Further arguments to be passed to or from other methods. They are ignored in this function.
 #' @export
 #' @keywords internal
 plot.mlcc.fit <- function(x,...){
@@ -177,4 +178,17 @@ plot.mlcc.fit <- function(x,...){
   BICVals <- lapply(x$all.fit, function(y) y$BIC)
   plot.default(clusterNumbs, BICVals, type="b", xaxt="n", ylab="BIC", xlab="Number of clusters")
   axis(side = 1, labels = clusterNumbs, at=clusterNumbs)
+}
+
+#' Print mlcc.fit class object
+#' 
+#' @param x mlcc.fit class object
+#' @param ... Further arguments to be passed to or from other methods. They are ignored in this function.
+#' @export
+#' @keywords internal
+print.mlcc.fit <- function(x,...){
+  cat("$nClusters: ", x$nClusters, "\n")
+  cat("$segmentation:\n", x$segmentation, "\n")
+  cat("$BIC: ", x$BIC, "\n")
+  cat("$subspacesDimensions:\n", unlist(x$subspacesDimensions), "\n")
 }
