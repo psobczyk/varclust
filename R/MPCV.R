@@ -1,4 +1,4 @@
-#' Multiple Latent Components Clustering
+#' Multiple Latent Components Clustering - kmeans algorithm
 #'
 #' Performs k-means based subspace clustering. Center of each cluster is some number 
 #' of principal components. Similarity measure is R^2 coefficient.
@@ -13,7 +13,7 @@
 #' @return A list consisting of:
 #' \item{segmentation}{a vector containing the partition of the variables}
 #' \item{pcas}{a list of matrices, basis vectors for each cluster (subspace)}
-MPCV <- function(X, numberClusters=2, stop.criterion=1, max.iter=40, maxSubspaceDim=4, initial.segmentation=NULL){
+mlcc.kmeans <- function(X, numberClusters=2, stop.criterion=1, max.iter=40, maxSubspaceDim=4, initial.segmentation=NULL){
   numbVars = dim(X)[2]
   rowNumb = dim(X)[1]
   pcas <- list(NULL)

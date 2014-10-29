@@ -1,14 +1,19 @@
 #' Subspace clustering assuming that the number of clusters is known
 #'
-#' For a fixed number of cluster and fixed number of components per cluster, 
-#' select the best partition according to the BIC.
+#' For a fixed number of cluster and fixed number of components per cluster
+#' function returns the best partition and basis for each subspace.
+#' 
+#' In more detail, an algorithm \code{\link{mlcc.kmeans}} 
+#' is run a \emph{numb.runs} of times with random initializations. 
+#' The best partition is selected according to the BIC.
+#' 
 #'
 #' @param X a data frame or a matrix with only continuous variables
 #' @param numb.clusters an integer, number of cluster
-#' @param numb.runs an integer, number of runs of \code{\link{MPCV} algorithm} with random initialization
-#' @param stop.criterion an integer, indicating how many changes in partitions triggers stopping the MLCC algorithm
-#' @param max.iter an integer, maximum number of iterations of MLCC algorithm
-#' @param initial.segmentations a list of vectors, segmentations that user wants to be used as an initial segmentation in MLCC algorithm
+#' @param numb.runs an integer, number of runs of \code{\link{mlcc.kmeans} algorithm} with random initialization
+#' @param stop.criterion an integer, indicating how many changes in partitions triggers stopping the \code{\link{mlcc.kmeans} algorithm}
+#' @param max.iter an integer, maximum number of iterations of \code{\link{mlcc.kmeans} algorithm}
+#' @param initial.segmentations a list of vectors, segmentations that user wants to be used as an initial segmentation in \code{\link{mlcc.kmeans} algorithm}
 #' @param max.dim an integer, maximum dimension of subspaces to be considered
 #' @param scale a boolean, if TRUE (value set by default) then data are scaled to unit variance
 #' @param numb.cores an integer, number of cores to be used, by default all cores are used
@@ -19,8 +24,8 @@
 #' @examples
 #' \donttest{
 #' data <- dataSIMULATION(n=100, SNR=1, K=5, numbVars=30, max.dim=2)
-#' MPCV.reps(data$X, numb.clusters=5, numb.runs=20)}
-MPCV.reps <- function(X, numb.clusters=2, numb.runs=20, stop.criterion=1, max.iter=20, initial.segmentations=NULL,
+#' mlcc.reps(data$X, numb.clusters=5, numb.runs=20)}
+mlcc.reps <- function(X, numb.clusters=2, numb.runs=20, stop.criterion=1, max.iter=20, initial.segmentations=NULL,
                       max.dim=2, scale=T, numb.cores=NULL){
   if (is.data.frame(X)) {
     warnings("X is not a matrix. Casting to matrix.")
@@ -52,14 +57,14 @@ MPCV.reps <- function(X, numb.clusters=2, numb.runs=20, stop.criterion=1, max.it
   BICs <- NULL 
   segmentations <- NULL
   segmentations <- foreach(i=(1:numb.runs)) %dopar% {
-    MPCV.res <- MPCV(X=X, numberClusters=numb.clusters, maxSubspaceDim=max.dim, max.iter=max.iter)
+    MPCV.res <- mlcc.kmeans(X=X, numberClusters=numb.clusters, maxSubspaceDim=max.dim, max.iter=max.iter)
     current.segmentation <- MPCV.res$segmentation
     current.pcas <- MPCV.res$pcas
     list(current.segmentation, cluster.BIC(X, current.segmentation, max.dim, numb.clusters))
   }
   i <- NULL
   segmentations2 <- foreach(i=(1:length(initial.segmentations))) %dopar% { #running user specified clusters
-    MPCV.res <- MPCV(X=X, numberClusters=numb.clusters, maxSubspaceDim=max.dim, max.iter=max.iter, initial.segmentation=initial.segmentations[[i]])
+    MPCV.res <- mlcc.kmeans(X=X, numberClusters=numb.clusters, maxSubspaceDim=max.dim, max.iter=max.iter, initial.segmentation=initial.segmentations[[i]])
     current.segmentation <- MPCV.res$segmentation
     current.pcas <- MPCV.res$pcas
     list(current.segmentation, cluster.BIC(X, current.segmentation, max.dim, numb.clusters))

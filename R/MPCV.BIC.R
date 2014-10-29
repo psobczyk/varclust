@@ -2,14 +2,15 @@
 #' and their dimension.
 #'
 #' Estimate the number of clusters according to the BIC. Basic k-means based 
-#' Multiple Latent Components Clustering (MLCC) algorithm is run a 
-#' specified number of times (numb.runs) for each number of clusters in numb.Clusters
+#' Multiple Latent Components Clustering (MLCC) algorithm (\code{\link{mlcc.kmeans}}) is run a 
+#' given number of times (\emph{numb.runs}) for each number of clusters in numb.Clusters.
+#' The best partition is choosen with BIC (see \code{\link{mlcc.reps} function})
 #'
 #' @param X a data frame or a matrix with only continuous variables
 #' @param numb.clusters a vector, numbers of clusters to be checked
-#' @param numb.runs an integer, number of runs of MLCC
-#' @param stop.criterion an integer, indicating how many changes in partitions triggers stopping the MLCC algorithm
-#' @param max.iter an integer, maximum number of iterations of MLCC algorithm
+#' @param numb.runs an integer, number of runs of \code{\link{mlcc.kmeans}}
+#' @param stop.criterion an integer, indicating how many changes in partitions triggers stopping the \code{\link{mlcc.kmeans} algorithm}
+#' @param max.iter an integer, maximum number of iterations of \code{\link{mlcc.kmeans} algorithm}
 #' @param max.dim an integer, maximum dimension of subspaces to be considered
 #' @param scale a boolean, if TRUE (value set by default) then data are scaled to unit variance
 #' @param numb.cores an integer, number of cores to be used, by default all cores are used
@@ -25,8 +26,8 @@
 #' @examples
 #' \donttest{
 #' data <- dataSIMULATION(n=100, SNR=1, K=5, numbVars=30, max.dim=2)
-#' MPCV.BIC(data$X, numb.clusters=1:10, numb.runs=20)}
-MPCV.BIC <- function(X, numb.clusters=1:10, numb.runs=20, stop.criterion=1, max.iter=20, max.dim=4, 
+#' mlcc.bic(data$X, numb.clusters=1:10, numb.runs=20)}
+mlcc.bic <- function(X, numb.clusters=1:10, numb.runs=20, stop.criterion=1, max.iter=20, max.dim=4, 
                     scale=T, numb.cores=NULL, greedy=TRUE, estimate.dimensions=T){
   if (is.data.frame(X)) {
     warnings("X is not a matrix. Casting to matrix.")
@@ -53,7 +54,7 @@ MPCV.BIC <- function(X, numb.clusters=1:10, numb.runs=20, stop.criterion=1, max.
   cat(paste("Number of clusters \t BIC \n"))
   for(i in 1:length(numb.clusters)){
     number.clusters <- numb.clusters[i]                                                                                                 
-    MPCV.fit <- MPCV.reps(X=X, numb.clusters=number.clusters, numb.runs=numb.runs, max.dim=max.dim, scale=F, numb.cores=numb.cores)
+    MPCV.fit <- mlcc.reps(X=X, numb.clusters=number.clusters, numb.runs=numb.runs, max.dim=max.dim, scale=F, numb.cores=numb.cores)
     BIC.sum <- 0
     if(estimate.dimensions){
       sigma <- NULL
@@ -75,14 +76,14 @@ MPCV.BIC <- function(X, numb.clusters=1:10, numb.runs=20, stop.criterion=1, max.
       results[[i]] <- list(segmentation=MPCV.fit$segmentation, BIC=MPCV.fit$BIC, subspacesDimensions=NULL, nClusters=number.clusters)
     }
     if(greedy & (i>2)){ 
-      if( (results[[i]]$BIC < results[[i-2]]$BIC) & 
-          (results[[i-1]]$BIC < results[[i-2]]$BIC)){
+      if ( (results[[i]]$BIC < results[[i-2]]$BIC) & 
+           (results[[i-1]]$BIC < results[[i-2]]$BIC) ){
         greedy.stop <- i
-        cat(paste("\t \t \t", number.clusters, "\t \t \t \t", formatC(results[[i]]$BIC, digits=ceiling(log(abs(results[[i]]$BIC),10))), "\n"))
+        cat(paste("         ", number.clusters, "           ", formatC(results[[i]]$BIC, digits=ceiling(log(abs(results[[i]]$BIC),10))), "\n"))
         break
       }
     }
-    cat(paste("\t \t \t", number.clusters, "\t \t \t \t", formatC(results[[i]]$BIC, digits=ceiling(log(abs(results[[i]]$BIC),10))), "\n"))
+    cat(paste("          ", number.clusters, "            ", formatC(results[[i]]$BIC, digits=ceiling(log(abs(results[[i]]$BIC),10))), "\n"))
   }
   BICs <- lapply(results, function(res) res$BIC)
   plot(numb.clusters[1:greedy.stop], BICs, type="b", xaxt="n", ylab="BIC", xlab="Number of clusters")
