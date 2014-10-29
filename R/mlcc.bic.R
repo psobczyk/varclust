@@ -16,6 +16,8 @@
 #' @param numb.cores an integer, number of cores to be used, by default all cores are used
 #' @param greedy a boolean, if TRUE (value set by default) the clusters are estimated in a greedy way
 #' @param estimate.dimensions a boolean, if TRUE (value set by default) subspaces dimensions are estimated
+#' @param graphical.output a boolean, if TRUE (value set by default) plot with BIC values for different
+#'        numbers of clusters is produced
 #' @export
 #' @return An object of class mlcc.fit consisting of
 #' \item{segmentation}{a vector containing the partition of the variables}
@@ -29,7 +31,7 @@
 #' mlcc.bic(data$X, numb.clusters=1:10, numb.runs=20)
 #' }
 mlcc.bic <- function(X, numb.clusters=1:10, numb.runs=20, stop.criterion=1, max.iter=20, max.dim=4, 
-                    scale=T, numb.cores=NULL, greedy=TRUE, estimate.dimensions=T){
+                    scale=TRUE, numb.cores=NULL, greedy=TRUE, estimate.dimensions=TRUE, graphical.output=TRUE){
   if (is.data.frame(X)) {
     warnings("X is not a matrix. Casting to matrix.")
     X = as.matrix(X)
@@ -80,16 +82,18 @@ mlcc.bic <- function(X, numb.clusters=1:10, numb.runs=20, stop.criterion=1, max.
       if ( (results[[i]]$BIC < results[[i-2]]$BIC) & 
            (results[[i-1]]$BIC < results[[i-2]]$BIC) ){
         greedy.stop <- i
-        cat(paste("         ", number.clusters, "           ", formatC(results[[i]]$BIC, digits=ceiling(log(abs(results[[i]]$BIC),10))), "\n"))
+        cat(paste("        ", number.clusters, "        ", formatC(results[[i]]$BIC, digits=ceiling(log(abs(results[[i]]$BIC),10))), "\n"))
         break
       }
     }
-    cat(paste("          ", number.clusters, "            ", formatC(results[[i]]$BIC, digits=ceiling(log(abs(results[[i]]$BIC),10))), "\n"))
+    cat(paste("        ", number.clusters, "        ", formatC(results[[i]]$BIC, digits=ceiling(log(abs(results[[i]]$BIC),10))), "\n"))
   }
   BICs <- lapply(results, function(res) res$BIC)
-  plot(numb.clusters[1:greedy.stop], BICs, type="b", xaxt="n", ylab="BIC", xlab="Number of clusters")
-  axis(side = 1, labels = numb.clusters[1:greedy.stop], at=numb.clusters[1:greedy.stop])
-  
+  if (graphical.output) {
+    plot(numb.clusters[1:greedy.stop], BICs, type="b", xaxt="n", ylab="BIC", xlab="Number of clusters")
+    axis(side = 1, labels = numb.clusters[1:greedy.stop], at=numb.clusters[1:greedy.stop])
+  }
+
   result <- results[[which.max(BICs)]]
   result$all.fit <- results
   class(result) <- "mlcc.fit"
