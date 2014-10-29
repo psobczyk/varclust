@@ -3,10 +3,11 @@
 \name{VarClust}
 \alias{VarClust}
 \alias{VarClust-package}
-\title{Variable Clustering}
+\title{Variable Clustering with Multiple Latent Components Clustering algorithm}
 \description{
-Variable Clustering based on k-means algorithm. In each step cluster center is a number of PCA components
-of points in that cluster. Than distance is defined as R^2 in least-squares.
+Variable Clustering with Multiple Latent Components Clustering is based on k-means algorithm.
+In each step cluster centers are few PCA components, computed for variables in that cluster.
+Than distance is defined by R^2 (obtained by performing least-squares).
 }
 \details{
 The main function of package \pkg{VarClust} is
@@ -19,21 +20,20 @@ which takes number of clusters as a parameter. For \code{\link{MPCV.reps}} one m
 specify as well some initial segmentation for k-means algorithm. This can be useful if
 user has some apriori knowledge about clustering.
 
-We also provide function \code{\link{missclassify.heuristic2}} that computes missclasification
+We also provide function \code{\link{missclassification}} that computes missclasification
 rate between two partitions in which might have different labelings. This performance measure is
 extensively used in application to computer vision.
 
-Version: 0.9.7
+Version: 0.9.8
 }
 \examples{
 \donttest{
 data <- dataSIMULATION(n=100, SNR=1, K=5, numbVars=30, max.dim=2)
-MPCV.reps(data$X, numb.Clusters=5, numb.runs=20)}
+MPCV.reps(data$X, numb.clusters=5, numb.runs=20)}
 }
 \author{
 Piotr Sobczyk,
-        Julie Josse,
-        Malgorzata Bogdan
+        Julie Josse
 
 Maintainer: Piotr Sobczyk \email{Piotr.Sobczyk@pwr.edu.pl}
 }
