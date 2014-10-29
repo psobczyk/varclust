@@ -3,8 +3,8 @@
 \alias{dataSIMULATION}
 \title{Simulating subspace clustering data}
 \usage{
-dataSIMULATION(n = 100, SNR = 1, K = 10, numbVars = 30, max.dim = 2,
-  equalDims = T)
+dataSIMULATION(n = 100, SNR = 1, K = 10, numb.vars = 30, max.dim = 2,
+  equal.dims = T)
 }
 \arguments{
 \item{n}{an integer, number of individuals}
@@ -13,11 +13,11 @@ dataSIMULATION(n = 100, SNR = 1, K = 10, numbVars = 30, max.dim = 2,
 
 \item{K}{an integer, number of subspaces}
 
-\item{numbVars}{an integer, number of variables in each subspace}
+\item{numb.vars}{an integer, number of variables in each subspace}
 
 \item{max.dim}{an integer, maximum dimension of subspace}
 
-\item{equalDims}{a boolean, if TRUE (value set by default) all clusters are of the same dimension}
+\item{equal.dims}{a boolean, if TRUE (value set by default) all clusters are of the same dimension}
 }
 \value{
 A list consisting of:
@@ -28,5 +28,9 @@ A list consisting of:
 }
 \description{
 Generating random data for subspace clustering simulation
+}
+\examples{
+data <- dataSIMULATION()
+data2 <- dataSIMULATION(n=30, SNR=2, K=5, numb.vars=20, max.dim=3, equal.dims=FALSE)
 }
 
