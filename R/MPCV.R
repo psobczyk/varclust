@@ -1,19 +1,19 @@
-#' Subspace clustering based on multiple principal components
+#' Multiple Latent Components Clustering
 #'
-#' Performs subspace clustering
+#' Performs k-means based subspace clustering. Center of each cluster is some number 
+#' of principal components. Similarity measure is R^2 coefficient.
 #'
-#' @param X data
-#' @param numberClusters number of clusters to be used
-#' @param stop.criterion how many changes in partitions triggers stopping the algorithm
-#' @param max.iter maximum number of k-means iterations
-#' @param maxSubspaceDim maximum dimension of subspaces
-#' @param initial.segmentation initial segmentation of variable to clusters
-#' @export
-#' @return a list consisting of
-#' \item{segmentation}{of points to clusters}
-#' \item{pcas}{basis of each cluster}
+#' @param X a matrix with only continuous variables
+#' @param numberClusters an integer, number of clusters to be used
+#' @param stop.criterion an integer indicating how many changes in partitions triggers stopping the algorithm
+#' @param max.iter an integer, maximum number of iterations of k-means
+#' @param maxSubspaceDim an integer, maximum dimension of subspaces
+#' @param initial.segmentation a vector, initial segmentation of variables to clusters
+#' @keywords internal
+#' @return A list consisting of:
+#' \item{segmentation}{a vector containing the partition of the variables}
+#' \item{pcas}{a list of matrices, basis vectors for each cluster (subspace)}
 MPCV <- function(X, numberClusters=2, stop.criterion=1, max.iter=40, maxSubspaceDim=4, initial.segmentation=NULL){
-  X = scale(X)
   numbVars = dim(X)[2]
   rowNumb = dim(X)[1]
   pcas <- list(NULL)
@@ -27,28 +27,15 @@ MPCV <- function(X, numberClusters=2, stop.criterion=1, max.iter=40, maxSubspace
     segmentation=initial.segmentation
   
   new.segmentation <- segmentation
-  
   for (iter in 1:max.iter){
     pcas <- lapply(1:numberClusters, function(i){
-      if(is.matrix(X[,segmentation==i]) && (dim(X[,segmentation==i])[2]>=maxSubspaceDim)){
+      if(dim(X[,segmentation==i, drop=F])[2]>=maxSubspaceDim){
         a <- summary(prcomp(x=X[,segmentation==i]))
         cut <- maxSubspaceDim
         return(matrix(a$x[,1:cut], nrow=rowNumb))
       }
       else{
-        m <- as.numeric(names(sort(table(new.segmentation),decreasing=T)))[1] #most populous cluster
-        try({
-          podzial <- kmeansvar(X[,new.segmentation==m],init=2)$cluster
-          new.segmentation[which(new.segmentation==m)[podzial==2]] = i
-          segmentation[which(new.segmentation==m)[podzial==2]] = i
-        })
-        if(length(X[,segmentation==i])<maxSubspaceDim*rowNumb)
           return(matrix(rnorm(rowNumb*maxSubspaceDim), nrow=rowNumb))
-        else{
-          a <- summary(prcomp(x=X[,segmentation==i]))
-          cut <- maxSubspaceDim
-          return(matrix(a$x[,1:cut], nrow=rowNumb))
-        } 
       }
     })
     new.segmentation <- sapply(1:numbVars, function(j) choose.cluster(X[,j],pcas, numberClusters))
