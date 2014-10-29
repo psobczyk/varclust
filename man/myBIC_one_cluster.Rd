@@ -18,6 +18,7 @@ myBIC_one_cluster(X, max.dim, numb.clusters, sigma = NULL)
 BIC value of BIC criterion
 }
 \description{
-Computes the value of BIC criterion
+Computes the value of BIC criterion for one cluster.
 }
+\keyword{internal}
 
