@@ -26,7 +26,7 @@
 #' data <- data.simulation(n=100, SNR=1, K=5, numb.vars=30, max.dim=2)
 #' mlcc.reps(data$X, numb.clusters=5, numb.runs=20)}
 mlcc.reps <- function(X, numb.clusters=2, numb.runs=20, stop.criterion=1, max.iter=20, initial.segmentations=NULL,
-                      max.dim=2, scale=T, numb.cores=NULL){
+                      max.dim=2, scale=TRUE, numb.cores=NULL){
   if (is.data.frame(X)) {
     warnings("X is not a matrix. Casting to matrix.")
     X = as.matrix(X)
