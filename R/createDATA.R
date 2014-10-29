@@ -2,35 +2,36 @@
 #' 
 #' Generating random data for subspace clustering simulation
 #' 
-#' @param n number of observations
-#' @param SNR signal to noise ratio
-#' @param K number of subspaces
-#' @param numbPoints number of variables in each subspace
-#' @param max.dim maximum dimension of subspace
+#' @param n an integer, number of individuals
+#' @param SNR a double, signal to noise ratio measured as variance of variable to variance of noise
+#' @param K an integer, number of subspaces
+#' @param numbVars an integer, number of variables in each subspace
+#' @param max.dim an integer, maximum dimension of subspace
+#' @param equalDims a boolean, if TRUE (value set by default) all clusters are of the same dimension
 #' @export
-#' @return a list consisting of
-#' \item{X}{generated data}
-#' \item{signals}{data without noise}
-#' \item{dims}{dimensions of subspaces}
-#' \item{s}{true clustering}
-dataSIMULATION <- function(n = 100, SNR, K = 20, numbPoints = 50, max.dim = 1){
+#' @return A list consisting of:
+#' \item{X}{matrix, generated data}
+#' \item{signals}{matrix, data without noise}
+#' \item{dims}{vector, dimensions of subspaces}
+#' \item{s}{vector, true partiton of variables}
+dataSIMULATION <- function(n = 100, SNR=1, K = 10, numbVars = 30, max.dim = 2, equalDims=T){
   #draw dimensions of subspaces
-  #sigma = 1/(SNR*sqrt(n*K*numbPoints))
   sigma = 1/SNR
-  dims = rep(max.dim, K) #sample(1:max.dim, K, replace=T) 
+  if(equalDims)
+    dims = rep(max_dim,K)
+  else
+    dims = sample(1:max_dim, K, replace=T)   
   
   X = NULL
   Y = NULL
   s = NULL
   for (j in 1:K){
-    SIGNAL <- replicate(numbPoints, rnorm(n, 0, 1))
-    SIGNAL <- scale(SIGNAL, scale = FALSE)
-    svdSIGNAL <- svd(SIGNAL)  
-    SIGNAL <- matrix(svdSIGNAL$u[, 1:dims[j]], ncol=dims[j]) %*% diag(svdSIGNAL$d[1:dims[j]], nrow=dims[j]) %*% 
-      t(matrix(svdSIGNAL$v[, 1:dims[j]], ncol=dims[j])) / sqrt(sum(svdSIGNAL$d[1:dims[j]]^2))
+    Z <- qr.Q(qr(matrix(mvrnorm(dims[j],rep(0,n),diag(rep(1,n))), ncol=dims[j])))
+    coeff <- matrix(runif(dims[j]*numbPoints, 0.1, 1) * sign(runif(dims[j]*numbPoints, -1, 1)), nrow=dims[j])
+    SIGNAL <- Z %*% coeff
     SIGNAL <- scale(SIGNAL)
-    X = cbind(X, SIGNAL + sigma*replicate(numbPoints, rnorm(n, 0, 1)))
-    Y = cbind(Y, SIGNAL)
+    Y = cbind(Y,SIGNAL)
+    X = cbind(X, SIGNAL + replicate(numbPoints, rnorm(n, 0, sigma)))
     s = c(s, rep(j, numbPoints))
   }
   return(list(X = X,

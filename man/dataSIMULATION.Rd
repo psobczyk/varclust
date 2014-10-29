@@ -3,25 +3,28 @@
 \alias{dataSIMULATION}
 \title{Simulating subspace clustering data}
 \usage{
-dataSIMULATION(n = 100, SNR, K = 20, numbPoints = 50, max.dim = 1)
+dataSIMULATION(n = 100, SNR = 1, K = 10, numbVars = 30, max.dim = 2,
+  equalDims = T)
 }
 \arguments{
-\item{n}{number of observations}
+\item{n}{an integer, number of individuals}
 
-\item{SNR}{signal to noise ratio}
+\item{SNR}{a double, signal to noise ratio measured as variance of variable to variance of noise}
 
-\item{K}{number of subspaces}
+\item{K}{an integer, number of subspaces}
 
-\item{numbPoints}{number of variables in each subspace}
+\item{numbVars}{an integer, number of variables in each subspace}
 
-\item{max.dim}{maximum dimension of subspace}
+\item{max.dim}{an integer, maximum dimension of subspace}
+
+\item{equalDims}{a boolean, if TRUE (value set by default) all clusters are of the same dimension}
 }
 \value{
-a list consisting of
-\item{X}{generated data}
-\item{signals}{data without noise}
-\item{dims}{dimensions of subspaces}
-\item{s}{true clustering}
+A list consisting of:
+\item{X}{matrix, generated data}
+\item{signals}{matrix, data without noise}
+\item{dims}{vector, dimensions of subspaces}
+\item{s}{vector, true partiton of variables}
 }
 \description{
 Generating random data for subspace clustering simulation
