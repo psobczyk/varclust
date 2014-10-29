@@ -1,75 +1,71 @@
-#' Subspace clustering based on multiple principal components
+#' Subspace clustering assuming that the number of clusters is known
 #'
-#' Performs MPCC multiple times and chooses the best run based on residual variance
+#' For a fixed number of cluster and fixed number of components per cluster, 
+#' select the best partition according to the BIC.
 #'
-#' @param X data
-#' @param numb.Clusters number of clusters to be used
-#' @param numb.runs number of runs of MLCC
-#' @param stop.criterion how many changes in partitions triggers stopping the algorithm
-#' @param max.iter maxium number of iteratations
-#' @param initial.segmentation initial segmentation of variable to clusters
-#' @param max.dim maximum considered dimension of subspaces
-#' @param method method to be used to determine best run. Possible values are "likelihood", "singular", "residual"
-#' @param scale Should data be scaled?
-#' @param numbCores Number of cores to be used
+#' @param X a data frame or a matrix with only continuous variables
+#' @param numb.Clusters an integer, number of cluster
+#' @param numb.runs an integer, number of runs of \code{\link{MPCV} algorithm} with random initialization
+#' @param stop.criterion an integer, indicating how many changes in partitions triggers stopping the MLCC algorithm
+#' @param max.iter an integer, maximum number of iterations of MLCC algorithm
+#' @param initial.segmentations a list of vectors, segmentations that user wants to be used as an initial segmentation in MLCC algorithm
+#' @param max.dim an integer, maximum dimension of subspaces to be considered
+#' @param scale a boolean, if TRUE (value set by default) then data are scaled to unit variance
+#' @param numbCores an integer, number of cores to be used, by default all cores are used
 #' @export
-#' @return a list consisting of
-#' \item{segmentation}{of points to clusters}
-#' \item{BIC}{Value of \code{\link{myBIC}} criterion}
-MPCV.reps <- function(X, numb.Clusters=2, numb.runs=20, stop.criterion=1, max.iter=20, initial.segmentation=NULL,
-                      max.dim=1, method=c("likelihood", "singular", "residual"), scale=T, numbCores=1){
-  registerDoMC(numbCores)
-  
-  method <- match.arg(method)
-  if(scale){
-    dane = scale(X)
+#' @return A list consisting of
+#' \item{segmentation}{a vector containing the partition of the variables}
+#' \item{BIC}{double, value of \code{\link{myBIC}} criterion}
+#' @examples
+#' \donttest{
+#' data <- dataSIMULATION(n=100, SNR=1, K=5, numbVars=30, max.dim=2)
+#' MPCV.reps(data$X, numb.Clusters=5, numb.runs=20)}
+MPCV.reps <- function(X, numb.Clusters=2, numb.runs=20, stop.criterion=1, max.iter=20, initial.segmentations=NULL,
+                      max.dim=2, scale=T, numbCores=NULL){
+  if (is.data.frame(X)) {
+    warnings("X is not a matrix. Casting to matrix.")
+    X = as.matrix(X)
   }
-  else dane=X
+  if(any(is.na(X))) {
+    warnings("Missing values are imputed by the mean of the variable")
+    X[is.na(X)] = matrix(apply(X, 2, mean, na.rm = TRUE), ncol = ncol(X), nrow = nrow(X), byrow = TRUE)[is.na(X)]
+  }
+  if (any(!sapply(X, is.numeric))) {
+    auxi = NULL
+    for (j in 1:ncol(X)) if (!is.numeric(X[, j])) 
+      auxi = c(auxi, j)
+    stop(paste("\nThe following variables are not quantitative: ", 
+               auxi))
+  }
+  if (is.null(numbCores)) {
+    registerDoMC(max(1,detectCores()-1))
+  }
+  else{
+    registerDoMC(numbCores)
+  }
   
-  #goodness of fit
-  Hs <- NULL
-  Res <- NULL
+  if(scale){
+    X = scale(X)
+  }
+  else X=X
+  
   BICs <- NULL 
-  
   segmentations <- NULL
   segmentations <- foreach(i=(1:numb.runs)) %dopar% {
-    MPCV.res <- MPCV(X=dane, numberClusters=numb.Clusters, maxSubspaceDim=max.dim, max.iter=max.iter, initial.segmentation=initial.segmentation)
+    MPCV.res <- MPCV(X=X, numberClusters=numb.Clusters, maxSubspaceDim=max.dim, max.iter=max.iter)
     current.segmentation <- MPCV.res$segmentation
     current.pcas <- MPCV.res$pcas
-    
-    if(method=="singular"){
-      H <- 0 #explained variance
-      for (j in 1:numb.Clusters){
-        if(is.matrix(dane[,current.segmentation==j]) && dim(dane[,current.segmentation==j])[2]>max.dim){
-          a <- summary(prcomp(dane[,current.segmentation==j]))
-          H <- H + a$importance[3,max.dim]
-        }
-        else{
-          H <- H+1 #all variance in that cluster is explained
-        }
-      }
-      list(current.segmentation, myBIC(dane, current.segmentation, max.dim, numb.Clusters), H)
-    }
-    
-    if(method=="residual"){
-      R <- 0 #residual variance
-      for (j in 1:numb.Clusters){
-        if(is.matrix(dane[,current.segmentation==j]) && dim(dane[,current.segmentation==j])[2]>max.dim){
-          a <- summary(prcomp(dane[,current.segmentation==j]))
-          R <- R + sum(lm(dane[,current.segmentation==j] ~ current.pcas[[j]])$residuals^2)
-        } #otherwise we have a perfect fit
-      }
-      list(current.segmentation, myBIC(dane, current.segmentation, max.dim, numb.Clusters), R)
-    }
-    else{
-      list(current.segmentation, myBIC(dane, current.segmentation, max.dim, numb.Clusters))
-    }
+    list(current.segmentation, myBIC(X, current.segmentation, max.dim, numb.Clusters))
   }
+  i <- NULL
+  segmentations2 <- foreach(i=(1:length(initial.segmentations))) %dopar% { #running user specified clusters
+    MPCV.res <- MPCV(X=X, numberClusters=numb.Clusters, maxSubspaceDim=max.dim, max.iter=max.iter, initial.segmentation=initial.segmentations[[i]])
+    current.segmentation <- MPCV.res$segmentation
+    current.pcas <- MPCV.res$pcas
+    list(current.segmentation, myBIC(X, current.segmentation, max.dim, numb.Clusters))
+  }
+  segmentations <- append(segmentations, segmentations2)
   BICs <- unlist(lapply(segmentations, function(x) x[2]))
-  keep <- segmentations
   segmentations <- lapply(segmentations, function(x) x[[1]])
-  switch(method,
-         singular   = return(list(segmentation = segmentations[[which.max(Hs)]],   BIC = BICs[which.max(unlist(lapply(keep, function(x) x[3])))])),
-         residual   = return(list(segmentation = segmentations[[which.min(Res)]],  BIC = BICs[which.min(unlist(lapply(keep, function(x) x[3])))])),
-         likelihood = return(list(segmentation = segmentations[[which.max(BICs)]], BIC = BICs[which.max(BICs)])))
+  likelihood = return(list(segmentation = segmentations[[which.max(BICs)]], BIC = BICs[which.max(BICs)]))
 }
