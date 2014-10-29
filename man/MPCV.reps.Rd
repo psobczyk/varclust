@@ -3,14 +3,14 @@
 \alias{MPCV.reps}
 \title{Subspace clustering assuming that the number of clusters is known}
 \usage{
-MPCV.reps(X, numb.Clusters = 2, numb.runs = 20, stop.criterion = 1,
+MPCV.reps(X, numb.clusters = 2, numb.runs = 20, stop.criterion = 1,
   max.iter = 20, initial.segmentations = NULL, max.dim = 2, scale = T,
-  numbCores = NULL)
+  numb.cores = NULL)
 }
 \arguments{
 \item{X}{a data frame or a matrix with only continuous variables}
 
-\item{numb.Clusters}{an integer, number of cluster}
+\item{numb.clusters}{an integer, number of cluster}
 
 \item{numb.runs}{an integer, number of runs of \code{\link{MPCV} algorithm} with random initialization}
 
@@ -24,7 +24,7 @@ MPCV.reps(X, numb.Clusters = 2, numb.runs = 20, stop.criterion = 1,
 
 \item{scale}{a boolean, if TRUE (value set by default) then data are scaled to unit variance}
 
-\item{numbCores}{an integer, number of cores to be used, by default all cores are used}
+\item{numb.cores}{an integer, number of cores to be used, by default all cores are used}
 }
 \value{
 A list consisting of
@@ -38,6 +38,6 @@ select the best partition according to the BIC.
 \examples{
 \donttest{
 data <- dataSIMULATION(n=100, SNR=1, K=5, numbVars=30, max.dim=2)
-MPCV.reps(data$X, numb.Clusters=5, numb.runs=20)}
+MPCV.reps(data$X, numb.clusters=5, numb.runs=20)}
 }
 

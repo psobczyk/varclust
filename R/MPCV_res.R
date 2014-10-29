@@ -4,14 +4,14 @@
 #' select the best partition according to the BIC.
 #'
 #' @param X a data frame or a matrix with only continuous variables
-#' @param numb.Clusters an integer, number of cluster
+#' @param numb.clusters an integer, number of cluster
 #' @param numb.runs an integer, number of runs of \code{\link{MPCV} algorithm} with random initialization
 #' @param stop.criterion an integer, indicating how many changes in partitions triggers stopping the MLCC algorithm
 #' @param max.iter an integer, maximum number of iterations of MLCC algorithm
 #' @param initial.segmentations a list of vectors, segmentations that user wants to be used as an initial segmentation in MLCC algorithm
 #' @param max.dim an integer, maximum dimension of subspaces to be considered
 #' @param scale a boolean, if TRUE (value set by default) then data are scaled to unit variance
-#' @param numbCores an integer, number of cores to be used, by default all cores are used
+#' @param numb.cores an integer, number of cores to be used, by default all cores are used
 #' @export
 #' @return A list consisting of
 #' \item{segmentation}{a vector containing the partition of the variables}
@@ -19,9 +19,9 @@
 #' @examples
 #' \donttest{
 #' data <- dataSIMULATION(n=100, SNR=1, K=5, numbVars=30, max.dim=2)
-#' MPCV.reps(data$X, numb.Clusters=5, numb.runs=20)}
-MPCV.reps <- function(X, numb.Clusters=2, numb.runs=20, stop.criterion=1, max.iter=20, initial.segmentations=NULL,
-                      max.dim=2, scale=T, numbCores=NULL){
+#' MPCV.reps(data$X, numb.clusters=5, numb.runs=20)}
+MPCV.reps <- function(X, numb.clusters=2, numb.runs=20, stop.criterion=1, max.iter=20, initial.segmentations=NULL,
+                      max.dim=2, scale=T, numb.cores=NULL){
   if (is.data.frame(X)) {
     warnings("X is not a matrix. Casting to matrix.")
     X = as.matrix(X)
@@ -37,11 +37,11 @@ MPCV.reps <- function(X, numb.Clusters=2, numb.runs=20, stop.criterion=1, max.it
     stop(paste("\nThe following variables are not quantitative: ", 
                auxi))
   }
-  if (is.null(numbCores)) {
+  if (is.null(numb.cores)) {
     registerDoMC(max(1,detectCores()-1))
   }
   else{
-    registerDoMC(numbCores)
+    registerDoMC(numb.cores)
   }
   
   if(scale){
@@ -52,17 +52,17 @@ MPCV.reps <- function(X, numb.Clusters=2, numb.runs=20, stop.criterion=1, max.it
   BICs <- NULL 
   segmentations <- NULL
   segmentations <- foreach(i=(1:numb.runs)) %dopar% {
-    MPCV.res <- MPCV(X=X, numberClusters=numb.Clusters, maxSubspaceDim=max.dim, max.iter=max.iter)
+    MPCV.res <- MPCV(X=X, numberClusters=numb.clusters, maxSubspaceDim=max.dim, max.iter=max.iter)
     current.segmentation <- MPCV.res$segmentation
     current.pcas <- MPCV.res$pcas
-    list(current.segmentation, myBIC(X, current.segmentation, max.dim, numb.Clusters))
+    list(current.segmentation, myBIC(X, current.segmentation, max.dim, numb.clusters))
   }
   i <- NULL
   segmentations2 <- foreach(i=(1:length(initial.segmentations))) %dopar% { #running user specified clusters
-    MPCV.res <- MPCV(X=X, numberClusters=numb.Clusters, maxSubspaceDim=max.dim, max.iter=max.iter, initial.segmentation=initial.segmentations[[i]])
+    MPCV.res <- MPCV(X=X, numberClusters=numb.clusters, maxSubspaceDim=max.dim, max.iter=max.iter, initial.segmentation=initial.segmentations[[i]])
     current.segmentation <- MPCV.res$segmentation
     current.pcas <- MPCV.res$pcas
-    list(current.segmentation, myBIC(X, current.segmentation, max.dim, numb.Clusters))
+    list(current.segmentation, myBIC(X, current.segmentation, max.dim, numb.clusters))
   }
   segmentations <- append(segmentations, segmentations2)
   BICs <- unlist(lapply(segmentations, function(x) x[2]))
