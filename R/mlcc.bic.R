@@ -80,8 +80,8 @@ mlcc.bic <- function(X, numb.clusters=1:10, numb.runs=20, stop.criterion=1, max.
       results[[i]] <- list(segmentation=MPCV.fit$segmentation, BIC=MPCV.fit$BIC, subspacesDimensions=NULL, nClusters=number.clusters)
     }
     if(greedy & (i>2)){ 
-      if ( (results[[i]]$BIC < results[[i-2]]$BIC) & 
-           (results[[i-1]]$BIC < results[[i-2]]$BIC) ){
+      if ( (results[[i]]$BIC < results[[i-1]]$BIC) & 
+           (results[[i-2]]$BIC < results[[i-1]]$BIC) ){
         greedy.stop <- i
         cat(paste("        ", number.clusters, "        ", formatC(results[[i]]$BIC, digits=ceiling(log(abs(results[[i]]$BIC),10))), "\n"))
         break
