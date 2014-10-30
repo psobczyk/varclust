@@ -1,4 +1,3 @@
-
 ---
 title: "VarClust package tutorial"
 author: "Piotr Sobczyk"
@@ -33,20 +32,41 @@ Please note that it may take few minutes to run the following code:
 ```{r}
 comp <- read.table("http://factominer.free.fr/docs/gene.csv",sep=";",header=T,row.names=1) 
 benchmarkClustering <- c(rep(1, 68), rep(2, 356))    
-comp <- data.frame(comp[,-ncol(comp)])    
-mlcc.fit <- mlcc.bic(comp, numb.clusters = 1:3, numb.runs = 20, max.dim = 3, greedy=F, estimate.dimensions=T, numb.cores=1)
-summary(mlcc.fit)
+comp <- data.frame(comp[,-ncol(comp)])   
+set.seed(1)
+mlcc.fit <- mlcc.bic(comp, numb.clusters = 1:15, numb.runs = 10, max.dim = 4, greedy=TRUE, 
+                     estimate.dimensions=TRUE, numb.cores=1, graphical.output=FALSE)
+print(mlcc.fit)
+plot(mlcc.fit)
 mclust::adjustedRandIndex(mlcc.fit$segmentation, benchmarkClustering)
 ```
 
+One might be a little concerned by high number of clusters found and 
+that our benchmark clustering was not recognized, however,
+what we expect to see is the seperation of RNA and expression groups, not the homogenity
+within those groups. If we define different partion based on mlcc.fit we're getting 
+very high Adjusted Rand Index.
+
+```{r}
+part <- NULL
+part[mlcc.fit$segmentation %in% c(7,8)] <- 1
+part[!mlcc.fit$segmentation %in% c(7,8)] <- 2
+mclust::adjustedRandIndex(part, benchmarkClustering)
+misclassification(part, benchmarkClustering, max(table(benchmarkClustering)), 2)
+```
+
 If you know what is the true number of clusters you might use **mlcc.reps** function instead.
+In that case you can also compare segmentations in terms of misclassification.
 ```{r}
 mlcc.fit2 <- mlcc.reps(X=comp, numb.clusters = 2, numb.runs = 20, max.dim = 4, numb.cores=1)
 mclust::adjustedRandIndex(mlcc.fit2$segmentation, benchmarkClustering)
+misclassification(mlcc.fit2$segmentation, benchmarkClustering, max(table(benchmarkClustering)), 2)
 ```
 You should also use **mlcc.reps** function if you have some apriori knowledge regarding true segmentation.
 You can enforce starting point
 ```{r}
 mlcc.fit3 <- mlcc.reps(comp, numb.clusters = 2, numb.runs = 0, max.dim = 2, initial.segmentations=list(benchmarkClustering), numb.cores=1)
 mclust::adjustedRandIndex(mlcc.fit3$segmentation, benchmarkClustering)
+misclassification(mlcc.fit3$segmentation, benchmarkClustering, max(table(benchmarkClustering)), 2)
 ```
+
