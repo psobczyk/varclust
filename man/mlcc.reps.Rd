@@ -14,22 +14,27 @@ mlcc.reps(X, numb.clusters = 2, numb.runs = 20, stop.criterion = 1,
 
 \item{numb.runs}{an integer, number of runs of \code{\link{mlcc.kmeans} algorithm} with random initialization}
 
-\item{stop.criterion}{an integer, indicating how many changes in partitions triggers stopping \code{\link{mlcc.kmeans} algorithm}}
+\item{stop.criterion}{an integer, if an iteration of \code{\link{mlcc.kmeans}} algorithm
+makes less changes in partitions than \code{stop.criterion},
+\code{\link{mlcc.kmeans}} stops.}
 
-\item{max.iter}{an integer, maximum number of iterations of \code{\link{mlcc.kmeans} algorithm}}
+\item{max.iter}{an integer, maximum number of iterations of \code{\link{mlcc.kmeans}} algorithm}
 
-\item{initial.segmentations}{a list of vectors, segmentations that user wants to be used as an initial segmentation in \code{\link{mlcc.kmeans} algorithm}}
+\item{initial.segmentations}{a list of vectors, segmentations that user wants to be
+used as an initial segmentation in \code{\link{mlcc.kmeans}} algorithm}
 
 \item{max.dim}{an integer, dimension of subspaces (all are assumed to be equal)}
 
-\item{scale}{a boolean, if TRUE (value set by default) then variables in dataset are scaled to zero mean and unit variance}
+\item{scale}{a boolean, if TRUE (value set by default) then variables in
+dataset are scaled to zero mean and unit variance}
 
 \item{numb.cores}{an integer, number of cores to be used, by default all cores are used}
 }
 \value{
 A list consisting of
 \item{segmentation}{a vector containing the partition of the variables}
-\item{BIC}{double, value of \code{\link{cluster.BIC}} criterion}
+\item{BIC}{a numeric, value of \code{\link{cluster.BIC}} criterion}
+\item{basis}{a list of matrices, the basis vectors for subspaces}
 }
 \description{
 For a fixed number of cluster and fixed number of components per cluster
@@ -42,7 +47,7 @@ The best partition is selected according to the BIC.
 }
 \examples{
 \donttest{
-data <- data.simulation(n=100, SNR=1, K=5, numb.vars=30, max.dim=2)
-mlcc.reps(data$X, numb.clusters=5, numb.runs=20)}
+data <- data.simulation(n = 100, SNR = 1, K = 5, numb.vars = 30, max.dim = 2)
+mlcc.reps(data$X, numb.clusters = 5, numb.runs = 20)}
 }
 

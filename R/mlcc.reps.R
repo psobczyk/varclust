@@ -11,27 +11,32 @@
 #' @param X a data frame or a matrix with only continuous variables
 #' @param numb.clusters an integer, number of cluster
 #' @param numb.runs an integer, number of runs of \code{\link{mlcc.kmeans} algorithm} with random initialization
-#' @param stop.criterion an integer, indicating how many changes in partitions triggers stopping \code{\link{mlcc.kmeans} algorithm}
-#' @param max.iter an integer, maximum number of iterations of \code{\link{mlcc.kmeans} algorithm}
-#' @param initial.segmentations a list of vectors, segmentations that user wants to be used as an initial segmentation in \code{\link{mlcc.kmeans} algorithm}
+#' @param stop.criterion an integer, if an iteration of \code{\link{mlcc.kmeans}} algorithm 
+#'        makes less changes in partitions than \code{stop.criterion}, 
+#'        \code{\link{mlcc.kmeans}} stops.
+#' @param max.iter an integer, maximum number of iterations of \code{\link{mlcc.kmeans}} algorithm
+#' @param initial.segmentations a list of vectors, segmentations that user wants to be 
+#'        used as an initial segmentation in \code{\link{mlcc.kmeans}} algorithm
 #' @param max.dim an integer, dimension of subspaces (all are assumed to be equal)
-#' @param scale a boolean, if TRUE (value set by default) then variables in dataset are scaled to zero mean and unit variance
+#' @param scale a boolean, if TRUE (value set by default) then variables in 
+#'        dataset are scaled to zero mean and unit variance
 #' @param numb.cores an integer, number of cores to be used, by default all cores are used
 #' @export
 #' @return A list consisting of
 #' \item{segmentation}{a vector containing the partition of the variables}
-#' \item{BIC}{double, value of \code{\link{cluster.BIC}} criterion}
+#' \item{BIC}{a numeric, value of \code{\link{cluster.BIC}} criterion}
+#' \item{basis}{a list of matrices, the basis vectors for subspaces}
 #' @examples
 #' \donttest{
-#' data <- data.simulation(n=100, SNR=1, K=5, numb.vars=30, max.dim=2)
-#' mlcc.reps(data$X, numb.clusters=5, numb.runs=20)}
-mlcc.reps <- function(X, numb.clusters=2, numb.runs=20, stop.criterion=1, max.iter=20, initial.segmentations=NULL,
-                      max.dim=2, scale=TRUE, numb.cores=NULL){
+#' sim.data <- data.simulation(n = 100, SNR = 1, K = 5, numb.vars = 30, max.dim = 2)
+#' mlcc.reps(sim.data$X, numb.clusters = 5, numb.runs = 20)}
+mlcc.reps <- function(X, numb.clusters = 2, numb.runs = 20, stop.criterion = 1, max.iter = 20, 
+                      initial.segmentations = NULL, max.dim = 2, scale = TRUE, numb.cores = NULL){
   if (is.data.frame(X)) {
     warnings("X is not a matrix. Casting to matrix.")
     X = as.matrix(X)
   }
-  if(any(is.na(X))) {
+  if (any(is.na(X))) {
     warnings("Missing values are imputed by the mean of the variable")
     X[is.na(X)] = matrix(apply(X, 2, mean, na.rm = TRUE), ncol = ncol(X), nrow = nrow(X), byrow = TRUE)[is.na(X)]
   }
@@ -50,9 +55,9 @@ mlcc.reps <- function(X, numb.clusters=2, numb.runs=20, stop.criterion=1, max.it
   }
   
   if(scale){
-    X = scale(X)
+    X <- scale(X)
   }
-  else X=X
+  else X <- X
   
   BICs <- NULL 
   segmentations <- NULL
@@ -60,17 +65,26 @@ mlcc.reps <- function(X, numb.clusters=2, numb.runs=20, stop.criterion=1, max.it
     MPCV.res <- mlcc.kmeans(X=X, numberClusters=numb.clusters, maxSubspaceDim=max.dim, max.iter=max.iter)
     current.segmentation <- MPCV.res$segmentation
     current.pcas <- MPCV.res$pcas
-    list(current.segmentation, cluster.BIC(X, current.segmentation, max.dim, numb.clusters))
+    list(current.segmentation, 
+         cluster.BIC(X, current.segmentation, max.dim, numb.clusters), current.pcas)
   }
   i <- NULL
   segmentations2 <- foreach(i=(1:length(initial.segmentations))) %dopar% { #running user specified clusters
-    MPCV.res <- mlcc.kmeans(X=X, numberClusters=numb.clusters, maxSubspaceDim=max.dim, max.iter=max.iter, initial.segmentation=initial.segmentations[[i]])
+    MPCV.res <- mlcc.kmeans(X = X, numberClusters = numb.clusters, maxSubspaceDim = max.dim, 
+                            max.iter = max.iter, initial.segmentation = initial.segmentations[[i]])
     current.segmentation <- MPCV.res$segmentation
     current.pcas <- MPCV.res$pcas
-    list(current.segmentation, cluster.BIC(X, current.segmentation, max.dim, numb.clusters))
+    list(current.segmentation, 
+         cluster.BIC(X, current.segmentation, max.dim, numb.clusters), current.pcas)
   }
   segmentations <- append(segmentations, segmentations2)
   BICs <- unlist(lapply(segmentations, function(x) x[2]))
+  basis <- lapply(segmentations, function(x) x[3])
   segmentations <- lapply(segmentations, function(x) x[[1]])
-  likelihood = return(list(segmentation = segmentations[[which.max(BICs)]], BIC = BICs[which.max(BICs)]))
+  result <- list(
+              segmentation = segmentations[[which.max(BICs)]], 
+              BIC = BICs[which.max(BICs)],
+              basis = basis[[which.max(BICs)]][[1]])
+  class(result) <- "mlcc.reps.fit"
+  return(result)
 }

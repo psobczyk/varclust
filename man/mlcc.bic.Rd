@@ -2,7 +2,7 @@
 \name{mlcc.bic}
 \alias{mlcc.bic}
 \title{Subspace clustering with automatic estimation of number of clusters
-and their dimension.}
+and their dimension}
 \usage{
 mlcc.bic(X, numb.clusters = 1:10, numb.runs = 20, stop.criterion = 1,
   max.iter = 20, max.dim = 4, scale = TRUE, numb.cores = NULL,
@@ -15,14 +15,17 @@ mlcc.bic(X, numb.clusters = 1:10, numb.runs = 20, stop.criterion = 1,
 
 \item{numb.runs}{an integer, number of runs of \code{\link{mlcc.kmeans}}}
 
-\item{stop.criterion}{an integer, indicating how many changes in partitions triggers stopping \code{\link{mlcc.kmeans} algorithm}}
+\item{stop.criterion}{an integer, if an iteration of \code{\link{mlcc.kmeans}} algorithm
+makes less changes in partitions than \code{stop.criterion},
+\code{\link{mlcc.kmeans}} stops.}
 
-\item{max.iter}{an integer, maximum number of iterations of \code{\link{mlcc.kmeans} algorithm}}
+\item{max.iter}{an integer, maximum number of iterations of \code{\link{mlcc.kmeans}} algorithm}
 
 \item{max.dim}{an integer, if estimate.dimensions is FALSE then max.dim is dimension of each subspace.
 If estimate.dimensions is TRUE then subspaces dimensions are estimated from the range [1, max.dim]}
 
-\item{scale}{a boolean, if TRUE (value set by default) then variables in dataset are scaled to zero mean and unit variance}
+\item{scale}{a boolean, if TRUE (value set by default) then variables in
+dataset are scaled to zero mean and unit variance}
 
 \item{numb.cores}{an integer, number of cores to be used, by default all cores are used}
 
@@ -36,7 +39,7 @@ numbers of clusters is produced}
 \value{
 An object of class mlcc.fit consisting of
 \item{segmentation}{a vector containing the partition of the variables}
-\item{BIC}{double, value of \code{\link{cluster.BIC}} criterion}
+\item{BIC}{numeric, value of \code{\link{cluster.BIC}} criterion}
 \item{subspacesDimensions}{a list containing dimensions of the subspaces}
 \item{nClusters}{an integer, estimated number of clusters}
 \item{all.fit}{a list of segmentation, BIC, subspaces dimension for all numbers of clusters considered}
@@ -44,13 +47,13 @@ An object of class mlcc.fit consisting of
 \description{
 Estimate the number of clusters according to the BIC. Basic k-means based
 Multiple Latent Components Clustering (MLCC) algorithm (\code{\link{mlcc.kmeans}}) is run a
-given number of times (\emph{numb.runs}) for each number of clusters in numb.Clusters.
+given number of times (\emph{numb.runs}) for each number of clusters in \emph{numb.clusters}.
 The best partition is choosen with BIC (see \code{\link{mlcc.reps} function})
 }
 \examples{
 \donttest{
-data <- data.simulation(n=100, SNR=1, K=5, numb.vars=30, max.dim=2)
-mlcc.bic(data$X, numb.clusters=1:10, numb.runs=20)
+data <- data.simulation(n = 100, SNR = 1, K = 5, numb.vars = 30, max.dim = 2)
+mlcc.bic(data$X, numb.clusters = 1:10, numb.runs = 20)
 }
 }
 
