@@ -17,7 +17,7 @@ that span each subspace.}
 
 \item{numb.clusters}{an integer, number of clusters}
 
-\item{sigma}{a double, (default is NULL) value of sigma provided by the user}
+\item{sigma}{a numeric, (default is NULL) value of sigma provided by the user}
 
 \item{estimateJointly}{a boolean, (default value is TRUE) indicating if sigma should be estimated jointly for all clusters}
 }

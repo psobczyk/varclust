@@ -4,12 +4,13 @@
 \title{Simulating subspace clustering data}
 \usage{
 data.simulation(n = 100, SNR = 1, K = 10, numb.vars = 30, max.dim = 2,
-  equal.dims = T)
+  equal.dims = TRUE)
 }
 \arguments{
 \item{n}{an integer, number of individuals}
 
-\item{SNR}{a double, signal to noise ratio measured as variance of variable to variance of noise}
+\item{SNR}{a numeric, signal to noise ratio measured as variance of the variable, element of a subspace,
+to the variance of noise}
 
 \item{K}{an integer, number of subspaces}
 
@@ -28,10 +29,11 @@ A list consisting of:
 \item{s}{vector, true partiton of variables}
 }
 \description{
-Generating random data for subspace clustering simulation
+Generating data for simulation with a low-rank subspace structure:
+ variables are clustered and each cluster has a low-rank representation
 }
 \examples{
 data <- data.simulation()
-data2 <- data.simulation(n=30, SNR=2, K=5, numb.vars=20, max.dim=3, equal.dims=FALSE)
+data2 <- data.simulation(n = 30, SNR = 2, K = 5, numb.vars = 20, max.dim = 3, equal.dims = FALSE)
 }
 
