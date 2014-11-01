@@ -46,8 +46,8 @@ very high Adjusted Rand Index.
 
 ```{r}
 part <- NULL
-part[mlcc.fit$segmentation %in% c(7,8)] <- 1
-part[!mlcc.fit$segmentation %in% c(7,8)] <- 2
+part[mlcc.fit$segmentation %in% c(1,4,7,8)] <- 1
+part[!mlcc.fit$segmentation %in% c(1,4,7,8)] <- 2
 mclust::adjustedRandIndex(part, benchmarkClustering)
 misclassification(part, benchmarkClustering, max(table(benchmarkClustering)), 2)
 ```
