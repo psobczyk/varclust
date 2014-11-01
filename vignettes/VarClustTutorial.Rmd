@@ -1,26 +1,23 @@
 ---
-title: "VarClust package tutorial"
+title: "varclust package tutorial"
 author: "Piotr Sobczyk"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{VarClust tutorial}
+  %\VignetteIndexEntry{varclust tutorial}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---
 
-VarClust is a package that enables dimension
-reduction via variables clustering. Classical methods for
-dimensionality reduction are based on removing variables that
-are redundant. Here we assume that for certain group of variables 
-one can define few latent variables that describe our data.
+varclust is a package that enables dimension reduction via variables clustering. 
+We assume that each group of variables can be summarized with few latent variables.
 
-This tutorial will gently introduce you to usage of package **VarClust** and
+This tutorial will gently introduce you to usage of package **varclust** and
 familiarize with its options.
 
-You can install VarClust from either CRAN (stable version) or github (the current development version).
+You can install **varclust** from either CRAN (stable version) or github (the current development version).
 
-```{r, results='hide'}
+```{r, results='hide', message=FALSE, warning=FALSE}
 library(varclust)
 library(mclust)
 ```
@@ -59,13 +56,15 @@ If you know what is the true number of clusters you might use **mlcc.reps** func
 In that case you can also compare segmentations in terms of misclassification.
 ```{r}
 mlcc.fit2 <- mlcc.reps(X=comp, numb.clusters = 2, numb.runs = 20, max.dim = 4, numb.cores=1)
+mlcc.fit2
 mclust::adjustedRandIndex(mlcc.fit2$segmentation, benchmarkClustering)
 misclassification(mlcc.fit2$segmentation, benchmarkClustering, max(table(benchmarkClustering)), 2)
 ```
 You should also use **mlcc.reps** function if you have some apriori knowledge regarding true segmentation.
 You can enforce starting point
 ```{r}
-mlcc.fit3 <- mlcc.reps(comp, numb.clusters = 2, numb.runs = 0, max.dim = 2, initial.segmentations=list(benchmarkClustering), numb.cores=1)
+mlcc.fit3 <- mlcc.reps(comp, numb.clusters = 2, numb.runs = 0, max.dim = 2, 
+                       initial.segmentations=list(benchmarkClustering), numb.cores=1)
 mclust::adjustedRandIndex(mlcc.fit3$segmentation, benchmarkClustering)
 misclassification(mlcc.fit3$segmentation, benchmarkClustering, max(table(benchmarkClustering)), 2)
 ```
