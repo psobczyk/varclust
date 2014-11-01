@@ -13,7 +13,7 @@
 #' @param max.dim an integer, maximum dimension of subspace. Number of principal components
 #'        that span each subspace.
 #' @param numb.clusters an integer, number of clusters
-#' @param sigma a double, (default is NULL) value of sigma provided by the user
+#' @param sigma a numeric, (default is NULL) value of sigma provided by the user
 #' @param estimateJointly a boolean, (default value is TRUE) indicating if sigma should be estimated jointly for all clusters
 #' @keywords internal
 #' @return BIC value of BIC criterion
@@ -116,9 +116,9 @@ choose.cluster <- function(variable, pcas, numberClusters){
   }, 0.9) )
 }
 
-#' Computes misclassification rate.
+#' Computes misclassification rate
 #' 
-#' Missclasification is commonly used performance measure in subspace clustering.
+#' Missclasification is a commonly used performance measure in subspace clustering.
 #' It allows to compare two partitions with the same number of clusters.
 #'  
 #' As getting exact value of misclassification requires checking all permutations 
@@ -130,39 +130,39 @@ choose.cluster <- function(variable, pcas, numberClusters){
 #' @param true_group a vector, second (reference) partition
 #' @param M an integer, maximal number of elements in one class
 #' @param K an integer, number of classes
-#' @references {R Vidal. Subspace clustering. Signal Processing Magazine, IEEE, 28(2):52-68,2011.}
+#' @references {R. Vidal. Subspace clustering. Signal Processing Magazine, IEEE, 28(2):52-68,2011}
 #' @export
 #' @return misclassification rate
 #' @examples
 #' \donttest{
-#' data <- data.simulation(n=100, SNR=1, K=5, numb.vars=30, max.dim=2)
-#' mlcc.fit <- mlcc.reps(data$X, numb.clusters=5, numb.runs=20, max.dim=2)
+#' data <- data.simulation(n = 100, SNR = 1, K = 5, numb.vars = 30, max.dim = 2)
+#' mlcc.fit <- mlcc.reps(data$X, numb.clusters = 5, numb.runs = 20, max.dim = 2)
 #' misclassification(mlcc.fit$segmentation,data$s, 30, 5)
 #' }
 #' 
 #' #one can use this function not only for clusters
-#' partition1 <- sample(10, 300, replace=TRUE)
-#' partition2 <- sample(10, 300, replace=TRUE)
+#' partition1 <- sample(10, 300, replace = TRUE)
+#' partition2 <- sample(10, 300, replace = TRUE)
 #' misclassification(partition1, partition1, max(table(partition1)), 10)
 #' misclassification(partition1, partition2, max(table(partition2)), 10)
 misclassification <-function(group, true_group, M, K){
-  forbidden = NULL;
-  suma = 0;
+  forbidden <- NULL
+  suma <- 0
   nG = max(group);
-  for (i in M:1){ #differnet concordance levels
-    for(j in 1:nG){ #subspaces numbers (found)
-      if (sum(j==forbidden)==0){ #subspace not yet used
-        for (k in 1:K){ # subspaces numbers (true)
-          if (sum(j==group[true_group==k])==i){
-            suma = suma + i
-            forbidden = c(forbidden, j)
-            break;
+  for (i in M:1) { #differnet concordance levels
+    for (j in 1:nG) { #subspaces numbers (found)
+      if (sum(j==forbidden)==0) { #subspace not yet used
+        for (k in 1:K) { # subspaces numbers (true)
+          if (sum(j==group[true_group==k])==i) {
+            suma <- suma + i
+            forbidden <- c(forbidden, j)
+            break
           }
         }
       }
     }
   }
-  mis = 1-suma/length(true_group)
+  mis <- 1-suma/length(true_group)
   return(mis)
 }
 
@@ -188,7 +188,22 @@ plot.mlcc.fit <- function(x,...){
 #' @keywords internal
 print.mlcc.fit <- function(x,...){
   cat("$nClusters: ", x$nClusters, "\n")
-  cat("$segmentation:\n", x$segmentation, "\n")
+  cat("$segmentation:\n")
+  print(x$segmentation)
   cat("$BIC: ", x$BIC, "\n")
   cat("$subspacesDimensions:\n", unlist(x$subspacesDimensions), "\n")
+}
+
+#' Print mlcc.reps.fit class object
+#' 
+#' @param x mlcc.reps.fit class object
+#' @param ... Further arguments to be passed to or from other methods. They are ignored in this function.
+#' @export
+#' @keywords internal
+print.mlcc.reps.fit <- function(x,...){
+  cat("$segmentation:\n")
+  print(x$segmentation)
+  cat("$BIC: ", x$BIC, "\n")
+  cat("$basis:\n")
+  cat(str(x$basis))
 }
