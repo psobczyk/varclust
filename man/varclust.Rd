@@ -24,7 +24,7 @@ We also provide function \code{\link{misclassification}} that computes misclassi
 rate between two partitions. This performance measure is
 extensively used in image segmentation.
 
-Version: 0.9.11
+Version: 0.9.14
 }
 \examples{
 \donttest{
@@ -39,7 +39,7 @@ Piotr Sobczyk,
 Maintainer: Piotr Sobczyk \email{Piotr.Sobczyk@pwr.edu.pl}
 }
 \references{
-Malgorzata Bogdan, Julie Josse, Piotr Sobczyk, \emph{Clustering around latent variables - a technical report}, 2014,
+Piotr Sobczyk, Malgorzata Bogdan, Julie Josse, \emph{Clustering around latent variables - a technical report}, 2014,
 \url{www.im.pwr.edu.pl/~sobczyk/research.html}
 }
 

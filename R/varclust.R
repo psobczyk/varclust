@@ -20,7 +20,7 @@
 #'
 #' @docType package
 #' @name varclust
-#' @details Version: 0.9.11
+#' @details Version: 0.9.14
 #' @importFrom RcppEigen fastLmPure
 #' @importFrom doMC registerDoMC
 #' @importFrom parallel detectCores
@@ -30,7 +30,7 @@
 #' 
 #' Maintainer: Piotr Sobczyk \email{Piotr.Sobczyk@@pwr.edu.pl}
 #' @references 
-#' Malgorzata Bogdan, Julie Josse, Piotr Sobczyk, \emph{Clustering around latent variables - a technical report}, 2014, 
+#' Piotr Sobczyk, Malgorzata Bogdan, Julie Josse, \emph{Clustering around latent variables - a technical report}, 2014, 
 #' \url{www.im.pwr.edu.pl/~sobczyk/research.html} 
 #' 
 #' @examples
