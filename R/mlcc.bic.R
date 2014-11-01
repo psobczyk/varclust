@@ -28,14 +28,15 @@
 #' \item{BIC}{numeric, value of \code{\link{cluster.BIC}} criterion}
 #' \item{subspacesDimensions}{a list containing dimensions of the subspaces}
 #' \item{nClusters}{an integer, estimated number of clusters}
-#' \item{all.fit}{a list of segmentation, BIC, subspaces dimension for all numbers of clusters considered}
+#' \item{all.fit}{a list of segmentation, BIC, subspaces dimension for all numbers of clusters considered for an estimated subspace dimensions}
+#' \item{all.fit.dims}{a list of lists of segmentation, BIC, subspaces dimension for all numbers of clusters and subspaces dimensions considered}
 #' @examples
 #' \donttest{
 #' sim.data <- data.simulation(n = 100, SNR = 1, K = 5, numb.vars = 30, max.dim = 2)
 #' mlcc.bic(sim.data$X, numb.clusters = 1:10, numb.runs = 20)
 #' }
 mlcc.bic <- function(X, numb.clusters = 1:10, numb.runs = 20, stop.criterion = 1, max.iter = 20, max.dim = 4, 
-                    scale = TRUE, numb.cores = NULL, greedy = TRUE, estimate.dimensions = TRUE, graphical.output = TRUE){
+                    scale = TRUE, numb.cores = NULL, greedy = TRUE, estimate.dimensions = TRUE, graphical.output = FALSE){
   if (is.data.frame(X)) {
     warnings("X is not a matrix. Casting to matrix.")
     X = as.matrix(X)
@@ -58,50 +59,57 @@ mlcc.bic <- function(X, numb.clusters = 1:10, numb.runs = 20, stop.criterion = 1
   p <- ncol(X)
   greedy.stop <- max(numb.clusters)
   results <- list()
-  cat(paste("Number of clusters \t BIC \n"))
-  for(i in 1:length(numb.clusters)){
-    number.clusters <- numb.clusters[i]                                                                                                 
-    MPCV.fit <- mlcc.reps(X = X, numb.clusters = number.clusters, numb.runs = numb.runs, 
-                          max.dim = max.dim, scale = F, numb.cores = numb.cores)
-    BIC.sum <- 0
-    if (estimate.dimensions) {
-      sigma <- NULL
-      #SIGMA estimated jointly, we reduce the number of models considered that way
-      sigma <- getSigma(X, MPCV.fit$segmentation, max.dim, n, p, number.clusters)
-      #SIGMA estimated jointly, we reduce the number of models considered that way
-      dimensions <- list() 
-      for(k in 1:number.clusters){
-        temp <- 1
-        for(d in 1:max.dim){ 
-          temp[d] <- cluster.BIC(X[ ,MPCV.fit$segmentation==k, drop=F], 
-                                 rep(1, sum(MPCV.fit$segmentation==k)), d, 1, sigma=sigma)
+  for (dim in 1:max.dim){
+    partial.results <- NULL
+    cat(paste("Subspaces dimensions equal", dim, "\nNumber of clusters \t BIC \n"))
+    for(i in 1:length(numb.clusters)){
+      number.clusters <- numb.clusters[i]                                                                                                 
+      MPCV.fit <- mlcc.reps(X = X, numb.clusters = number.clusters, numb.runs = numb.runs, 
+                            max.dim = dim, scale = F, numb.cores = numb.cores)
+      BIC.sum <- 0
+      if (estimate.dimensions) {
+        sigma <- NULL
+        #SIGMA estimated jointly, we reduce the number of models considered that way
+        sigma <- getSigma(X, MPCV.fit$segmentation, dim, n, p, number.clusters)
+        #SIGMA estimated jointly, we reduce the number of models considered that way
+        dimensions <- list() 
+        for(k in 1:number.clusters){
+          temp <- 1
+          for(d in 1:dim){ 
+            temp[d] <- cluster.BIC(X[ ,MPCV.fit$segmentation==k, drop=F], 
+                                   rep(1, sum(MPCV.fit$segmentation==k)), d, 1, sigma=sigma)
+          } 
+          BIC.sum <- BIC.sum + max(temp[!is.nan(temp)]) 
+          dimensions <- append(dimensions, which.max(temp)) 
         } 
-        BIC.sum <- BIC.sum + max(temp[!is.nan(temp)]) 
-        dimensions <- append(dimensions, which.max(temp)) 
-      } 
-      results[[i]] <- list(segmentation=MPCV.fit$segmentation, BIC=BIC.sum, subspacesDimensions=dimensions, nClusters=number.clusters)
-    }
-    else{
-      results[[i]] <- list(segmentation=MPCV.fit$segmentation, BIC=MPCV.fit$BIC, subspacesDimensions=NULL, nClusters=number.clusters)
-    }
-    if (greedy & (i>2)) { 
-      if ( (results[[i]]$BIC < results[[i-1]]$BIC) & 
-           (results[[i-2]]$BIC < results[[i-1]]$BIC) ){
-        greedy.stop <- i
-        cat(paste("        ", number.clusters, "        ", formatC(results[[i]]$BIC, digits=ceiling(log(abs(results[[i]]$BIC),10))), "\n"))
-        break
+        partial.results[[i]] <- list(segmentation=MPCV.fit$segmentation, BIC=BIC.sum, subspacesDimensions=dimensions, nClusters=number.clusters)
       }
+      else{
+        partial.results[[i]] <- list(segmentation=MPCV.fit$segmentation, BIC=MPCV.fit$BIC, subspacesDimensions=NULL, nClusters=number.clusters)
+      }
+      if (greedy & (i>2)) { 
+        if ( (partial.results[[i]]$BIC < partial.results[[i-1]]$BIC) & 
+             (partial.results[[i-2]]$BIC < partial.results[[i-1]]$BIC) ){
+          greedy.stop <- i
+          cat(paste("        ", number.clusters, "        ", formatC(partial.results[[i]]$BIC, digits=ceiling(log(abs(partial.results[[i]]$BIC),10))), "\n"))
+          break
+        }
+      }
+      cat(paste("        ", number.clusters, "        ", formatC(partial.results[[i]]$BIC, digits=ceiling(log(abs(partial.results[[i]]$BIC),10))), "\n"))
     }
-    cat(paste("        ", number.clusters, "        ", formatC(results[[i]]$BIC, digits=ceiling(log(abs(results[[i]]$BIC),10))), "\n"))
+    
+    BICs <- lapply(partial.results, function(res) res$BIC)
+    if (graphical.output) {
+      plot(numb.clusters[1:greedy.stop], BICs, type="b", xaxt="n", ylab="BIC", xlab="Number of clusters")
+      axis(side = 1, labels = numb.clusters[1:greedy.stop], at=numb.clusters[1:greedy.stop])
+    }
+
+    results[[dim]] <- partial.results[[which.max(BICs)]]
+    results[[dim]]$all.fit <- partial.results
   }
   BICs <- lapply(results, function(res) res$BIC)
-  if (graphical.output) {
-    plot(numb.clusters[1:greedy.stop], BICs, type="b", xaxt="n", ylab="BIC", xlab="Number of clusters")
-    axis(side = 1, labels = numb.clusters[1:greedy.stop], at=numb.clusters[1:greedy.stop])
-  }
-
   result <- results[[which.max(BICs)]]
-  result$all.fit <- results
+  result$all.fit.dims <- results
   class(result) <- "mlcc.fit"
   return(result)
 }
