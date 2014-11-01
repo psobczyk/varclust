@@ -2,6 +2,7 @@
 
 S3method(plot,mlcc.fit)
 S3method(print,mlcc.fit)
+S3method(print,mlcc.reps.fit)
 export(data.simulation)
 export(misclassification)
 export(mlcc.bic)
