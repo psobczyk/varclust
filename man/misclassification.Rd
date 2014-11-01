@@ -29,9 +29,9 @@ Additional requirement is that classes labels are from range [1, K].
 }
 \examples{
 \donttest{
-data <- data.simulation(n = 100, SNR = 1, K = 5, numb.vars = 30, max.dim = 2)
-mlcc.fit <- mlcc.reps(data$X, numb.clusters = 5, numb.runs = 20, max.dim = 2)
-misclassification(mlcc.fit$segmentation,data$s, 30, 5)
+sim.data <- data.simulation(n = 100, SNR = 1, K = 5, numb.vars = 30, max.dim = 2)
+mlcc.fit <- mlcc.reps(sim.data$X, numb.clusters = 5, numb.runs = 20, max.dim = 2)
+misclassification(mlcc.fit$segmentation,sim.data$s, 30, 5)
 }
 
 #one can use this function not only for clusters

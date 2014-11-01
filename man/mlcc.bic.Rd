@@ -6,7 +6,7 @@ and their dimension}
 \usage{
 mlcc.bic(X, numb.clusters = 1:10, numb.runs = 20, stop.criterion = 1,
   max.iter = 20, max.dim = 4, scale = TRUE, numb.cores = NULL,
-  greedy = TRUE, estimate.dimensions = TRUE, graphical.output = TRUE)
+  greedy = TRUE, estimate.dimensions = TRUE, graphical.output = FALSE)
 }
 \arguments{
 \item{X}{a data frame or a matrix with only continuous variables}
@@ -42,7 +42,8 @@ An object of class mlcc.fit consisting of
 \item{BIC}{numeric, value of \code{\link{cluster.BIC}} criterion}
 \item{subspacesDimensions}{a list containing dimensions of the subspaces}
 \item{nClusters}{an integer, estimated number of clusters}
-\item{all.fit}{a list of segmentation, BIC, subspaces dimension for all numbers of clusters considered}
+\item{all.fit}{a list of segmentation, BIC, subspaces dimension for all numbers of clusters considered for an estimated subspace dimensions}
+\item{all.fit.dims}{a list of lists of segmentation, BIC, subspaces dimension for all numbers of clusters and subspaces dimensions considered}
 }
 \description{
 Estimate the number of clusters according to the BIC. Basic k-means based
@@ -52,8 +53,8 @@ The best partition is choosen with BIC (see \code{\link{mlcc.reps} function})
 }
 \examples{
 \donttest{
-data <- data.simulation(n = 100, SNR = 1, K = 5, numb.vars = 30, max.dim = 2)
-mlcc.bic(data$X, numb.clusters = 1:10, numb.runs = 20)
+sim.data <- data.simulation(n = 100, SNR = 1, K = 5, numb.vars = 30, max.dim = 2)
+mlcc.bic(sim.data$X, numb.clusters = 1:10, numb.runs = 20)
 }
 }
 

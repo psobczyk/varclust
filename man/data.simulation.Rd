@@ -33,7 +33,7 @@ Generating data for simulation with a low-rank subspace structure:
  variables are clustered and each cluster has a low-rank representation
 }
 \examples{
-data <- data.simulation()
-data2 <- data.simulation(n = 30, SNR = 2, K = 5, numb.vars = 20, max.dim = 3, equal.dims = FALSE)
+sim.data <- data.simulation()
+sim.data2 <- data.simulation(n = 30, SNR = 2, K = 5, numb.vars = 20, max.dim = 3, equal.dims = FALSE)
 }
 
