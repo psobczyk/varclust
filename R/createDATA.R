@@ -19,7 +19,8 @@
 #' \item{s}{vector, true partiton of variables}
 #' @examples
 #' sim.data <- data.simulation()
-#' sim.data2 <- data.simulation(n = 30, SNR = 2, K = 5, numb.vars = 20, max.dim = 3, equal.dims = FALSE)
+#' sim.data2 <- data.simulation(n = 30, SNR = 2, K = 5, numb.vars = 20, 
+#'                              max.dim = 3, equal.dims = FALSE)
 data.simulation <- function(n = 100, SNR = 1, K = 10, numb.vars = 30, max.dim = 2, equal.dims = TRUE){
   sigma <- 1/SNR
   #subspaces dimensions depend on equal.dims value

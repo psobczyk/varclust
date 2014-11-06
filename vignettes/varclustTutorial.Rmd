@@ -31,8 +31,8 @@ comp <- read.table("http://factominer.free.fr/docs/gene.csv",sep=";",header=T,ro
 benchmarkClustering <- c(rep(1, 68), rep(2, 356))    
 comp <- data.frame(comp[,-ncol(comp)])   
 set.seed(1)
-mlcc.fit <- mlcc.bic(comp, numb.clusters = 1:15, numb.runs = 10, max.dim = 4, greedy=TRUE, 
-                     estimate.dimensions=TRUE, numb.cores=1, graphical.output=FALSE)
+mlcc.fit <- mlcc.bic(comp, numb.clusters = 1:15, numb.runs = 10, max.dim = 4, greedy = TRUE, 
+                     estimate.dimensions = TRUE, numb.cores = 1, verbose = FALSE)
 print(mlcc.fit)
 plot(mlcc.fit)
 mclust::adjustedRandIndex(mlcc.fit$segmentation, benchmarkClustering)

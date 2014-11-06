@@ -20,8 +20,10 @@
 #' @param numb.cores an integer, number of cores to be used, by default all cores are used
 #' @param greedy a boolean, if TRUE (value set by default) the clusters are estimated in a greedy way
 #' @param estimate.dimensions a boolean, if TRUE (value set by default) subspaces dimensions are estimated
-#' @param graphical.output a boolean, if TRUE (value set by default) plot with BIC values for different
-#'        numbers of clusters is produced
+#' @param verbose a boolean, if TRUE plot with BIC values for different
+#'        numbers of clusters is produced and values of BIC, computed
+#'        for every number of clusters and subspaces dimensions, are printed
+#'        (value set by default is FALSE)
 #' @export
 #' @return An object of class mlcc.fit consisting of
 #' \item{segmentation}{a vector containing the partition of the variables}
@@ -36,7 +38,7 @@
 #' mlcc.bic(sim.data$X, numb.clusters = 1:10, numb.runs = 20)
 #' }
 mlcc.bic <- function(X, numb.clusters = 1:10, numb.runs = 20, stop.criterion = 1, max.iter = 20, max.dim = 4, 
-                    scale = TRUE, numb.cores = NULL, greedy = TRUE, estimate.dimensions = TRUE, graphical.output = FALSE){
+                    scale = TRUE, numb.cores = NULL, greedy = TRUE, estimate.dimensions = TRUE, verbose = FALSE){
   if (is.data.frame(X)) {
     warnings("X is not a matrix. Casting to matrix.")
     X = as.matrix(X)
@@ -61,7 +63,9 @@ mlcc.bic <- function(X, numb.clusters = 1:10, numb.runs = 20, stop.criterion = 1
   results <- list()
   for (dim in 1:max.dim){
     partial.results <- NULL
-    cat(paste("Subspaces dimensions equal", dim, "\nNumber of clusters \t BIC \n"))
+    cat(paste("Computing case when subspaces dimensions equal...", dim, "\n"))
+    if (verbose)
+      cat("Number of clusters \t BIC \n")
     for(i in 1:length(numb.clusters)){
       number.clusters <- numb.clusters[i]                                                                                                 
       MPCV.fit <- mlcc.reps(X = X, numb.clusters = number.clusters, numb.runs = numb.runs, 
@@ -91,15 +95,19 @@ mlcc.bic <- function(X, numb.clusters = 1:10, numb.runs = 20, stop.criterion = 1
         if ( (partial.results[[i]]$BIC < partial.results[[i-1]]$BIC) & 
              (partial.results[[i-2]]$BIC < partial.results[[i-1]]$BIC) ){
           greedy.stop <- i
-          cat(paste("        ", number.clusters, "        ", formatC(partial.results[[i]]$BIC, digits=ceiling(log(abs(partial.results[[i]]$BIC),10))), "\n"))
+          if (verbose) cat(paste("        ", number.clusters, "        ", 
+                                 formatC(partial.results[[i]]$BIC, 
+                                         digits=ceiling(log(abs(partial.results[[i]]$BIC),10))), "\n"))
           break
         }
       }
-      cat(paste("        ", number.clusters, "        ", formatC(partial.results[[i]]$BIC, digits=ceiling(log(abs(partial.results[[i]]$BIC),10))), "\n"))
+      if (verbose) cat(paste("        ", number.clusters, "        ", 
+                             formatC(partial.results[[i]]$BIC, 
+                                     digits=ceiling(log(abs(partial.results[[i]]$BIC),10))), "\n"))
     }
     
     BICs <- lapply(partial.results, function(res) res$BIC)
-    if (graphical.output) {
+    if (verbose) {
       plot(numb.clusters[1:greedy.stop], BICs, type="b", xaxt="n", ylab="BIC", xlab="Number of clusters")
       axis(side = 1, labels = numb.clusters[1:greedy.stop], at=numb.clusters[1:greedy.stop])
     }

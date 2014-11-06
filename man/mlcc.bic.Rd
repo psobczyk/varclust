@@ -6,7 +6,7 @@ and their dimension}
 \usage{
 mlcc.bic(X, numb.clusters = 1:10, numb.runs = 20, stop.criterion = 1,
   max.iter = 20, max.dim = 4, scale = TRUE, numb.cores = NULL,
-  greedy = TRUE, estimate.dimensions = TRUE, graphical.output = FALSE)
+  greedy = TRUE, estimate.dimensions = TRUE, verbose = FALSE)
 }
 \arguments{
 \item{X}{a data frame or a matrix with only continuous variables}
@@ -33,8 +33,10 @@ dataset are scaled to zero mean and unit variance}
 
 \item{estimate.dimensions}{a boolean, if TRUE (value set by default) subspaces dimensions are estimated}
 
-\item{graphical.output}{a boolean, if TRUE (value set by default) plot with BIC values for different
-numbers of clusters is produced}
+\item{verbose}{a boolean, if TRUE plot with BIC values for different
+numbers of clusters is produced and values of BIC, computed
+for every number of clusters and subspaces dimensions, are printed
+(value set by default is FALSE)}
 }
 \value{
 An object of class mlcc.fit consisting of
