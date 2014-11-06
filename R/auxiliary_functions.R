@@ -174,10 +174,27 @@ misclassification <-function(group, true_group, M, K){
 #' @export
 #' @keywords internal
 plot.mlcc.fit <- function(x,...){
-  clusterNumbs <- lapply(x$all.fit, function(y) y$nClusters)
-  BICVals <- lapply(x$all.fit, function(y) y$BIC)
-  plot.default(clusterNumbs, BICVals, type="b", xaxt="n", ylab="BIC", xlab="Number of clusters")
-  axis(side = 1, labels = clusterNumbs, at=clusterNumbs)
+  
+  min.clust <- min(unlist(lapply(x$all.fit.dims, function(z) lapply(z$all.fit, function(y) y$nClusters))))
+  max.clust <- max(unlist(lapply(x$all.fit.dims, function(z) lapply(z$all.fit, function(y) y$nClusters))))
+  
+  min.bic <- min(unlist(lapply(x$all.fit.dims, function(z) lapply(z$all.fit, function(y) y$BIC))))
+  max.bic <- max(unlist(lapply(x$all.fit.dims, function(z) lapply(z$all.fit, function(y) y$BIC))))
+  
+  colors.dims <- topo.colors(length(x$all.fit.dims))
+  
+  plot(x = min.clust:max.clust, y = NULL, ylim=c(min.bic, max.bic), type = "n", 
+       xaxt = "n", ylab = "BIC", xlab = "Number of clusters")
+  axis(side = 1, labels = min.clust:max.clust, at = min.clust:max.clust)
+  
+  lapply(1:length(x$all.fit.dims), function(i) {
+    z <- x$all.fit.dims[[i]]
+    clusterNumbs <- lapply(z$all.fit, function(y) y$nClusters)
+    BICVals <- lapply(z$all.fit, function(y) y$BIC)
+    lines(clusterNumbs, BICVals, type="b", xaxt="n", ylab="BIC", xlab="Number of clusters", col=colors.dims[i])
+  })
+  
+  legend(x="bottomright", legend=paste("dim", 1:length(x$all.fit.dims)), fill=colors.dims)
 }
 
 #' Print mlcc.fit class object
