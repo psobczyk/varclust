@@ -9,11 +9,11 @@
 #' @param max.iter an integer, maximum number of iterations of k-means
 #' @param maxSubspaceDim an integer, maximum dimension of subspaces
 #' @param initial.segmentation a vector, initial segmentation of variables to clusters
-#' @keywords internal
+#' @export
 #' @return A list consisting of:
 #' \item{segmentation}{a vector containing the partition of the variables}
 #' \item{pcas}{a list of matrices, basis vectors for each cluster (subspace)}
-mlcc.kmeans <- function(X, numberClusters=2, stop.criterion=1, max.iter=40, maxSubspaceDim=4, initial.segmentation=NULL){
+mlcc.kmeans <- function(X, numberClusters=2, stop.criterion=1, max.iter=40, maxSubspaceDim=4, initial.segmentation=NULL, estimateDimensions=FALSE){
   numbVars = dim(X)[2]
   rowNumb = dim(X)[1]
   pcas <- list(NULL)
@@ -29,16 +29,27 @@ mlcc.kmeans <- function(X, numberClusters=2, stop.criterion=1, max.iter=40, maxS
   new.segmentation <- segmentation
   for (iter in 1:max.iter){
     pcas <- lapply(1:numberClusters, function(i){
-      if(dim(X[,segmentation==i, drop=F])[2]>=maxSubspaceDim){
+      if(dim(X[,segmentation==i, drop=F])[2]>maxSubspaceDim){
+        #print(ncol(X[,segmentation==i, drop=F]))
         a <- summary(prcomp(x=X[,segmentation==i]))
-        cut <- maxSubspaceDim
+        if (estimateDimensions) {
+          cut <- which.max(sapply(1:maxSubspaceDim, 
+                                  function(dim) cluster.BIC(X[,segmentation==i], rep(1,sum(segmentation==i)), max.dim = dim, numb.clusters = 1)))
+        }
+        else {
+          cut <- maxSubspaceDim
+        }
         return(matrix(a$x[,1:cut], nrow=rowNumb))
       }
       else{
           return(matrix(rnorm(rowNumb*maxSubspaceDim), nrow=rowNumb))
       }
     })
-    new.segmentation <- sapply(1:numbVars, function(j) choose.cluster(X[,j],pcas, numberClusters))
+    if (estimateDimensions)
+      new.segmentation <- sapply(1:numbVars, function(j) choose.cluster.BIC(X[,j], pcas, numberClusters))
+    else {
+      new.segmentation <- sapply(1:numbVars, function(j) choose.cluster(X[,j], pcas, numberClusters))
+    }
     if(sum(new.segmentation!=segmentation)<stop.criterion) break
     segmentation = new.segmentation
   }

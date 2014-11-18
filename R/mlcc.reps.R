@@ -29,7 +29,7 @@
 #' @examples
 #' \donttest{
 #' sim.data <- data.simulation(n = 100, SNR = 1, K = 5, numb.vars = 30, max.dim = 2)
-#' mlcc.reps(sim.data$X, numb.clusters = 5, numb.runs = 20)}
+#' mlcc.reps(sim.data$X, numb.clusters = 5, numb.runs = 20, max.dim = 4)}
 mlcc.reps <- function(X, numb.clusters = 2, numb.runs = 20, stop.criterion = 1, max.iter = 20, 
                       initial.segmentations = NULL, max.dim = 2, scale = TRUE, numb.cores = NULL){
   if (is.data.frame(X)) {
@@ -62,11 +62,13 @@ mlcc.reps <- function(X, numb.clusters = 2, numb.runs = 20, stop.criterion = 1, 
   BICs <- NULL 
   segmentations <- NULL
   segmentations <- foreach(i=(1:numb.runs)) %dopar% {
-    MPCV.res <- mlcc.kmeans(X=X, numberClusters=numb.clusters, maxSubspaceDim=max.dim, max.iter=max.iter)
+    MPCV.res <- mlcc.kmeans(X=X, numberClusters=numb.clusters, maxSubspaceDim=max.dim, max.iter=max.iter, estimateDimensions = TRUE)
     current.segmentation <- MPCV.res$segmentation
     current.pcas <- MPCV.res$pcas
+    print(paste("done", i))
     list(current.segmentation, 
-         cluster.BIC(X, current.segmentation, max.dim, numb.clusters), current.pcas)
+         adjusted.cluster.BIC(X, current.segmentation, sapply(current.pcas, ncol), numb.clusters), 
+         current.pcas)
   }
   i <- NULL
   segmentations2 <- foreach(i=(1:length(initial.segmentations))) %dopar% { #running user specified clusters
@@ -75,7 +77,8 @@ mlcc.reps <- function(X, numb.clusters = 2, numb.runs = 20, stop.criterion = 1, 
     current.segmentation <- MPCV.res$segmentation
     current.pcas <- MPCV.res$pcas
     list(current.segmentation, 
-         cluster.BIC(X, current.segmentation, max.dim, numb.clusters), current.pcas)
+         adjusted.cluster.BIC(X, current.segmentation, sapply(current.pcas, ncol), numb.clusters), 
+         current.pcas)
   }
   segmentations <- append(segmentations, segmentations2)
   BICs <- unlist(lapply(segmentations, function(x) x[2]))
