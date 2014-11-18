@@ -110,7 +110,6 @@ cluster.BIC <- function(X, segmentation, max.dim, numb.clusters, sigma=NULL, est
     degrees.freedom <- D*p-p-numb.clusters*D*max.dim-p*max.dim+numb.clusters*max.dim^2+numb.clusters*max.dim
     sigma <- sqrt(RES.sigma/degrees.freedom)
   }
-  #print(p)
   likelihoods <- rep(0, numb.clusters)  
   penalties <- rep(0, numb.clusters)  
   for(k in 1:numb.clusters){

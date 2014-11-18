@@ -65,7 +65,6 @@ mlcc.reps <- function(X, numb.clusters = 2, numb.runs = 20, stop.criterion = 1, 
     MPCV.res <- mlcc.kmeans(X=X, numberClusters=numb.clusters, maxSubspaceDim=max.dim, max.iter=max.iter, estimateDimensions = TRUE)
     current.segmentation <- MPCV.res$segmentation
     current.pcas <- MPCV.res$pcas
-    print(paste("done", i))
     list(current.segmentation, 
          adjusted.cluster.BIC(X, current.segmentation, sapply(current.pcas, ncol), numb.clusters), 
          current.pcas)

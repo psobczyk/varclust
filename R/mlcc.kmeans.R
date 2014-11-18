@@ -30,7 +30,6 @@ mlcc.kmeans <- function(X, numberClusters=2, stop.criterion=1, max.iter=40, maxS
   for (iter in 1:max.iter){
     pcas <- lapply(1:numberClusters, function(i){
       if(dim(X[,segmentation==i, drop=F])[2]>maxSubspaceDim){
-        #print(ncol(X[,segmentation==i, drop=F]))
         a <- summary(prcomp(x=X[,segmentation==i]))
         if (estimateDimensions) {
           cut <- which.max(sapply(1:maxSubspaceDim, 
