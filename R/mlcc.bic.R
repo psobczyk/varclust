@@ -94,14 +94,14 @@ mlcc.bic <- function(X, numb.clusters = 1:10, numb.runs = 20, stop.criterion = 1
              (results[[i-2]]$BIC < results[[i-1]]$BIC) ){
         greedy.stop <- i
         if (verbose) cat(paste(" ", number.clusters, " ",
-                               formatC(partial.results[[i]]$BIC,
-                                       digits=ceiling(log(abs(partial.results[[i]]$BIC),10))), "\n"))
+                               formatC(results[[i]]$BIC,
+                                       digits=ceiling(log(abs(results[[i]]$BIC),10))), "\n"))
         break
       }
     }
     if (verbose) cat(paste(" ", number.clusters, " ",
-                           formatC(partial.results[[i]]$BIC,
-                                   digits=ceiling(log(abs(partial.results[[i]]$BIC),10))), "\n"))
+                           formatC(results[[i]]$BIC,
+                                   digits=ceiling(log(abs(results[[i]]$BIC),10))), "\n"))
   }
   BICs <- lapply(results, function(res) res$BIC)
   if (verbose) {

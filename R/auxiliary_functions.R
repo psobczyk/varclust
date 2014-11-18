@@ -10,7 +10,7 @@
 #' @param X a matrix with only continuous variables
 #' @param segmentation a vector, segmentation for which likelihood is computed. Clusters
 #'        numbers should be from range [1, numb.clusters]
-#' @param max.dim an integer, maximum dimension of subspace. Number of principal components
+#' @param dims a vector of integers, dimensions of subspaces. Number of principal components
 #'        that span each subspace.
 #' @param numb.clusters an integer, number of clusters
 #' @param adjustment a numeric, percentage of BIC penalty applied
@@ -172,7 +172,7 @@ getSigma <- function(X, segmentation, max.dim, n, p, numb.clusters){
 #'
 #' The most similar subspace is choosen based on BIC criterion
 #'
-#' @param varaible
+#' @param variable variable to be assigned
 #' @param pcas orthogonal basis for different subspaces
 #' @param numberClusters number of subspaces (clusters)
 #' @return index number of subspace closest to variable

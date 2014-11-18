@@ -4,7 +4,8 @@
 \title{Multiple Latent Components Clustering - kmeans algorithm}
 \usage{
 mlcc.kmeans(X, numberClusters = 2, stop.criterion = 1, max.iter = 40,
-  maxSubspaceDim = 4, initial.segmentation = NULL)
+  maxSubspaceDim = 4, initial.segmentation = NULL,
+  estimateDimensions = FALSE)
 }
 \arguments{
 \item{X}{a matrix with only continuous variables}
@@ -28,5 +29,4 @@ A list consisting of:
 Performs k-means based subspace clustering. Center of each cluster is some number
 of principal components. Similarity measure is R^2 coefficient.
 }
-\keyword{internal}
 

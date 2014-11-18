@@ -48,6 +48,6 @@ The best partition is selected according to the BIC.
 \examples{
 \donttest{
 sim.data <- data.simulation(n = 100, SNR = 1, K = 5, numb.vars = 30, max.dim = 2)
-mlcc.reps(sim.data$X, numb.clusters = 5, numb.runs = 20)}
+mlcc.reps(sim.data$X, numb.clusters = 5, numb.runs = 20, max.dim = 4)}
 }
 

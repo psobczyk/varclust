@@ -9,6 +9,7 @@
 #' @param max.iter an integer, maximum number of iterations of k-means
 #' @param maxSubspaceDim an integer, maximum dimension of subspaces
 #' @param initial.segmentation a vector, initial segmentation of variables to clusters
+#' @param estimateDimensions a boolean, if TRUE (value set by default) subspaces dimensions are estimated
 #' @export
 #' @return A list consisting of:
 #' \item{segmentation}{a vector containing the partition of the variables}
