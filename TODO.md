@@ -9,7 +9,6 @@ output: html_document
 
 1. add estimate dimensions parmeter to all functions
 2. write tests for new functions - add them to the package
-3. update documentation and vignette
 
 #### Initialization:
 
