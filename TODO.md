@@ -7,7 +7,7 @@ output: html_document
 
 #### Iterative estimation:
 
-1. incorporate changes to mlcc.bic
+1. add estimate dimensions parmeter to all functions
 2. write tests for new functions - add them to the package
 3. update documentation and vignette
 
@@ -23,3 +23,4 @@ output: html_document
 #### Documentation
 
 1. update mlcc.kmeans variables names to meet the dot standard
+2. rewrite documentation with @inheritParams
