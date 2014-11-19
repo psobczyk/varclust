@@ -30,16 +30,17 @@
 #' @examples
 #' \donttest{
 #' sim.data <- data.simulation(n = 100, SNR = 1, K = 5, numb.vars = 30, max.dim = 2)
-#' mlcc.reps(sim.data$X, numb.clusters = 5, numb.runs = 20, max.dim = 4)}
+#' mlcc.reps(sim.data$X, numb.clusters = 5, numb.runs = 20, max.dim = 4)
+#' }
 mlcc.reps <- function(X, numb.clusters = 2, numb.runs = 20, stop.criterion = 1, max.iter = 20, 
                       initial.segmentations = NULL, max.dim = 4, scale = TRUE, numb.cores = NULL,
                       estimate.dimensions = TRUE){
   if (is.data.frame(X)) {
-    warnings("X is not a matrix. Casting to matrix.")
+    warning("X is not a matrix. Casting to matrix.")
     X = as.matrix(X)
   }
   if (any(is.na(X))) {
-    warnings("Missing values are imputed by the mean of the variable")
+    warning("Missing values are imputed by the mean of the variable")
     X[is.na(X)] = matrix(apply(X, 2, mean, na.rm = TRUE), ncol = ncol(X), nrow = nrow(X), byrow = TRUE)[is.na(X)]
   }
   if (any(!sapply(X, is.numeric))) {

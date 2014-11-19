@@ -35,16 +35,16 @@
 #' @examples
 #' \donttest{
 #' sim.data <- data.simulation(n = 100, SNR = 1, K = 5, numb.vars = 30, max.dim = 2)
-#' mlcc.bic(sim.data$X, numb.clusters = 1:10, numb.runs = 20)
+#' mlcc.bic(sim.data$X, numb.clusters = 1:10, numb.runs = 20, verbose=TRUE)
 #' }
 mlcc.bic <- function(X, numb.clusters = 1:10, numb.runs = 20, stop.criterion = 1, max.iter = 20, max.dim = 4, 
                     scale = TRUE, numb.cores = NULL, greedy = TRUE, estimate.dimensions = TRUE, verbose = FALSE){
   if (is.data.frame(X)) {
-    warnings("X is not a matrix. Casting to matrix.")
+    warning("X is not a matrix. Casting to matrix.")
     X = as.matrix(X)
   }
   if (any(is.na(X))) {
-    warnings("Missing values are imputed by the mean of the variable")
+    warning("Missing values are imputed by the mean of the variable")
     X[is.na(X)] = matrix(apply(X, 2, mean, na.rm = TRUE), ncol = ncol(X), nrow = nrow(X), byrow = TRUE)[is.na(X)]
   }
   if (any(!sapply(X, is.numeric))) {
@@ -94,13 +94,13 @@ mlcc.bic <- function(X, numb.clusters = 1:10, numb.runs = 20, stop.criterion = 1
       if ( (results[[i]]$BIC < results[[i-1]]$BIC) &
              (results[[i-2]]$BIC < results[[i-1]]$BIC) ){
         greedy.stop <- i
-        if (verbose) cat(paste(" ", number.clusters, " ",
+        if (verbose) cat(paste("    ", number.clusters, "    ",
                                formatC(results[[i]]$BIC,
                                        digits=ceiling(log(abs(results[[i]]$BIC),10))), "\n"))
         break
       }
     }
-    if (verbose) cat(paste(" ", number.clusters, " ",
+    if (verbose) cat(paste("    ", number.clusters, "    ",
                            formatC(results[[i]]$BIC,
                                    digits=ceiling(log(abs(results[[i]]$BIC),10))), "\n"))
   }

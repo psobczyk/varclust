@@ -56,7 +56,7 @@ The best partition is choosen with BIC (see \code{\link{mlcc.reps} function})
 \examples{
 \donttest{
 sim.data <- data.simulation(n = 100, SNR = 1, K = 5, numb.vars = 30, max.dim = 2)
-mlcc.bic(sim.data$X, numb.clusters = 1:10, numb.runs = 20)
+mlcc.bic(sim.data$X, numb.clusters = 1:10, numb.runs = 20, verbose=TRUE)
 }
 }
 
