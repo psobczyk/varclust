@@ -4,8 +4,8 @@
 \title{Subspace clustering assuming that the number of clusters is known}
 \usage{
 mlcc.reps(X, numb.clusters = 2, numb.runs = 20, stop.criterion = 1,
-  max.iter = 20, initial.segmentations = NULL, max.dim = 2,
-  scale = TRUE, numb.cores = NULL)
+  max.iter = 20, initial.segmentations = NULL, max.dim = 4,
+  scale = TRUE, numb.cores = NULL, estimate.dimensions = TRUE)
 }
 \arguments{
 \item{X}{a data frame or a matrix with only continuous variables}
@@ -29,6 +29,8 @@ used as an initial segmentation in \code{\link{mlcc.kmeans}} algorithm}
 dataset are scaled to zero mean and unit variance}
 
 \item{numb.cores}{an integer, number of cores to be used, by default all cores are used}
+
+\item{estimate.dimensions}{a boolean, if TRUE (value set by default) subspaces dimensions are estimated}
 }
 \value{
 A list consisting of
@@ -48,6 +50,7 @@ The best partition is selected according to the BIC.
 \examples{
 \donttest{
 sim.data <- data.simulation(n = 100, SNR = 1, K = 5, numb.vars = 30, max.dim = 2)
-mlcc.reps(sim.data$X, numb.clusters = 5, numb.runs = 20, max.dim = 4)}
+mlcc.reps(sim.data$X, numb.clusters = 5, numb.runs = 20, max.dim = 4)
+}
 }
 

@@ -5,7 +5,7 @@
 \usage{
 mlcc.kmeans(X, numberClusters = 2, stop.criterion = 1, max.iter = 40,
   maxSubspaceDim = 4, initial.segmentation = NULL,
-  estimateDimensions = FALSE)
+  estimate.dimensions = FALSE)
 }
 \arguments{
 \item{X}{a matrix with only continuous variables}
@@ -19,6 +19,8 @@ mlcc.kmeans(X, numberClusters = 2, stop.criterion = 1, max.iter = 40,
 \item{maxSubspaceDim}{an integer, maximum dimension of subspaces}
 
 \item{initial.segmentation}{a vector, initial segmentation of variables to clusters}
+
+\item{estimate.dimensions}{a boolean, if TRUE (value set by default) subspaces dimensions are estimated}
 }
 \value{
 A list consisting of:

@@ -6,11 +6,11 @@
 choose.cluster.BIC(variable, pcas, numberClusters)
 }
 \arguments{
+\item{variable}{variable to be assigned}
+
 \item{pcas}{orthogonal basis for different subspaces}
 
 \item{numberClusters}{number of subspaces (clusters)}
-
-\item{varaible}{}
 }
 \value{
 index number of subspace closest to variable
