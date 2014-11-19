@@ -182,7 +182,9 @@ choose.cluster.BIC <- function(variable, pcas, numberClusters){
     nparams <- ncol(pcas[[i]])
     n <- length(variable)
     res <- fastLmPure(pcas[[i]], variable, method = 0L)$residuals
-    sigma.hat <- var(res)
+    sigma.hat <- sqrt(sum(res^2)/100)
+    if (sigma.hat < 1e-15)
+      warning("In function choose.cluster.BIC: estimated value of noise in cluster is <1e-16. It might corrupt the result.")
     loglik <- sum(dnorm(res, 0, sigma.hat, log=T))
     BICs[i] <- loglik - nparams*log(n)/2
   }
@@ -238,6 +240,8 @@ choose.cluster <- function(variable, pcas, numberClusters){
 #' misclassification(partition1, partition1, max(table(partition1)), 10)
 #' misclassification(partition1, partition2, max(table(partition2)), 10)
 misclassification <-function(group, true_group, M, K){
+  if (length(group) != length(true_group))
+    stop("Partitions are of different lengths")
   forbidden <- NULL
   suma <- 0
   nG = max(group);
