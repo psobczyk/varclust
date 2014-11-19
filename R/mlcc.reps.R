@@ -21,6 +21,7 @@
 #' @param scale a boolean, if TRUE (value set by default) then variables in 
 #'        dataset are scaled to zero mean and unit variance
 #' @param numb.cores an integer, number of cores to be used, by default all cores are used
+#' @param estimate.dimensions a boolean, if TRUE (value set by default) subspaces dimensions are estimated
 #' @export
 #' @return A list consisting of
 #' \item{segmentation}{a vector containing the partition of the variables}
@@ -31,7 +32,8 @@
 #' sim.data <- data.simulation(n = 100, SNR = 1, K = 5, numb.vars = 30, max.dim = 2)
 #' mlcc.reps(sim.data$X, numb.clusters = 5, numb.runs = 20, max.dim = 4)}
 mlcc.reps <- function(X, numb.clusters = 2, numb.runs = 20, stop.criterion = 1, max.iter = 20, 
-                      initial.segmentations = NULL, max.dim = 2, scale = TRUE, numb.cores = NULL){
+                      initial.segmentations = NULL, max.dim = 4, scale = TRUE, numb.cores = NULL,
+                      estimate.dimensions = TRUE){
   if (is.data.frame(X)) {
     warnings("X is not a matrix. Casting to matrix.")
     X = as.matrix(X)
@@ -62,7 +64,8 @@ mlcc.reps <- function(X, numb.clusters = 2, numb.runs = 20, stop.criterion = 1, 
   BICs <- NULL 
   segmentations <- NULL
   segmentations <- foreach(i=(1:numb.runs)) %dopar% {
-    MPCV.res <- mlcc.kmeans(X=X, numberClusters=numb.clusters, maxSubspaceDim=max.dim, max.iter=max.iter, estimateDimensions = TRUE)
+    MPCV.res <- mlcc.kmeans(X=X, numberClusters=numb.clusters, maxSubspaceDim=max.dim, max.iter=max.iter, 
+                            estimate.dimensions = estimate.dimensions)
     current.segmentation <- MPCV.res$segmentation
     current.pcas <- MPCV.res$pcas
     list(current.segmentation, 
@@ -72,7 +75,8 @@ mlcc.reps <- function(X, numb.clusters = 2, numb.runs = 20, stop.criterion = 1, 
   i <- NULL
   segmentations2 <- foreach(i=(1:length(initial.segmentations))) %dopar% { #running user specified clusters
     MPCV.res <- mlcc.kmeans(X = X, numberClusters = numb.clusters, maxSubspaceDim = max.dim, 
-                            max.iter = max.iter, initial.segmentation = initial.segmentations[[i]])
+                            max.iter = max.iter, initial.segmentation = initial.segmentations[[i]],
+                            estimate.dimensions = estimate.dimensions)
     current.segmentation <- MPCV.res$segmentation
     current.pcas <- MPCV.res$pcas
     list(current.segmentation, 

@@ -67,7 +67,8 @@ mlcc.bic <- function(X, numb.clusters = 1:10, numb.runs = 20, stop.criterion = 1
   for(i in 1:length(numb.clusters)){
     number.clusters <- numb.clusters[i]
     MPCV.fit <- mlcc.reps(X = X, numb.clusters = number.clusters, numb.runs = numb.runs,
-                          max.dim = max.dim, scale = F, numb.cores = numb.cores)
+                          max.dim = max.dim, scale = F, numb.cores = numb.cores,
+                          estimate.dimensions = estimate.dimensions)
     BIC.sum <- 0
     if (estimate.dimensions) {
       sigma <- NULL

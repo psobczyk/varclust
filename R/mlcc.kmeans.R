@@ -9,12 +9,12 @@
 #' @param max.iter an integer, maximum number of iterations of k-means
 #' @param maxSubspaceDim an integer, maximum dimension of subspaces
 #' @param initial.segmentation a vector, initial segmentation of variables to clusters
-#' @param estimateDimensions a boolean, if TRUE (value set by default) subspaces dimensions are estimated
+#' @param estimate.dimensions a boolean, if TRUE (value set by default) subspaces dimensions are estimated
 #' @export
 #' @return A list consisting of:
 #' \item{segmentation}{a vector containing the partition of the variables}
 #' \item{pcas}{a list of matrices, basis vectors for each cluster (subspace)}
-mlcc.kmeans <- function(X, numberClusters=2, stop.criterion=1, max.iter=40, maxSubspaceDim=4, initial.segmentation=NULL, estimateDimensions=FALSE){
+mlcc.kmeans <- function(X, numberClusters=2, stop.criterion=1, max.iter=40, maxSubspaceDim=4, initial.segmentation=NULL, estimate.dimensions=FALSE){
   numbVars = dim(X)[2]
   rowNumb = dim(X)[1]
   pcas <- list(NULL)
@@ -32,7 +32,7 @@ mlcc.kmeans <- function(X, numberClusters=2, stop.criterion=1, max.iter=40, maxS
     pcas <- lapply(1:numberClusters, function(i){
       if(dim(X[,segmentation==i, drop=F])[2]>maxSubspaceDim){
         a <- summary(prcomp(x=X[,segmentation==i]))
-        if (estimateDimensions) {
+        if (estimate.dimensions) {
           cut <- which.max(sapply(1:maxSubspaceDim, 
                                   function(dim) cluster.BIC(X[,segmentation==i], rep(1,sum(segmentation==i)), max.dim = dim, numb.clusters = 1)))
         }
@@ -45,7 +45,7 @@ mlcc.kmeans <- function(X, numberClusters=2, stop.criterion=1, max.iter=40, maxS
           return(matrix(rnorm(rowNumb*maxSubspaceDim), nrow=rowNumb))
       }
     })
-    if (estimateDimensions)
+    if (estimate.dimensions)
       new.segmentation <- sapply(1:numbVars, function(j) choose.cluster.BIC(X[,j], pcas, numberClusters))
     else {
       new.segmentation <- sapply(1:numbVars, function(j) choose.cluster(X[,j], pcas, numberClusters))
