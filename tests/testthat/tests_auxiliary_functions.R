@@ -37,9 +37,25 @@ test_that("choose cluster BIC - warning for suspiciously low noise", {
 test_that("cluster BIC - is computed correctly. Works with mlcc.reps", {
   set.seed(1)
   sim.data <- varclust::data.simulation(n = 50, SNR = 1, K = 2, numb.vars = 20, max.dim = 2)
-  expect_true(abs(varclust::adjusted.cluster.BIC(scale(sim.data$X), sim.data$s, c(2,2), 2) == -2457.157)<1e-3)
+  expect_equal(varclust::adjusted.cluster.BIC(scale(sim.data$X), sim.data$s, c(2,2), 2), 
+               -2457.157, tolerance = 1e-3, scale = 1)
   #please note that for the mlcc.fit value is -2445.326
   #the difference is because of sigma estimation. In mlcc.fit we get smaller sigma because
   #we estimate it with max.dim, hence BIC is higher.
 })
 
+test_that("get sigma", {
+  set.seed(1)
+  sim.data <- varclust::data.simulation(n = 50, SNR = 1, K = 2, numb.vars = 20, max.dim = 2)
+  sigma2 <- varclust::getSigma(X = scale(sim.data$X), segmentation = sim.data$s, max.dim = 2, 
+                     n = 50, p = 2*20, numb.clusters = 2)
+  sigma3 <- varclust::getSigma(X = scale(sim.data$X), segmentation = sim.data$s, max.dim = 3, 
+                     n = 50, p = 2*20, numb.clusters = 2)
+  expect_more_than(sigma2, sigma3)
+  sigma2_sig <- varclust::getSigma(X = scale(sim.data$signals), segmentation = sim.data$s, max.dim = 2, 
+                               n = 50, p = 2*20, numb.clusters = 2)
+  expect_equal(sigma2_sig, 0)
+  # the values below were computed using version 0.9.19
+  expect_equal(sigma2, 0.7088557, tolerance = 1e-7, scale = 1)
+  expect_equal(sigma3, 0.6795928, tolerance = 1e-7, scale = 1)
+})
