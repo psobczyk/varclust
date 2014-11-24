@@ -71,8 +71,9 @@ data.simulation <- function(n = 100, SNR = 1, K = 10, numb.vars = 30, max.dim = 
 #' @return A list consisting of:
 #' \item{X}{matrix, generated data}
 #' \item{signals}{matrix, data without noise}
+#' \item{factors}{matrix, columns of which span subspaces}
+#' \item{indices}{list of vectors, indices of factors that span subspaces}
 #' \item{dims}{vector, dimensions of subspaces}
-#' \item{factors}{list of matrices, factors for subspaces}
 #' \item{s}{vector, true partiton of variables}
 #' @examples
 #' sim.data <- data.simulation()

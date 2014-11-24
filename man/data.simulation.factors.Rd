@@ -27,8 +27,9 @@ If equal.dims is FALSE then subspaces dimensions are drawn from uniform distribu
 A list consisting of:
 \item{X}{matrix, generated data}
 \item{signals}{matrix, data without noise}
+\item{factors}{matrix, columns of which span subspaces}
+\item{indices}{list of vectors, indices of factors that span subspaces}
 \item{dims}{vector, dimensions of subspaces}
-\item{factors}{list of matrices, factors for subspaces}
 \item{s}{vector, true partiton of variables}
 }
 \description{
