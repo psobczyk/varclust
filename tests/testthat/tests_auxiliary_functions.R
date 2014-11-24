@@ -59,3 +59,10 @@ test_that("get sigma", {
   expect_equal(sigma2, 0.7088557, tolerance = 1e-7, scale = 1)
   expect_equal(sigma3, 0.6795928, tolerance = 1e-7, scale = 1)
 })
+
+test_that("sim.data - factors are orthogonal", {
+  set.seed(1)
+  sim.data <- varclust::data.simulation(n = 50, SNR = 1, K = 2, numb.vars = 20, max.dim = 2)
+  expect_more_than(cor.test(sim.data$factors[,1], sim.data$factors[,2])$p.value, 0.05)
+  expect_more_than(cor.test(sim.data$factors[,3], sim.data$factors[,4])$p.value, 0.05)
+})

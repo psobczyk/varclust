@@ -32,17 +32,20 @@ data.simulation <- function(n = 100, SNR = 1, K = 10, numb.vars = 30, max.dim = 
   X <- NULL
   Y <- NULL
   s <- NULL
+  factors <- NULL
   for (j in 1:K){
     Z <- qr.Q(qr(replicate(dims[j], rnorm(n, 0, 1))))
     coeff <- matrix(runif(dims[j]*numb.vars, 0.1, 1) * sign(runif(dims[j]*numb.vars, -1, 1)), nrow=dims[j])
     SIGNAL <- Z %*% coeff
     SIGNAL <- scale(SIGNAL)
     Y <- cbind(Y,SIGNAL)
+    factors <- cbind(factors, Z)
     X <- cbind(X, SIGNAL + replicate(numb.vars, rnorm(n, 0, sigma)))
     s <- c(s, rep(j, numb.vars))
   }
   return(list(X = X,
               signals = Y,
+              factors = factors,
               dims = dims,
               s = s))
 }
