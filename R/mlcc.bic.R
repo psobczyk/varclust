@@ -30,6 +30,7 @@
 #' \item{BIC}{numeric, value of \code{\link{cluster.BIC}} criterion}
 #' \item{subspacesDimensions}{a list containing dimensions of the subspaces}
 #' \item{nClusters}{an integer, estimated number of clusters}
+#' \item{factors}{a list of matrices, basis for each subspace}
 #' \item{all.fit}{a list of segmentation, BIC, subspaces dimension for all numbers of clusters considered for an estimated subspace dimensions}
 #' \item{all.fit.dims}{a list of lists of segmentation, BIC, subspaces dimension for all numbers of clusters and subspaces dimensions considered}
 #' @examples
@@ -85,10 +86,18 @@ mlcc.bic <- function(X, numb.clusters = 1:10, numb.runs = 20, stop.criterion = 1
         BIC.sum <- BIC.sum + max(temp[!is.nan(temp)])
         dimensions <- append(dimensions, which.max(temp))
       }
-      results[[i]] <- list(segmentation=MPCV.fit$segmentation, BIC=BIC.sum, subspacesDimensions=dimensions, nClusters=number.clusters)
+      results[[i]] <- list(segmentation = MPCV.fit$segmentation, 
+                           BIC = BIC.sum, 
+                           subspacesDimensions = dimensions, 
+                           nClusters = number.clusters,
+                           factors = MPCV.fit$basis)
     }
     else{
-      results[[i]] <- list(segmentation=MPCV.fit$segmentation, BIC=MPCV.fit$BIC, subspacesDimensions=NULL, nClusters=number.clusters)
+      results[[i]] <- list(segmentation=MPCV.fit$segmentation, 
+                           BIC=MPCV.fit$BIC, 
+                           subspacesDimensions=NULL, 
+                           nClusters=number.clusters,
+                           factors = MPCV.fit$basis)
     }
     if (greedy & (i>2)) {
       if ( (results[[i]]$BIC < results[[i-1]]$BIC) &
@@ -110,6 +119,10 @@ mlcc.bic <- function(X, numb.clusters = 1:10, numb.runs = 20, stop.criterion = 1
     axis(side = 1, labels = numb.clusters[1:greedy.stop], at=numb.clusters[1:greedy.stop])
   }
   result <- results[[which.max(BICs)]]
+  result$factors <- lapply(1:result$nClusters, function(i) {
+    d <- ncol(result$factors[[i]]); 
+    colnames(result$factors[[i]]) <- paste(i, 1:d); 
+    result$factors[[i]] } )
   result$all.fit <- results
   class(result) <- "mlcc.fit"
   return(result)

@@ -24,13 +24,13 @@ We also provide function \code{\link{misclassification}} that computes misclassi
 rate between two partitions. This performance measure is
 extensively used in image segmentation.
 
-Version: 0.9.16
+Version: 0.9.21
 }
 \examples{
 \donttest{
 sim.data <- data.simulation(n=100, SNR=1, K=5, numb.vars=30, max.dim=2)
 mlcc.bic(sim.data$X, numb.clusters=1:5, numb.runs=20)
-mlcc.reps(sim.data$X, numb.clusters=5, numb.runs=20, max.dim=3)}
+mlcc.reps(sim.data$X, numb.clusters=5, numb.runs=20)}
 }
 \author{
 Piotr Sobczyk,

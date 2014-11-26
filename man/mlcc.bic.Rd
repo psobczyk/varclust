@@ -44,6 +44,7 @@ An object of class mlcc.fit consisting of
 \item{BIC}{numeric, value of \code{\link{cluster.BIC}} criterion}
 \item{subspacesDimensions}{a list containing dimensions of the subspaces}
 \item{nClusters}{an integer, estimated number of clusters}
+\item{factors}{a list of matrices, basis for each subspace}
 \item{all.fit}{a list of segmentation, BIC, subspaces dimension for all numbers of clusters considered for an estimated subspace dimensions}
 \item{all.fit.dims}{a list of lists of segmentation, BIC, subspaces dimension for all numbers of clusters and subspaces dimensions considered}
 }
