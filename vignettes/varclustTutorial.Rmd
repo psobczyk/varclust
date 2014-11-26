@@ -9,24 +9,34 @@ vignette: >
   \usepackage[utf8]{inputenc}
 ---
 
-varclust is a package that enables dimension reduction via variables clustering. 
+## Tutorial for **varclust** package
+
+#### Introduction
+
+**varclust** is a package that enables dimension reduction via variables clustering. 
 We assume that each group of variables can be summarized with few latent variables.
 
 This tutorial will gently introduce you to usage of package **varclust** and
 familiarize with its options.
 
-You can install **varclust** from either CRAN (stable version) or github (the current development version).
+You can install **varclust** from github (current development version).
+```
+install_github("psobczyk/varclust")
+```
+
+#### Main usage example
 
 ```{r, results='hide', message=FALSE, warning=FALSE}
 library(varclust)
 library(mclust)
 ```
 
-First let us consider some real genomic data. We're going to use FactoMineR package data.
-This data consists of two types of variables. First group are gene expression data.
-The second is RNA data.
+Let us consider some real genomic data. We're going to use 
+[FactoMineR package](http://factominer.free.fr/) data.
+This data consists of two types of variables. First group are gene 
+expression data. The second is RNA data.
 Please note that it may take few minutes to run the following code:
-```{r}
+```{r, warning=FALSE}
 comp <- read.table("http://factominer.free.fr/docs/gene.csv",sep=";",header=T,row.names=1) 
 benchmarkClustering <- c(rep(1, 68), rep(2, 356))    
 comp <- data.frame(comp[,-ncol(comp)])   
@@ -46,28 +56,53 @@ very high Adjusted Rand Index.
 
 ```{r}
 part <- NULL
-part[mlcc.fit$segmentation %in% c(4,5)] <- 1
-part[!mlcc.fit$segmentation %in% c(4,5)] <- 2
+part[mlcc.fit$segmentation %in% c(4,5,10,12)] <- 1
+part[!mlcc.fit$segmentation %in% c(4,5,10,12)] <- 2
 mclust::adjustedRandIndex(part, benchmarkClustering)
 misclassification(part, benchmarkClustering, max(table(benchmarkClustering)), 2)
 ```
 
 If you know what is the true number of clusters you might use **mlcc.reps** function instead.
 In that case you can also compare segmentations in terms of misclassification.
-```{r}
+```{r, warning=FALSE}
 mlcc.fit2 <- mlcc.reps(X=comp, numb.clusters = 2, numb.runs = 20, max.dim = 4, numb.cores=1)
 mlcc.fit2
 mclust::adjustedRandIndex(mlcc.fit2$segmentation, benchmarkClustering)
 misclassification(mlcc.fit2$segmentation, benchmarkClustering, max(table(benchmarkClustering)), 2)
 ```
+
+#### Running algorithm with some initial segmentation
+
 You should also use **mlcc.reps** function if you have some apriori knowledge regarding true segmentation.
 You can enforce starting point
-```{r}
+```{r, warning=FALSE}
 mlcc.fit3 <- mlcc.reps(comp, numb.clusters = 2, numb.runs = 0, max.dim = 2, 
                        initial.segmentations=list(benchmarkClustering), numb.cores=1)
 mclust::adjustedRandIndex(mlcc.fit3$segmentation, benchmarkClustering)
 misclassification(mlcc.fit3$segmentation, benchmarkClustering, max(table(benchmarkClustering)), 2)
 ```
 
-If possible one should use multiple cores for computation. By default all but one cores are used. 
-User can override this with **numb.cores** parameter as shown above.
+#### Execution time
+Execution time of **mlcc.bic** depends mainly on:
+
+1. Number of clusters (*numb.clusters*)
+2. Number of variables 
+3. Number of runs of k-means algorithm (*numb.runs*)
+
+For a dataset of 1000 variables and 10 clusters computation takes about 
+8 minutes on Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz.
+
+#### Choosing values of parameters
+
+* If possible one should use multiple cores for computation. By default all 
+  but one cores are used. User can override this with **numb.cores** parameter
+* For more precise segmentation one should increase **numb.runs**. 
+  Default value is 20
+* Parameter **max.dim** should reflect how large we expect subspaces to be. 
+  Default value is 4
+* If parameter **greedy** is TRUE (value set by default) the number of clusters
+  is estimated in a greedy way. So program stops after getting first 
+  BIC local maximum
+* If **estimate.dimensions** is TRUE subspaces dimensions are estimated. 
+  Otherwise all subspaces are assumed to be of dimension *max.dim*
+  
