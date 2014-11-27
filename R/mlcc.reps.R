@@ -65,7 +65,7 @@ mlcc.reps <- function(X, numb.clusters = 2, numb.runs = 20, stop.criterion = 1, 
   BICs <- NULL 
   segmentations <- NULL
   segmentations <- foreach(i=(1:numb.runs)) %dopar% {
-    MPCV.res <- mlcc.kmeans(X=X, numberClusters=numb.clusters, maxSubspaceDim=max.dim, max.iter=max.iter, 
+    MPCV.res <- mlcc.kmeans(X=X, number.clusters=numb.clusters, max.subspace.dim=max.dim, max.iter=max.iter, 
                             estimate.dimensions = estimate.dimensions)
     current.segmentation <- MPCV.res$segmentation
     current.pcas <- MPCV.res$pcas
@@ -75,7 +75,7 @@ mlcc.reps <- function(X, numb.clusters = 2, numb.runs = 20, stop.criterion = 1, 
   }
   i <- NULL
   segmentations2 <- foreach(i=(1:length(initial.segmentations))) %dopar% { #running user specified clusters
-    MPCV.res <- mlcc.kmeans(X = X, numberClusters = numb.clusters, maxSubspaceDim = max.dim, 
+    MPCV.res <- mlcc.kmeans(X = X, number.clusters = numb.clusters, max.subspace.dim = max.dim, 
                             max.iter = max.iter, initial.segmentation = initial.segmentations[[i]],
                             estimate.dimensions = estimate.dimensions)
     current.segmentation <- MPCV.res$segmentation
