@@ -3,20 +3,20 @@
 \alias{mlcc.kmeans}
 \title{Multiple Latent Components Clustering - kmeans algorithm}
 \usage{
-mlcc.kmeans(X, numberClusters = 2, stop.criterion = 1, max.iter = 40,
-  maxSubspaceDim = 4, initial.segmentation = NULL,
+mlcc.kmeans(X, number.clusters = 2, stop.criterion = 1, max.iter = 40,
+  max.subspace.dim = 4, initial.segmentation = NULL,
   estimate.dimensions = FALSE)
 }
 \arguments{
 \item{X}{a matrix with only continuous variables}
 
-\item{numberClusters}{an integer, number of clusters to be used}
+\item{number.clusters}{an integer, number of clusters to be used}
 
 \item{stop.criterion}{an integer indicating how many changes in partitions triggers stopping the algorithm}
 
 \item{max.iter}{an integer, maximum number of iterations of k-means}
 
-\item{maxSubspaceDim}{an integer, maximum dimension of subspaces}
+\item{max.subspace.dim}{an integer, maximum dimension of subspaces}
 
 \item{initial.segmentation}{a vector, initial segmentation of variables to clusters}
 

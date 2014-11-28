@@ -18,4 +18,5 @@ index number of subspace closest to variable
 \description{
 The most similar subspace is choosen based on BIC criterion
 }
+\keyword{internal}
 

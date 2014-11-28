@@ -76,9 +76,9 @@ data.simulation <- function(n = 100, SNR = 1, K = 10, numb.vars = 30, max.dim = 
 #' \item{dims}{vector, dimensions of subspaces}
 #' \item{s}{vector, true partiton of variables}
 #' @examples
-#' sim.data <- data.simulation()
-#' sim.data2 <- data.simulation(n = 30, SNR = 2, K = 5, numb.vars = 20, 
-#'                              max.dim = 3, equal.dims = FALSE)
+#' sim.data <- data.simulation.factors()
+#' sim.data2 <- data.simulation.factors(n = 30, SNR = 2, K = 5, numb.vars = 20,
+#'              numb.factors = 10, max.dim = 3, equal.dims = FALSE)
 data.simulation.factors <- function(n = 100, SNR = 1, K = 10, numb.vars = 30, numb.factors = 10, max.dim = 2, equal.dims = TRUE){
   sigma <- 1/SNR
   #subspaces dimensions depend on equal.dims value

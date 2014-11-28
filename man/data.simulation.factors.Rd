@@ -38,8 +38,8 @@ Generating data for simulation with a low-rank subspace structure:
  Factors that span subspaces are shared between clusters
 }
 \examples{
-sim.data <- data.simulation()
-sim.data2 <- data.simulation(n = 30, SNR = 2, K = 5, numb.vars = 20,
-                             max.dim = 3, equal.dims = FALSE)
+sim.data <- data.simulation.factors()
+sim.data2 <- data.simulation.factors(n = 30, SNR = 2, K = 5, numb.vars = 20,
+             numb.factors = 10, max.dim = 3, equal.dims = FALSE)
 }
 
