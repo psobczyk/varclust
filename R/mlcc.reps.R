@@ -70,18 +70,22 @@ mlcc.reps <- function(X, numb.clusters = 2, numb.runs = 20, stop.criterion = 1, 
     current.segmentation <- MPCV.res$segmentation
     current.pcas <- MPCV.res$pcas
     list(current.segmentation, 
-         adjusted.cluster.BIC(X, current.segmentation, sapply(current.pcas, ncol), numb.clusters), 
+         adjusted.cluster.BIC(X, current.segmentation, 
+                              sapply(current.pcas, ncol), numb.clusters), 
          current.pcas)
   }
   i <- NULL
-  segmentations2 <- foreach(i=(1:length(initial.segmentations))) %dopar% { #running user specified clusters
-    MPCV.res <- mlcc.kmeans(X = X, number.clusters = numb.clusters, max.subspace.dim = max.dim, 
-                            max.iter = max.iter, initial.segmentation = initial.segmentations[[i]],
+  #running user specified clusters
+  segmentations2 <- foreach(i=(1:length(initial.segmentations))) %dopar% { 
+    MPCV.res <- mlcc.kmeans(X = X, number.clusters = numb.clusters, 
+                            max.subspace.dim = max.dim, max.iter = max.iter, 
+                            initial.segmentation = initial.segmentations[[i]],
                             estimate.dimensions = estimate.dimensions)
     current.segmentation <- MPCV.res$segmentation
     current.pcas <- MPCV.res$pcas
     list(current.segmentation, 
-         adjusted.cluster.BIC(X, current.segmentation, sapply(current.pcas, ncol), numb.clusters), 
+         adjusted.cluster.BIC(X, current.segmentation, 
+                              sapply(current.pcas, ncol), numb.clusters), 
          current.pcas)
   }
   segmentations <- append(segmentations, segmentations2)

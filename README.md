@@ -21,8 +21,7 @@
 
 #### Iterative estimation:
 
-1. remove estimating subspace in mlcc.bic - it is now done in mlcc.reps. Right now the 
-  way of computing sigma is not coherent with mlcc.kmeans
+1. Rewrite clusterBIC to use function getSIGMA
 
 #### Initialization:
 

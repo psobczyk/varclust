@@ -67,55 +67,33 @@ mlcc.bic <- function(X, numb.clusters = 1:10, numb.runs = 20, stop.criterion = 1
   
   for(i in 1:length(numb.clusters)){
     number.clusters <- numb.clusters[i]
-    MPCV.fit <- mlcc.reps(X = X, numb.clusters = number.clusters, numb.runs = numb.runs,
-                          max.dim = max.dim, scale = F, numb.cores = numb.cores,
+    MPCV.fit <- mlcc.reps(X = X, numb.clusters = number.clusters, 
+                          numb.runs = numb.runs, max.dim = max.dim, scale = F,
+                          numb.cores = numb.cores, 
                           estimate.dimensions = estimate.dimensions)
-    BIC.sum <- 0
-    if (estimate.dimensions) {
-      sigma <- NULL
-      #SIGMA estimated jointly, we reduce the number of models considered that way
-      sigma <- getSigma(X, MPCV.fit$segmentation, max.dim, n, p, number.clusters)
-      #SIGMA estimated jointly, we reduce the number of models considered that way
-      dimensions <- list()
-      for(k in 1:number.clusters){
-        temp <- 1
-        for(d in 1:max.dim){
-          temp[d] <- cluster.BIC(X[ ,MPCV.fit$segmentation==k, drop=F],
-                                 rep(1, sum(MPCV.fit$segmentation==k)), d, 1, sigma=sigma)
-        }
-        BIC.sum <- BIC.sum + max(temp[!is.nan(temp)])
-        dimensions <- append(dimensions, which.max(temp))
-      }
-      results[[i]] <- list(segmentation = MPCV.fit$segmentation, 
-                           BIC = BIC.sum, 
-                           subspacesDimensions = dimensions, 
-                           nClusters = number.clusters,
-                           factors = MPCV.fit$basis)
-    }
-    else{
-      results[[i]] <- list(segmentation=MPCV.fit$segmentation, 
-                           BIC=MPCV.fit$BIC, 
-                           subspacesDimensions=NULL, 
-                           nClusters=number.clusters,
-                           factors = MPCV.fit$basis)
-    }
+    
+    results[[i]] <- list(segmentation = MPCV.fit$segmentation, 
+                         BIC = MPCV.fit$BIC, 
+                         subspacesDimensions = lapply(MPCV.fit$basis, ncol), 
+                         nClusters = number.clusters, factors = MPCV.fit$basis)
     if (greedy & (i>2)) {
       if ( (results[[i]]$BIC < results[[i-1]]$BIC) &
              (results[[i-2]]$BIC < results[[i-1]]$BIC) ){
         greedy.stop <- i
-        if (verbose) cat(paste("    ", number.clusters, "    ",
-                               formatC(results[[i]]$BIC,
-                                       digits=ceiling(log(abs(results[[i]]$BIC),10))), "\n"))
+        if (verbose) cat(paste("       ", number.clusters, "        ", 
+                               formatC(results[[i]]$BIC, digits = 
+                                         ceiling(log(abs(results[[i]]$BIC),10))), "\n"))
         break
       }
     }
-    if (verbose) cat(paste("    ", number.clusters, "    ",
-                           formatC(results[[i]]$BIC,
-                                   digits=ceiling(log(abs(results[[i]]$BIC),10))), "\n"))
+    if (verbose) cat(paste("       ", number.clusters, "        ",
+                           formatC(results[[i]]$BIC, digits = 
+                                     ceiling(log(abs(results[[i]]$BIC),10))), "\n"))
   }
   BICs <- lapply(results, function(res) res$BIC)
   if (verbose) {
-    plot(numb.clusters[1:greedy.stop], BICs, type="b", xaxt="n", ylab="BIC", xlab="Number of clusters")
+    plot(numb.clusters[1:greedy.stop], BICs, type="b", xaxt="n", ylab="BIC", 
+         xlab="Number of clusters")
     axis(side = 1, labels = numb.clusters[1:greedy.stop], at=numb.clusters[1:greedy.stop])
   }
   result <- results[[which.max(BICs)]]
