@@ -36,7 +36,7 @@ test_that("choose cluster BIC - warning for suspiciously low noise", {
 })
 
 
-test_that("cluster BIC - is computed correctly. Works with mlcc.reps", {
+test_that("adjusted cluster BIC - is computed correctly. Works with mlcc.reps", {
   set.seed(1)
   sim.data <- varclust::data.simulation(n = 50, SNR = 1, K = 2, numb.vars = 20, max.dim = 2)
   expect_equal(varclust:::adjusted.cluster.BIC(scale(sim.data$X), sim.data$s, c(2,2), 2), 
