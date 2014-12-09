@@ -13,7 +13,7 @@
 
 * Install *varclust* package using devtools package
 ```
-install_github("psobczyk/varclust_public")
+install_github("psobczyk/varclust")
 ```
 * Download the package and install it manually from R console
 * You might need to install package dependencies:
