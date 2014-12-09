@@ -71,6 +71,13 @@ mclust::adjustedRandIndex(mlcc.fit2$segmentation, benchmarkClustering)
 misclassification(mlcc.fit2$segmentation, benchmarkClustering, max(table(benchmarkClustering)), 2)
 ```
 
+##### More details about the method
+The algorithm aims to reduce dimensionality of data by clustering variables.
+It is assumed that variables lie in few low-rank subspaces. Our iterative algorithm
+recovers their partition as well as estimates number of clusters and dimensions
+of subspaces. This kind of problem is called Subspace Clustering. For a reference
+comparing multiple approaches [see here.](http://cis.jhu.edu/~rvidal/publications/SPM-Tutorial-Final.pdf)
+
 #### Running algorithm with some initial segmentation
 
 You should also use **mlcc.reps** function if you have some apriori knowledge regarding true segmentation.
