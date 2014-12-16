@@ -64,9 +64,13 @@ data.simulation <- function(n = 100, SNR = 1, K = 10, numb.vars = 30, max.dim = 
 #' @param K an integer, number of subspaces
 #' @param numb.vars an integer, number of variables in each subspace
 #' @param numb.factors an integer, number of factors from which subspaces basis will be drawn
+#' @param min.dim an integer, if equal.dims is TRUE then max.dim is dimension of each subspace.
+#'        If equal.dims is FALSE then subspaces dimensions are drawn from uniform distribution on [min.dim,max.dim]
 #' @param max.dim an integer, if equal.dims is TRUE then max.dim is dimension of each subspace.
-#'        If equal.dims is FALSE then subspaces dimensions are drawn from uniform distribution on [1,max.dim]
+#'        If equal.dims is FALSE then subspaces dimensions are drawn from uniform distribution on [min.dim,max.dim]
 #' @param equal.dims a boolean, if TRUE (value set by default) all clusters are of the same dimension
+#' @param separation.parameter a numeric, coefficients of variables in each 
+#'        subspace basis are drawn from range [separation.parameter,1]
 #' @export
 #' @return A list consisting of:
 #' \item{X}{matrix, generated data}
@@ -78,14 +82,16 @@ data.simulation <- function(n = 100, SNR = 1, K = 10, numb.vars = 30, max.dim = 
 #' @examples
 #' sim.data <- data.simulation.factors()
 #' sim.data2 <- data.simulation.factors(n = 30, SNR = 2, K = 5, numb.vars = 20,
-#'              numb.factors = 10, max.dim = 3, equal.dims = FALSE)
-data.simulation.factors <- function(n = 100, SNR = 1, K = 10, numb.vars = 30, numb.factors = 10, max.dim = 2, equal.dims = TRUE){
+#'              numb.factors = 10, max.dim = 3, equal.dims = FALSE, separation.parameter = 0.2)
+data.simulation.factors <- function(n = 100, SNR = 1, K = 10, numb.vars = 30, numb.factors = 10, 
+                                    min.dim = 1, max.dim = 2, equal.dims = TRUE, 
+                                    separation.parameter = 0.1){
   sigma <- 1/SNR
   #subspaces dimensions depend on equal.dims value
   if(equal.dims)
     dims <- rep(max.dim,K)
   else
-    dims <- sample(1:max.dim, K, replace=T)   
+    dims <- sample(min.dim:max.dim, K, replace=T)   
   
   factors <- scale(replicate(numb.factors, rnorm(n, 0, 1)))
   X <- NULL
@@ -95,7 +101,7 @@ data.simulation.factors <- function(n = 100, SNR = 1, K = 10, numb.vars = 30, nu
   for (j in 1:K){
     factors.indices[[j]] <- sample(numb.factors, dims[j], replace = FALSE)
     Z <- factors[, factors.indices[[j]] , drop=FALSE]
-    coeff <- matrix(runif(dims[j]*numb.vars, 0.1, 1) * sign(runif(dims[j]*numb.vars, -1, 1)), nrow=dims[j])
+    coeff <- matrix(runif(dims[j]*numb.vars, separation.parameter, 1) * sign(runif(dims[j]*numb.vars, -1, 1)), nrow=dims[j])
     SIGNAL <- Z %*% coeff
     SIGNAL <- scale(SIGNAL)
     Y <- cbind(Y,SIGNAL)
