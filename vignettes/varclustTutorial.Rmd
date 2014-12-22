@@ -50,8 +50,8 @@ mclust::adjustedRandIndex(mlcc.fit$segmentation, benchmarkClustering)
 
 One might be a little concerned by high number of clusters found and 
 that our benchmark clustering was not recognized, however,
-what we expect to see is the seperation of RNA and expression groups, not the homogenity
-within those groups. If we define different partion based on mlcc.fit we're getting 
+what we expect to see is the separation of RNA and expression groups, not the homogeneity
+within those groups. If we define different partition based on mlcc.fit we're getting 
 very high Adjusted Rand Index.
 
 ```{r}
@@ -63,7 +63,7 @@ misclassification(part, benchmarkClustering, max(table(benchmarkClustering)), 2)
 ```
 
 If you know what is the true number of clusters you might use **mlcc.reps** function instead.
-In that case you can also compare segmentations in terms of misclassification.
+In that case you can also compare segmentation in terms of misclassification.
 ```{r, warning=FALSE}
 mlcc.fit2 <- mlcc.reps(X=comp, numb.clusters = 2, numb.runs = 20, max.dim = 4, numb.cores=1)
 mlcc.fit2
