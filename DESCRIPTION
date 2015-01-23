@@ -1,15 +1,14 @@
 Package: varclust
 Type: Package
-Title: Variable Clustering
+Title: Variables Clustering
 Version: 0.9.22
 Date: 2015-01-22
 Author: Piotr Sobczyk, Julie Josse
 Maintainer: Piotr Sobczyk <piotr.sobczyk@pwr.edu.pl>
-Description: Package varclust performs clustering of variables, according
-  to a probabilistic model, which assumes that each variable is part of a 
-  cluster, that lies in a low dimensional subspace. Segmentation of variables, 
+Description: Package varclust performs clustering of quantitative variables, 
+  assuming that clusters lie in low-dimensional subspaces. Segmentation of variables, 
   number of clusters and their dimensions are selected based on the appropriate 
-  implementation of the Bayesian Information Criterion. 
+  implementation of the Bayesian Information Criterion.
 License: GPL-3
 Depends:
     R (>= 3.0.2)
