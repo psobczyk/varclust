@@ -33,7 +33,7 @@
 #'
 #' @docType package
 #' @name varclust
-#' @details Version: 0.9.21
+#' @details Version: 0.9.22
 #' @importFrom RcppEigen fastLmPure
 #' @importFrom doMC registerDoMC
 #' @importFrom parallel detectCores

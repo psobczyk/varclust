@@ -57,12 +57,18 @@ adjusted.cluster.BIC <- function(X, segmentation, dims, numb.clusters, adjustmen
       likelihoods[k] <- sum(dnorm(as.matrix((RESIDUAL[,]), nrow=1), mean=0 , sd=sigma, log=T))
       mk <- ncol(Xk)
       penalties[k] <- 1/2*log(mk)*(max.dim*(D - max.dim +mk))
-    }
-    else{
-      RESIDUAL = Xk - Xk
-      likelihoods[k] <- sum(dnorm(as.matrix((RESIDUAL[,]), nrow=1), mean=0 , sd=sigma, log=T))
-      mk <- max(ncol(Xk),1)
-      penalties[k] <- 1/2*log(mk)*(max.dim*(D - max.dim +mk))
+      if(!estimateJointly)
+        penalties[k] <- penalties[k] + 1/2*log(mk) #for estimating sigma
+    } else{
+        if(!estimateJointly & is.null(sigma)){ 
+          likelihoods[k] <- 0
+          penalties[k] <- 0
+        } else{
+          RESIDUAL = Xk - Xk
+          likelihoods[k] <- sum(dnorm(as.matrix((RESIDUAL[,]), nrow=1), mean=0 , sd=sigma, log=T))
+          mk <- max(ncol(Xk),1)
+          penalties[k] <- 1/2*log(mk)*(max.dim*(D - max.dim +mk))
+        }
     }
   }
   BIC <- sum(likelihoods) - adjustment*sum(penalties)
