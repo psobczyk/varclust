@@ -9,7 +9,7 @@
 
 Package **varclust**
 
-* is $\text{R}$ package for clustering quantitative variables
+* is **R** package for clustering quantitative variables
 * provides estimation of number of clusters
 * enables significant data dimension reduction
 
@@ -22,7 +22,7 @@ Package **varclust**
 ```
 install_github("psobczyk/varclust")
 ```
-* Download the package as an archive and install it manually from R console
+* Download the package as an archive and install it manually from **R** console
 * You might need to install package dependencies:
     * RcppEigen
     * doMC
