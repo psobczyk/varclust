@@ -3,12 +3,13 @@ Type: Package
 Title: Variables Clustering
 Version: 0.9.22
 Date: 2015-01-22
-Author: Piotr Sobczyk, Julie Josse
+Author: Piotr Sobczyk, Julie Josse, Malgorzata Bogdan
 Maintainer: Piotr Sobczyk <piotr.sobczyk@pwr.edu.pl>
 Description: Package varclust performs clustering of quantitative variables, 
-  assuming that clusters lie in low-dimensional subspaces. Segmentation of variables, 
-  number of clusters and their dimensions are selected based on the appropriate 
-  implementation of the Bayesian Information Criterion.
+  assuming that clusters lie in low-dimensional subspaces. Segmentation of
+  variables, number of clusters and their dimensions are selected based on BIC.
+  Candidate models are identified based on many runs of K-means algorithm with
+  different random initializations of cluser centers.
 License: GPL-3
 Depends:
     R (>= 3.0.2)

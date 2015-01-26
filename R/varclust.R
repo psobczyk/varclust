@@ -39,12 +39,11 @@
 #' @importFrom parallel detectCores
 #' @import foreach
 #' @author Piotr Sobczyk,
-#'         Julie Josse
+#'         Julie Josse,
+#'         Małgorzata Bogdan
 #' 
 #' Maintainer: Piotr Sobczyk \email{Piotr.Sobczyk@@pwr.edu.pl}
 #' @references 
-#' Piotr Sobczyk, Malgorzata Bogdan, Julie Josse, \emph{Clustering around latent variables - a technical report}, 2014, 
-#' \url{www.im.pwr.edu.pl/~sobczyk/research.html} 
 #' 
 #' @examples
 #' \donttest{

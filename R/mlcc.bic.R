@@ -1,10 +1,11 @@
 #' Subspace clustering with automatic estimation of number of clusters
 #' and their dimension
 #'
-#' Estimate the number of clusters according to the BIC. Basic k-means based 
-#' Multiple Latent Components Clustering (MLCC) algorithm (\code{\link{mlcc.kmeans}}) is run a 
-#' given number of times (\emph{numb.runs}) for each number of clusters in \emph{numb.clusters}.
-#' The best partition is choosen with BIC (see \code{\link{mlcc.reps} function})
+#' Clustering of quantitative variables into a number, estimated with BIC, of clusters. 
+#' Basic k-means based Multiple Latent Components Clustering (MLCC) algorithm 
+#' (\code{\link{mlcc.kmeans}}) is run a given number of times (\emph{numb.runs})
+#' for each considered number of clusters in \emph{numb.clusters}.
+#' The best partition is choosen with BIC (see \code{\link{mlcc.reps} function}).
 #'
 #' @param X a data frame or a matrix with only continuous variables
 #' @param numb.clusters a vector, numbers of clusters to be checked
