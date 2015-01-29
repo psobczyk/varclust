@@ -33,17 +33,16 @@
 #'
 #' @docType package
 #' @name varclust
-#' @details Version: 0.9.22
+#' @details Version: 0.9.23
 #' @importFrom RcppEigen fastLmPure
 #' @importFrom doMC registerDoMC
 #' @importFrom parallel detectCores
 #' @import foreach
 #' @author Piotr Sobczyk,
 #'         Julie Josse,
-#'         Małgorzata Bogdan
+#'         Malgorzata Bogdan
 #' 
 #' Maintainer: Piotr Sobczyk \email{Piotr.Sobczyk@@pwr.edu.pl}
-#' @references 
 #' 
 #' @examples
 #' \donttest{

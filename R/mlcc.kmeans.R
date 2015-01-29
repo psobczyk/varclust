@@ -30,11 +30,12 @@ mlcc.kmeans <- function(X, number.clusters=2, stop.criterion=1, max.iter=40, max
   new.segmentation <- segmentation
   for (iter in 1:max.iter){
     pcas <- lapply(1:number.clusters, function(i){
+      sub.dim <- dim(X[,segmentation==i, drop=F])[2]
       if(dim(X[,segmentation==i, drop=F])[2]>max.subspace.dim){
         a <- summary(prcomp(x=X[,segmentation==i]))
         if (estimate.dimensions) {
-          cut <- which.max(sapply(1:max.subspace.dim, 
-                                  function(dim) cluster.BIC(X[,segmentation==i], rep(1,sum(segmentation==i)), max.dim = dim, numb.clusters = 1)))
+          cut <- which.max(sapply(1:min(floor(sqrt(sub.dim)), max.subspace.dim), 
+                                  function(dim) pca.BIC(X[,segmentation==i], k = dim)))
         }
         else {
           cut <- max.subspace.dim
@@ -42,7 +43,8 @@ mlcc.kmeans <- function(X, number.clusters=2, stop.criterion=1, max.iter=40, max
         return(matrix(a$x[,1:cut], nrow=rowNumb))
       }
       else{
-          return(matrix(rnorm(rowNumb*max.subspace.dim), nrow=rowNumb))
+        dim <- max(1, floor(sqrt(sub.dim)))
+        return(matrix(rnorm(rowNumb*dim), nrow = rowNumb, ncol = dim))
       }
     })
     if (estimate.dimensions)

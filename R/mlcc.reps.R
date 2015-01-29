@@ -70,8 +70,10 @@ mlcc.reps <- function(X, numb.clusters = 2, numb.runs = 20, stop.criterion = 1, 
     current.segmentation <- MPCV.res$segmentation
     current.pcas <- MPCV.res$pcas
     list(current.segmentation, 
-         adjusted.cluster.BIC(X, current.segmentation, 
-                              sapply(current.pcas, ncol), numb.clusters), 
+         cluster.pca.BIC(X, 
+                         current.segmentation,
+                         sapply(current.pcas, ncol), 
+                         numb.clusters), 
          current.pcas)
   }
   i <- NULL
@@ -84,8 +86,10 @@ mlcc.reps <- function(X, numb.clusters = 2, numb.runs = 20, stop.criterion = 1, 
     current.segmentation <- MPCV.res$segmentation
     current.pcas <- MPCV.res$pcas
     list(current.segmentation, 
-         adjusted.cluster.BIC(X, current.segmentation, 
-                              sapply(current.pcas, ncol), numb.clusters), 
+         cluster.pca.BIC(X, 
+                         current.segmentation,
+                         sapply(current.pcas, ncol), 
+                         numb.clusters), 
          current.pcas)
   }
   segmentations <- append(segmentations, segmentations2)

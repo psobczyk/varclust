@@ -37,7 +37,7 @@ We also provide function \code{\link{misclassification}} that computes misclassi
 rate between two partitions. This performance measure is
 extensively used in image segmentation.
 
-Version: 0.9.21
+Version: 0.9.23
 }
 \examples{
 \donttest{
@@ -47,12 +47,9 @@ mlcc.reps(sim.data$X, numb.clusters=5, numb.runs=20)}
 }
 \author{
 Piotr Sobczyk,
-        Julie Josse
+        Julie Josse,
+        Malgorzata Bogdan
 
 Maintainer: Piotr Sobczyk \email{Piotr.Sobczyk@pwr.edu.pl}
-}
-\references{
-Piotr Sobczyk, Malgorzata Bogdan, Julie Josse, \emph{Clustering around latent variables - a technical report}, 2014,
-\url{www.im.pwr.edu.pl/~sobczyk/research.html}
 }
 

@@ -49,10 +49,11 @@ An object of class mlcc.fit consisting of
 \item{all.fit.dims}{a list of lists of segmentation, BIC, subspaces dimension for all numbers of clusters and subspaces dimensions considered}
 }
 \description{
-Estimate the number of clusters according to the BIC. Basic k-means based
-Multiple Latent Components Clustering (MLCC) algorithm (\code{\link{mlcc.kmeans}}) is run a
-given number of times (\emph{numb.runs}) for each number of clusters in \emph{numb.clusters}.
-The best partition is choosen with BIC (see \code{\link{mlcc.reps} function})
+Clustering of quantitative variables into a number, estimated with BIC, of clusters.
+Basic k-means based Multiple Latent Components Clustering (MLCC) algorithm
+(\code{\link{mlcc.kmeans}}) is run a given number of times (\emph{numb.runs})
+for each considered number of clusters in \emph{numb.clusters}.
+The best partition is choosen with BIC (see \code{\link{mlcc.reps} function}).
 }
 \examples{
 \donttest{

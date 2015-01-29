@@ -1,3 +1,80 @@
+
+#' BIC for PCA
+#' 
+#' Computes the value of BIC criterion for given data set and 
+#' number of factors.
+#' 
+#' @param X a matrix with only continuous variables
+#' @param k number of principal components fitted
+#' @keywords internal
+#' @references Automatic choice of dimensionality for PCA, Thomas P. Minka
+#' @return BIC value of BIC criterion
+pca.BIC <- function(X, k){
+  d <- dim(X)[1]
+  N <- dim(X)[2]
+  m <- d*k - k*(k+1)/2
+  
+  mu <- rowMeans(X)
+  S <- matrix(0, ncol=d, nrow=d)
+  for (j in 1:N){
+    S <- S + (X[,j]-mu)%*%t((X[,j])-mu)
+  }
+  
+  lambda <- eigen(S/N)$values
+  v <- sum(lambda[(k+1):d])/(d-k) 
+  #   print(v)
+  
+  t1 <- -N/2*sum(log(lambda[1:k]))
+  t2 <- -N*(d-k)/2*log(v)
+  t3 <- -(m+k)/2*log(N)
+
+  t1+t2+t3
+}
+
+
+#' BIC for subspace clustering
+#' 
+#' Computes the value of BIC criterion for given data set and partition.
+#' In each cluster we assume that variables are spanned by few factors.
+#' Considering maximum likelihood we get that those factors are in fact
+#' principal components. Noise sigma can be computed jointly for all clusters (default),
+#' seperately for each cluster or be specified as input.
+#' 
+#' 
+#' @param X a matrix with only continuous variables
+#' @param segmentation a vector, segmentation for which likelihood is computed. Clusters
+#'        numbers should be from range [1, numb.clusters]
+#' @param dims a vector of integers, dimensions of subspaces. Number of principal components
+#'        that span each subspace.
+#' @param numb.clusters an integer, number of clusters
+#' @keywords internal
+#' @return BIC value of BIC criterion
+cluster.pca.BIC <- function(X, segmentation, dims, numb.clusters){
+  if(!is.matrix(X)){ # if X is one variable it is stored as vector
+    X <- matrix(X, ncol=1)
+  }
+  D = dim(X)[1]
+  p = dim(X)[2]
+  
+  formula <- rep(0, numb.clusters)   
+  for(k in 1:numb.clusters){
+    #one cluster
+    max.dim = dims[k]
+    Xk = X[,segmentation==k, drop=F]
+    if(dim(Xk)[2]>max.dim){
+      formula[k] <- pca.BIC(Xk, max.dim)
+    } else{
+        formula[k] <- -Inf
+    }
+  }
+  #apriori
+  apriori.segmentations <- -lgamma(p+1)+ sum(lgamma(table(segmentation)+1))
+  apriori.dimensions <- - log(4)*numb.clusters
+  BIC <- sum(formula) + apriori.segmentations + apriori.dimensions
+  return(BIC)
+}
+
+
 #' BIC for subspace clustering
 #' 
 #' Computes the value of BIC criterion for given data set and partition.
@@ -39,6 +116,10 @@ adjusted.cluster.BIC <- function(X, segmentation, dims, numb.clusters, adjustmen
     }, 0.9))  
     max.dim = max(dims)
     degrees.freedom <- D*p-p-numb.clusters*D*max.dim-p*max.dim+numb.clusters*max.dim^2+numb.clusters*max.dim
+#     print(degrees.freedom)
+#     ps <- as.numeric(table(segmentation))
+#     degrees.freedom <- sum(D*ps-ps-numb.clusters*D*dims-ps*dims+numb.clusters*dims^2+numb.clusters*dims)
+#     print(degrees.freedom)
     sigma <- sqrt(RES.sigma/degrees.freedom)
   }
   likelihoods <- rep(0, numb.clusters)  
@@ -53,7 +134,11 @@ adjusted.cluster.BIC <- function(X, segmentation, dims, numb.clusters, adjustmen
         diag(svdSIGNAL$d[1:max.dim], nrow=max.dim) %*% 
         t(matrix(svdSIGNAL$v[, 1:max.dim], ncol=max.dim))
       RESIDUAL = Xk - SIGNAL
-      if(!estimateJointly & is.null(sigma)){ sigma = sqrt(sum(RESIDUAL^2)/((D-1)*(ncol(Xk)-1))) }
+      if(!estimateJointly & is.null(sigma)) {
+        df <- D*ncol(Xk)-ncol(Xk)-D*max.dim-ncol(Xk)*max.dim+max.dim^2+max.dim
+        sigma = sqrt(sum(RESIDUAL^2)/((D-1)*(ncol(Xk)-1)))
+        sigma <- sqrt(sum(RESIDUAL^2)/df)
+      }
       likelihoods[k] <- sum(dnorm(as.matrix((RESIDUAL[,]), nrow=1), mean=0 , sd=sigma, log=T))
       mk <- ncol(Xk)
       penalties[k] <- 1/2*log(mk)*(max.dim*(D - max.dim +mk))
@@ -61,7 +146,7 @@ adjusted.cluster.BIC <- function(X, segmentation, dims, numb.clusters, adjustmen
         penalties[k] <- penalties[k] + 1/2*log(mk) #for estimating sigma
     } else{
         if(!estimateJointly & is.null(sigma)){ 
-          likelihoods[k] <- 0
+          likelihoods[k] <- -Inf
           penalties[k] <- 0
         } else{
           RESIDUAL = Xk - Xk
