@@ -15,20 +15,15 @@ pca.BIC <- function(X, k){
   m <- d*k - k*(k+1)/2
   
   mu <- rowMeans(X)
-  S <- matrix(0, ncol=d, nrow=d)
-  for (j in 1:N){
-    S <- S + (X[,j]-mu)%*%t((X[,j])-mu)
-  }
-  
-  lambda <- eigen(S/N)$values
+  S <- Reduce(function(y,i) y + (X[,i]-mu)%*%t(X[,i]-mu), 1:N)
+  lambda <- eigen(S/N, only.values = TRUE)$values
   v <- sum(lambda[(k+1):d])/(d-k) 
-  #   print(v)
   
-  t1 <- -N/2*sum(log(lambda[1:k]))
-  t2 <- -N*(d-k)/2*log(v)
-  t3 <- -(m+k)/2*log(N)
-
-  t1+t2+t3
+#   t1 <- -N/2*sum(log(lambda[1:k]))
+#   t2 <- -N*(d-k)/2*log(v)
+#   t3 <- -(m+k)/2*log(N)
+#   t1+t2+t3
+  -N/2*sum(log(lambda[1:k])) -N*(d-k)/2*log(v) -(m+k)/2*log(N)
 }
 
 
