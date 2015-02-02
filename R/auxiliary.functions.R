@@ -42,9 +42,10 @@ pca.BIC <- function(X, k){
 #' @param dims a vector of integers, dimensions of subspaces. Number of principal components
 #'        that span each subspace.
 #' @param numb.clusters an integer, number of clusters
+#' @param max.dim an integer, upper bound for allowed dimension of subspace
 #' @keywords internal
 #' @return BIC value of BIC criterion
-cluster.pca.BIC <- function(X, segmentation, dims, numb.clusters){
+cluster.pca.BIC <- function(X, segmentation, dims, numb.clusters, max.dim){
   if(!is.matrix(X)){ # if X is one variable it is stored as vector
     X <- matrix(X, ncol=1)
   }
@@ -63,8 +64,8 @@ cluster.pca.BIC <- function(X, segmentation, dims, numb.clusters){
     }
   }
   #apriori
-  apriori.segmentations <- -lgamma(p+1)+ sum(lgamma(table(segmentation)+1))
-  apriori.dimensions <- - log(4)*numb.clusters
+  apriori.segmentations <- -p*log(numb.clusters)
+  apriori.dimensions <- - log(max.dim)*numb.clusters
   BIC <- sum(formula) + apriori.segmentations + apriori.dimensions
   return(BIC)
 }

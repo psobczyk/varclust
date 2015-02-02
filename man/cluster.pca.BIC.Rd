@@ -3,7 +3,7 @@
 \alias{cluster.pca.BIC}
 \title{BIC for subspace clustering}
 \usage{
-cluster.pca.BIC(X, segmentation, dims, numb.clusters)
+cluster.pca.BIC(X, segmentation, dims, numb.clusters, max.dim)
 }
 \arguments{
 \item{X}{a matrix with only continuous variables}
@@ -15,6 +15,8 @@ numbers should be from range [1, numb.clusters]}
 that span each subspace.}
 
 \item{numb.clusters}{an integer, number of clusters}
+
+\item{max.dim}{an integer, upper bound for allowed dimension of subspace}
 }
 \value{
 BIC value of BIC criterion
