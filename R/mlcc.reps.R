@@ -29,7 +29,7 @@
 #' \item{basis}{a list of matrices, the basis vectors for subspaces}
 #' @examples
 #' \donttest{
-#' sim.data <- data.simulation(n = 100, SNR = 1, K = 5, numb.vars = 30, max.dim = 2)
+#' sim.data <- data.simulation(n = 50, SNR = 1, K = 5, numb.vars = 50, max.dim = 3)
 #' mlcc.reps(sim.data$X, numb.clusters = 5, numb.runs = 20, max.dim = 4)
 #' }
 mlcc.reps <- function(X, numb.clusters = 2, numb.runs = 20, stop.criterion = 1, max.iter = 20, 
@@ -73,7 +73,8 @@ mlcc.reps <- function(X, numb.clusters = 2, numb.runs = 20, stop.criterion = 1, 
          cluster.pca.BIC(X, 
                          current.segmentation,
                          sapply(current.pcas, ncol), 
-                         numb.clusters), 
+                         numb.clusters,
+                         max.dim = max.dim), 
          current.pcas)
   }
   i <- NULL

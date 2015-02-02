@@ -36,7 +36,7 @@
 #' \item{all.fit.dims}{a list of lists of segmentation, BIC, subspaces dimension for all numbers of clusters and subspaces dimensions considered}
 #' @examples
 #' \donttest{
-#' sim.data <- data.simulation(n = 100, SNR = 1, K = 5, numb.vars = 30, max.dim = 2)
+#' sim.data <- data.simulation(n = 50, SNR = 1, K = 3, numb.vars = 50, max.dim = 3)
 #' mlcc.bic(sim.data$X, numb.clusters = 1:10, numb.runs = 20, verbose=TRUE)
 #' }
 mlcc.bic <- function(X, numb.clusters = 1:10, numb.runs = 20, stop.criterion = 1, max.iter = 20, max.dim = 4, 
