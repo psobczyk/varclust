@@ -37,7 +37,7 @@ We also provide function \code{\link{misclassification}} that computes misclassi
 rate between two partitions. This performance measure is
 extensively used in image segmentation.
 
-Version: 0.9.24
+Version: 0.9.25
 }
 \examples{
 \donttest{

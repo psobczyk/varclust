@@ -34,7 +34,7 @@
 #' }
 mlcc.reps <- function(X, numb.clusters = 2, numb.runs = 20, stop.criterion = 1, max.iter = 20, 
                       initial.segmentations = NULL, max.dim = 4, scale = TRUE, numb.cores = NULL,
-                      estimate.dimensions = TRUE){
+                      estimate.dimensions = TRUE, flat.prior = FALSE){
   if (is.data.frame(X)) {
     warning("X is not a matrix. Casting to matrix.")
     X = as.matrix(X)
@@ -74,7 +74,8 @@ mlcc.reps <- function(X, numb.clusters = 2, numb.runs = 20, stop.criterion = 1, 
                          current.segmentation,
                          sapply(current.pcas, ncol), 
                          numb.clusters,
-                         max.dim = max.dim), 
+                         max.dim = max.dim,
+                         flat.prior = flat.prior), 
          current.pcas)
   }
   i <- NULL
@@ -90,7 +91,9 @@ mlcc.reps <- function(X, numb.clusters = 2, numb.runs = 20, stop.criterion = 1, 
          cluster.pca.BIC(X, 
                          current.segmentation,
                          sapply(current.pcas, ncol), 
-                         numb.clusters), 
+                         numb.clusters,
+                         max.dim = max.dim,
+                         flat.prior = flat.prior), 
          current.pcas)
   }
   segmentations <- append(segmentations, segmentations2)

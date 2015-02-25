@@ -1,7 +1,7 @@
 Package: varclust
 Type: Package
 Title: Variables Clustering
-Version: 0.9.24
+Version: 0.9.25
 Date: 2015-02-02
 Author: Piotr Sobczyk, Julie Josse, Malgorzata Bogdan
 Maintainer: Piotr Sobczyk <piotr.sobczyk@pwr.edu.pl>

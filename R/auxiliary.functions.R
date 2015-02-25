@@ -43,9 +43,10 @@ pca.BIC <- function(X, k){
 #'        that span each subspace.
 #' @param numb.clusters an integer, number of clusters
 #' @param max.dim an integer, upper bound for allowed dimension of subspace
+#' @param flat.prior boolean, if TRUE (default is FALSE) then flat prior on models is used
 #' @keywords internal
 #' @return BIC value of BIC criterion
-cluster.pca.BIC <- function(X, segmentation, dims, numb.clusters, max.dim){
+cluster.pca.BIC <- function(X, segmentation, dims, numb.clusters, max.dim, flat.prior = FALSE){
   if(!is.matrix(X)){ # if X is one variable it is stored as vector
     X <- matrix(X, ncol=1)
   }
@@ -66,6 +67,10 @@ cluster.pca.BIC <- function(X, segmentation, dims, numb.clusters, max.dim){
   #apriori
   apriori.segmentations <- -p*log(numb.clusters)
   apriori.dimensions <- - log(max.dim)*numb.clusters
+  if (flat.prior){
+    BIC <- sum(formula)
+    return(BIC)
+  }
   BIC <- sum(formula) + apriori.segmentations + apriori.dimensions
   return(BIC)
 }
