@@ -34,7 +34,7 @@
 #' }
 mlcc.reps <- function(X, numb.clusters = 2, numb.runs = 20, stop.criterion = 1, max.iter = 20, 
                       initial.segmentations = NULL, max.dim = 4, scale = TRUE, numb.cores = NULL,
-                      estimate.dimensions = TRUE, flat.prior = FALSE){
+                      estimate.dimensions = TRUE, flat.prior = FALSE, old.BIC = FALSE){
   if (is.data.frame(X)) {
     warning("X is not a matrix. Casting to matrix.")
     X = as.matrix(X)
@@ -52,49 +52,68 @@ mlcc.reps <- function(X, numb.clusters = 2, numb.runs = 20, stop.criterion = 1, 
   }
   if (is.null(numb.cores)) {
     registerDoMC(max(1,detectCores()-1))
-  }
-  else{
+  } else{
     registerDoMC(numb.cores)
   }
   
   if(scale){
     X <- scale(X)
+  } else {
+    X <- X
   }
-  else X <- X
   
   BICs <- NULL 
   segmentations <- NULL
   segmentations <- foreach(i=(1:numb.runs)) %dopar% {
     MPCV.res <- mlcc.kmeans(X=X, number.clusters=numb.clusters, max.subspace.dim=max.dim, max.iter=max.iter, 
-                            estimate.dimensions = estimate.dimensions)
+                            estimate.dimensions = estimate.dimensions, old.BIC = old.BIC)
     current.segmentation <- MPCV.res$segmentation
     current.pcas <- MPCV.res$pcas
-    list(current.segmentation, 
-         cluster.pca.BIC(X, 
-                         current.segmentation,
-                         sapply(current.pcas, ncol), 
-                         numb.clusters,
-                         max.dim = max.dim,
-                         flat.prior = flat.prior), 
-         current.pcas)
+    if (old.BIC) {
+      print(adjusted.cluster.BIC(X = X, 
+                                 current.segmentation,
+                                 sapply(current.pcas, ncol), 
+                                 numb.clusters))
+      list(current.segmentation, 
+           adjusted.cluster.BIC(X = X, 
+                                current.segmentation,
+                                sapply(current.pcas, ncol), 
+                                numb.clusters),
+           current.pcas)
+    } else {
+      print("wielka dupa")
+      list(current.segmentation, 
+           cluster.pca.BIC(X, 
+                           current.segmentation,
+                           sapply(current.pcas, ncol), 
+                           numb.clusters,
+                           max.dim = max.dim,
+                           flat.prior = flat.prior), 
+           current.pcas)
+    }
   }
   i <- NULL
   #running user specified clusters
-  segmentations2 <- foreach(i=(1:length(initial.segmentations))) %dopar% { 
-    MPCV.res <- mlcc.kmeans(X = X, number.clusters = numb.clusters, 
-                            max.subspace.dim = max.dim, max.iter = max.iter, 
-                            initial.segmentation = initial.segmentations[[i]],
-                            estimate.dimensions = estimate.dimensions)
-    current.segmentation <- MPCV.res$segmentation
-    current.pcas <- MPCV.res$pcas
-    list(current.segmentation, 
-         cluster.pca.BIC(X, 
-                         current.segmentation,
-                         sapply(current.pcas, ncol), 
-                         numb.clusters,
-                         max.dim = max.dim,
-                         flat.prior = flat.prior), 
-         current.pcas)
+  if (is.null(initial.segmentations)) {
+    segmentations2 <- NULL
+  } else {
+    segmentations2 <- foreach(i=(1:length(initial.segmentations))) %dopar% { 
+      print("gigantyczna dupa")
+      MPCV.res <- mlcc.kmeans(X = X, number.clusters = numb.clusters, 
+                              max.subspace.dim = max.dim, max.iter = max.iter, 
+                              initial.segmentation = initial.segmentations[[i]],
+                              estimate.dimensions = estimate.dimensions)
+      current.segmentation <- MPCV.res$segmentation
+      current.pcas <- MPCV.res$pcas
+      list(current.segmentation, 
+           cluster.pca.BIC(X, 
+                           current.segmentation,
+                           sapply(current.pcas, ncol), 
+                           numb.clusters,
+                           max.dim = max.dim,
+                           flat.prior = flat.prior), 
+           current.pcas)
+    }
   }
   segmentations <- append(segmentations, segmentations2)
   BICs <- unlist(lapply(segmentations, function(x) x[2]))

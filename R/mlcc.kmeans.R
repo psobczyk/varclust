@@ -14,7 +14,8 @@
 #' @return A list consisting of:
 #' \item{segmentation}{a vector containing the partition of the variables}
 #' \item{pcas}{a list of matrices, basis vectors for each cluster (subspace)}
-mlcc.kmeans <- function(X, number.clusters=2, stop.criterion=1, max.iter=40, max.subspace.dim=4, initial.segmentation=NULL, estimate.dimensions=FALSE){
+mlcc.kmeans <- function(X, number.clusters=2, stop.criterion=1, max.iter=40, max.subspace.dim=4, 
+                        initial.segmentation=NULL, estimate.dimensions=FALSE, old.BIC = FALSE){
   numbVars = dim(X)[2]
   rowNumb = dim(X)[1]
   pcas <- list(NULL)
@@ -34,8 +35,16 @@ mlcc.kmeans <- function(X, number.clusters=2, stop.criterion=1, max.iter=40, max
       if(dim(X[,segmentation==i, drop=F])[2]>max.subspace.dim){
         a <- summary(prcomp(x=X[,segmentation==i]))
         if (estimate.dimensions) {
-          cut <- which.max(sapply(1:min(floor(sqrt(sub.dim)), max.subspace.dim), 
+          if (old.BIC){
+            cut <- which.max(sapply(1:min(floor(sqrt(sub.dim)), max.subspace.dim), 
+                                    function(dim) cluster.BIC(X[,segmentation==i], 
+                                                              rep(1,sum(segmentation==i)), 
+                                                              max.dim = dim, 
+                                                              numb.clusters = 1)))
+          } else {
+            cut <- which.max(sapply(1:min(floor(sqrt(sub.dim)), max.subspace.dim), 
                                   function(dim) pca.BIC(X[,segmentation==i], k = dim)))
+          }
         }
         else {
           cut <- max.subspace.dim

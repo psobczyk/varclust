@@ -56,10 +56,10 @@ cluster.pca.BIC <- function(X, segmentation, dims, numb.clusters, max.dim, flat.
   formula <- rep(0, numb.clusters)   
   for(k in 1:numb.clusters){
     #one cluster
-    max.dim = dims[k]
+    dim1 = dims[k]
     Xk = X[,segmentation==k, drop=F]
-    if(dim(Xk)[2]>max.dim){
-      formula[k] <- pca.BIC(Xk, max.dim)
+    if(dim(Xk)[2]>dim1){
+      formula[k] <- pca.BIC(Xk, dim1)
     } else{
         formula[k] <- -Inf
     }
