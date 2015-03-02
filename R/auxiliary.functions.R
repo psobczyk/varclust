@@ -27,6 +27,36 @@ pca.BIC <- function(X, k){
 }
 
 
+#' Laplace for PCA
+#' 
+#' Computes the value of Laplace approximation for given data set and 
+#' number of factors.
+#' 
+#' @param X a matrix with only continuous variables
+#' @param k number of principal components fitted
+#' @keywords internal
+#' @references Automatic choice of dimensionality for PCA, Thomas P. Minka
+#' @return L value of Laplace approximation
+pca.Laplace <- function(X, k){
+  d <- dim(X)[1]
+  N <- dim(X)[2]
+  m <- d*k - k*(k+1)/2
+  
+  mu <- rowMeans(X)
+  S <- Reduce(function(y,i) y + (X[,i]-mu)%*%t(X[,i]-mu), 1:N)
+  lambda <- eigen(S/N, only.values = TRUE)$values
+  v <- sum(lambda[(k+1):d])/(d-k) 
+  
+  t1 <- -N/2*sum(log(lambda[1:k]))
+  t2 <- -N*(d-k)/2*log(v)
+  t3 <- -k/2*log(N)
+  Az <- sapply(1:k, function(i) sum( log(1/lambda[(i+1):d] - 1/lambda[i] ) + log(lambda[i] - lambda[(i+1):d]) + log(N) ))
+  t4 <- sum(Az)*(-1)/2
+  t5 <- log(2*pi)*(m+k)/2
+  t6 <- -k*log(2) + sum( lgamma( (d-1:k+1)/2 ) - (d-1:k+1)/2*log(pi) )
+  t1+t2+t3+t4+t5+t6
+}
+
 #' BIC for subspace clustering
 #' 
 #' Computes the value of BIC criterion for given data set and partition.
