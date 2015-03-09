@@ -43,7 +43,7 @@ mlcc.kmeans <- function(X, number.clusters=2, stop.criterion=1, max.iter=40, max
                                                               numb.clusters = 1)))
           } else {
             cut <- which.max(sapply(1:min(floor(sqrt(sub.dim)), max.subspace.dim), 
-                                  function(dim) pca.BIC(X[,segmentation==i], k = dim)))
+                                  function(dim) pca.new.BIC(X[,segmentation==i], k = dim)))
           }
         }
         else {

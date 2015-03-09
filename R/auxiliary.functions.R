@@ -122,7 +122,7 @@ cluster.pca.BIC <- function(X, segmentation, dims, numb.clusters, max.dim, flat.
     dim1 = dims[k]
     Xk = X[,segmentation==k, drop=F]
     if(dim(Xk)[2]>dim1){
-      formula[k] <- pca.BIC(Xk, dim1)
+      formula[k] <- pca.new.BIC(Xk, dim1)
     } else{
         formula[k] <- -Inf
     }
