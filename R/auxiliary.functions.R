@@ -1,5 +1,34 @@
 
-#' BIC for PCA
+#' Version of BIC for PCA
+#' 
+#' Computes the value of BIC criterion for given data set and 
+#' number of factors.
+#' 
+#' @param X a matrix with only continuous variables
+#' @param k number of principal components fitted
+#' @keywords internal
+#' @references Automatic choice of dimensionality for PCA, Thomas P. Minka
+#' @return BIC value of BIC criterion
+pca.new.BIC <- function(X, k){
+  d <- dim(X)[1]
+  N <- dim(X)[2]
+  m <- d*k - k*(k+1)/2
+  
+  mu <- rowMeans(X)
+  S <- Reduce(function(y,i) y + (X[,i]-mu)%*%t(X[,i]-mu), 1:N)
+  lambda <- eigen(S/N, only.values = TRUE)$values
+  v <- sum(lambda[(k+1):d])/(d-k) 
+  
+    t0 <- -N*d/2*log(2*pi)
+    t1 <- -N/2*sum(log(lambda[1:k]))
+    t2 <- -N*(d-k)/2*log(v)
+    t3 <- -N*d/2
+    pen <- -(m+d+d+1)/2*log(N)
+    t0+t1+t2+t3+pen
+}
+
+
+#' BIC for PCA, as given by Minka
 #' 
 #' Computes the value of BIC criterion for given data set and 
 #' number of factors.
@@ -27,7 +56,7 @@ pca.BIC <- function(X, k){
 }
 
 
-#' Laplace for PCA
+#' Laplace evidence for PCA, as given by Minka
 #' 
 #' Computes the value of Laplace approximation for given data set and 
 #' number of factors.
@@ -37,7 +66,7 @@ pca.BIC <- function(X, k){
 #' @keywords internal
 #' @references Automatic choice of dimensionality for PCA, Thomas P. Minka
 #' @return L value of Laplace approximation
-pca.Laplace <- function(X, k){
+pca.Laplace <- function(X, k, alfa=1){
   d <- dim(X)[1]
   N <- dim(X)[2]
   m <- d*k - k*(k+1)/2
@@ -46,11 +75,15 @@ pca.Laplace <- function(X, k){
   S <- Reduce(function(y,i) y + (X[,i]-mu)%*%t(X[,i]-mu), 1:N)
   lambda <- eigen(S/N, only.values = TRUE)$values
   v <- sum(lambda[(k+1):d])/(d-k) 
+  l <- (N*lambda+alfa)/(N-1+alfa)
   
   t1 <- -N/2*sum(log(lambda[1:k]))
   t2 <- -N*(d-k)/2*log(v)
   t3 <- -k/2*log(N)
   Az <- sapply(1:k, function(i) sum( log(1/lambda[(i+1):d] - 1/lambda[i] ) + log(lambda[i] - lambda[(i+1):d]) + log(N) ))
+  if( any(is.nan(Az)) )
+    warning(paste("Number of elements in a cluster ", N, " is to little compared to ", d, 
+                  " to perform a meaningful estimation"))
   t4 <- sum(Az)*(-1)/2
   t5 <- log(2*pi)*(m+k)/2
   t6 <- -k*log(2) + sum( lgamma( (d-1:k+1)/2 ) - (d-1:k+1)/2*log(pi) )

@@ -5,7 +5,7 @@
 \usage{
 mlcc.kmeans(X, number.clusters = 2, stop.criterion = 1, max.iter = 40,
   max.subspace.dim = 4, initial.segmentation = NULL,
-  estimate.dimensions = FALSE)
+  estimate.dimensions = FALSE, old.BIC = FALSE)
 }
 \arguments{
 \item{X}{a matrix with only continuous variables}
