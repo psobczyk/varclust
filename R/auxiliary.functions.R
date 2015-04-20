@@ -14,9 +14,7 @@ pca.new.BIC <- function(X, k){
   N <- dim(X)[2]
   m <- d*k - k*(k+1)/2
   
-  mu <- rowMeans(X)
-  S <- Reduce(function(y,i) y + (X[,i]-mu)%*%t(X[,i]-mu), 1:N)
-  lambda <- eigen(S/N, only.values = TRUE)$values
+  lambda <- eigen(cov(t(X)), only.values = TRUE)$values
   v <- sum(lambda[(k+1):d])/(d-k) 
   
     t0 <- -N*d/2*log(2*pi)
@@ -43,9 +41,7 @@ pca.BIC <- function(X, k){
   N <- dim(X)[2]
   m <- d*k - k*(k+1)/2
   
-  mu <- rowMeans(X)
-  S <- Reduce(function(y,i) y + (X[,i]-mu)%*%t(X[,i]-mu), 1:N)
-  lambda <- eigen(S/N, only.values = TRUE)$values
+  lambda <- eigen(cov(t(X)), only.values = TRUE)$values
   v <- sum(lambda[(k+1):d])/(d-k) 
   
 #   t1 <- -N/2*sum(log(lambda[1:k]))
@@ -71,9 +67,7 @@ pca.Laplace <- function(X, k, alfa=1){
   N <- dim(X)[2]
   m <- d*k - k*(k+1)/2
   
-  mu <- rowMeans(X)
-  S <- Reduce(function(y,i) y + (X[,i]-mu)%*%t(X[,i]-mu), 1:N)
-  lambda <- eigen(S/N, only.values = TRUE)$values
+  lambda <- abs(eigen(cov(t(X)), only.values = TRUE)$values)
   v <- sum(lambda[(k+1):d])/(d-k) 
   l <- (N*lambda+alfa)/(N-1+alfa)
   

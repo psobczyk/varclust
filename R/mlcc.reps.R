@@ -70,10 +70,6 @@ mlcc.reps <- function(X, numb.clusters = 2, numb.runs = 20, stop.criterion = 1, 
     current.segmentation <- MPCV.res$segmentation
     current.pcas <- MPCV.res$pcas
     if (old.BIC) {
-      print(adjusted.cluster.BIC(X = X, 
-                                 current.segmentation,
-                                 sapply(current.pcas, ncol), 
-                                 numb.clusters))
       list(current.segmentation, 
            adjusted.cluster.BIC(X = X, 
                                 current.segmentation,
@@ -81,7 +77,6 @@ mlcc.reps <- function(X, numb.clusters = 2, numb.runs = 20, stop.criterion = 1, 
                                 numb.clusters),
            current.pcas)
     } else {
-      print("wielka dupa")
       list(current.segmentation, 
            cluster.pca.BIC(X, 
                            current.segmentation,
@@ -98,7 +93,6 @@ mlcc.reps <- function(X, numb.clusters = 2, numb.runs = 20, stop.criterion = 1, 
     segmentations2 <- NULL
   } else {
     segmentations2 <- foreach(i=(1:length(initial.segmentations))) %dopar% { 
-      print("gigantyczna dupa")
       MPCV.res <- mlcc.kmeans(X = X, number.clusters = numb.clusters, 
                               max.subspace.dim = max.dim, max.iter = max.iter, 
                               initial.segmentation = initial.segmentations[[i]],
