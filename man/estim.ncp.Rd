@@ -4,8 +4,9 @@
 \alias{estim.ncp}
 \title{Estimating number of important Principal Components in PCA}
 \usage{
-estim.ncp(X, ncp.min = 1, ncp.max = 10, method = c("penLik", "RajanPen",
-  "minkaBIC", "minkaLaplace"), scale = TRUE, verbose = FALSE)
+estim.ncp(X, ncp.min = 1, ncp.max = 10, method = c("penalizedLikelihood",
+  "homogenousPenalizedLikelihood", "minkaBIC", "laplaceEvidence"),
+  scale = TRUE, verbose = FALSE)
 }
 \arguments{
 \item{X}{a data frame or a matrix with only continuous variables}
@@ -27,9 +28,17 @@ Number of components
 \description{
 For a given data set, estimates numberof PCs according to
 one of four different penalized likelihood criterions
+Methods description:
+\itemize{
+ \item penalizedLikelihood - standard penalized likelihood
+ \item homogenousPenalizedLikelihood - penalized likelihood with singular values assumed equal
+and coefficients with non-one variance
+ \item minkaBIC - BIC criterion dervied by Minka in Automatic choice of dimensionality for PCA
+ \item laplaceEvidence - prior dependent criterion dervied by Minka in Automatic choice of dimensionality for PCA
+}
 }
 \references{
-, P. Sobczyk, M. Bogdan, J. Josse,
+P. Sobczyk, M. Bogdan, J. Josse,
 Bayesian dimensionality reduction with PCA using partially integrated penalized likelihood
 }
 

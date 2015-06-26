@@ -123,6 +123,7 @@ pca.new.BIC <- function(X, k){
 #' @references Automatic choice of dimensionality for PCA, Thomas P. Minka
 #' @return BIC value of BIC criterion
 pca.BIC <- function(X, k){
+  X <- t(X)
   d <- dim(X)[1]
   N <- dim(X)[2]
   m <- d*k - k*(k+1)/2
@@ -143,22 +144,22 @@ pca.BIC <- function(X, k){
 #' @param k number of principal components fitted
 #' @keywords internal
 #' @references Automatic choice of dimensionality for PCA, Thomas P. Minka
-#' @return L value of Laplace approximation
+#' @return L value of Laplace evidence
 pca.Laplace <- function(X, k, alfa=1){
+  X <- t(X)
   d <- dim(X)[1]
   N <- dim(X)[2]
   m <- d*k - k*(k+1)/2
   
   lambda <- abs(eigen(cov(t(X)), only.values = TRUE)$values)
   v <- sum(lambda[(k+1):d])/(d-k) 
-  l <- (N*lambda+alfa)/(N-1+alfa)
   
   t1 <- -N/2*sum(log(lambda[1:k]))
   t2 <- -N*(d-k)/2*log(v)
   t3 <- -k/2*log(N)
   Az <- sapply(1:k, function(i) sum( log(1/lambda[(i+1):d] - 1/lambda[i] ) + log(lambda[i] - lambda[(i+1):d]) + log(N) ))
   if( any(is.nan(Az)) )
-    warning(paste("Number of elements in a cluster ", N, " is to little compared to ", d, 
+    warning(paste("Number of observations ", N, " is to little compared to number of variables ", d, 
                   " to perform a meaningful estimation"))
   t4 <- sum(Az)*(-1)/2
   t5 <- log(2*pi)*(m+k)/2

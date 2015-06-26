@@ -12,7 +12,7 @@ pca.Laplace(X, k, alfa = 1)
 \item{k}{number of principal components fitted}
 }
 \value{
-L value of Laplace approximation
+L value of Laplace evidence
 }
 \description{
 Computes the value of Laplace approximation for given data set and
