@@ -16,12 +16,20 @@ vignette: >
 **varclust** is a package that enables dimension reduction via variables clustering. 
 We assume that each group of variables can be summarized with few latent variables.
 
+It also provides a function to determine number of principal components in PCA.
+
 This tutorial will gently introduce you to usage of package **varclust** and
 familiarize with its options.
 
 You can install **varclust** from github (current development version).
 ```
 install_github("psobczyk/varclust")
+```
+
+or from CRAN
+
+```
+install.package("varclust")
 ```
 
 #### Main usage example
@@ -39,37 +47,18 @@ Please note that it may take few minutes to run the following code:
 ```{r, warning=FALSE}
 comp <- read.table("http://factominer.free.fr/docs/gene.csv",sep=";",header=T,row.names=1) 
 benchmarkClustering <- c(rep(1, 68), rep(2, 356))    
-comp <- data.frame(comp[,-ncol(comp)])   
-set.seed(1)
-mlcc.fit <- mlcc.bic(comp, numb.clusters = 1:15, numb.runs = 10, max.dim = 4, greedy = TRUE, 
+comp <- as.matrix(comp[,-ncol(comp)])
+set.seed(2)
+mlcc.fit <- mlcc.bic(comp, numb.clusters = 1:10, numb.runs = 10, max.dim = 8, greedy = TRUE, 
                      estimate.dimensions = TRUE, numb.cores = 1, verbose = FALSE)
 print(mlcc.fit)
 plot(mlcc.fit)
 mclust::adjustedRandIndex(mlcc.fit$segmentation, benchmarkClustering)
+misclassification(mlcc.fit$segmentation, benchmarkClustering, max(table(benchmarkClustering)), 2)
 ```
 
-One might be a little concerned by high number of clusters found and 
-that our benchmark clustering was not recognized, however,
-what we expect to see is the separation of RNA and expression groups, not the homogeneity
-within those groups. If we define different partition based on mlcc.fit we're getting 
-very high Adjusted Rand Index.
-
-```{r}
-part <- NULL
-part[mlcc.fit$segmentation %in% c(4,5,10,12)] <- 1
-part[!mlcc.fit$segmentation %in% c(4,5,10,12)] <- 2
-mclust::adjustedRandIndex(part, benchmarkClustering)
-misclassification(part, benchmarkClustering, max(table(benchmarkClustering)), 2)
-```
-
-If you know what is the true number of clusters you might use **mlcc.reps** function instead.
-In that case you can also compare segmentation in terms of misclassification.
-```{r, warning=FALSE}
-mlcc.fit2 <- mlcc.reps(X=comp, numb.clusters = 2, numb.runs = 20, max.dim = 4, numb.cores=1)
-mlcc.fit2
-mclust::adjustedRandIndex(mlcc.fit2$segmentation, benchmarkClustering)
-misclassification(mlcc.fit2$segmentation, benchmarkClustering, max(table(benchmarkClustering)), 2)
-```
+Please note that although we use *benchmarkClustering* as a reference, it is not
+an oracle. Some variables from expression data can be highly correlated and act together with RNA data. 
 
 ##### More details about the method
 The algorithm aims to reduce dimensionality of data by clustering variables.
@@ -83,8 +72,9 @@ comparing multiple approaches [see here.](http://cis.jhu.edu/~rvidal/publication
 You should also use **mlcc.reps** function if you have some apriori knowledge regarding true segmentation.
 You can enforce starting point
 ```{r, warning=FALSE}
-mlcc.fit3 <- mlcc.reps(comp, numb.clusters = 2, numb.runs = 0, max.dim = 2, 
+mlcc.fit3 <- mlcc.reps(comp, numb.clusters = 2, numb.runs = 0, max.dim = 8, 
                        initial.segmentations=list(benchmarkClustering), numb.cores=1)
+print(mlcc.fit3)
 mclust::adjustedRandIndex(mlcc.fit3$segmentation, benchmarkClustering)
 misclassification(mlcc.fit3$segmentation, benchmarkClustering, max(table(benchmarkClustering)), 2)
 ```
@@ -113,3 +103,15 @@ For a dataset of 1000 variables and 10 clusters computation takes about
 * If **estimate.dimensions** is TRUE subspaces dimensions are estimated. 
   Otherwise all subspaces are assumed to be of dimension *max.dim*
   
+### Estimating number of clusters
+
+To estimate number of clusters one should use function **estim.ncp**.
+One can select:
+
+* minimal number of PCs (*ncp.min*)
+* maximal number of PCs (*ncp.max*)
+* one of four methods penLik, RajanPen, minkaBIC, minkaLaplace
+
+```{r, echo=TRUE}
+estim.ncp(comp[,benchmarkClustering==1], 1, 10)
+```
