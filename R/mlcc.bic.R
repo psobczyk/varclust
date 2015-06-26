@@ -25,6 +25,8 @@
 #'        numbers of clusters is produced and values of BIC, computed
 #'        for every number of clusters and subspaces dimensions, are printed
 #'        (value set by default is FALSE)
+#' @param flat.prior a boolean, if TRUE then, instead of a prior that takes into account
+#'        number of models for a given number of clusters, flat prior is used
 #' @export
 #' @return An object of class mlcc.fit consisting of
 #' \item{segmentation}{a vector containing the partition of the variables}

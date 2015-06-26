@@ -22,6 +22,8 @@
 #'        dataset are scaled to zero mean and unit variance
 #' @param numb.cores an integer, number of cores to be used, by default all cores are used
 #' @param estimate.dimensions a boolean, if TRUE (value set by default) subspaces dimensions are estimated
+#' @param flat.prior a boolean, if TRUE then, instead of a prior that takes into account
+#'        number of models for a given number of clusters, flat prior is used
 #' @export
 #' @return A list consisting of
 #' \item{segmentation}{a vector containing the partition of the variables}
