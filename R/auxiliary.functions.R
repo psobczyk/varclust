@@ -1,3 +1,91 @@
+#' Version of BIC for PCA according ro Rajan, Rayner model
+#' 
+#' Computes the value of BIC criterion for given data set and 
+#' number of factors.
+#' 
+#' @param X a matrix with only continuous variables
+#' @param k number of principal components fitted
+#' @keywords internal
+#' @references Automatic choice of dimensionality for PCA, Thomas P. Minka
+#' @return BIC value of BIC criterion
+rajan.uniform.BIC <- function(X, k){
+  erf <- function(x) 2 * pnorm(x * sqrt(2)) - 1
+  
+  d <- dim(X)[1]
+  N <- dim(X)[2]
+  m <- d*k - k*(k+1)/2
+  
+  eig <- eigen(cov(t(X)))
+  lambda <- eig$values
+  U <- eig$vectors
+  Uk <- U[,1:k, drop=F]
+  v <- sum(lambda[(k+1):d])/(d-k) 
+  
+  beta <- max(abs(t(Uk)%*%X))
+  w1 <- sqrt(2*v)*(beta - t(Uk)%*%X)
+  w2 <- sqrt(2*v)*(-beta - t(Uk)%*%X)
+  
+  t0 <- -(k-N)*d/2*log(2*pi*v)
+  t1 <- -d*k*log(2*beta)
+  t2 <- -d*log(v)
+  t3 <- -N*d/2
+  t4 <- sum(log((erf(w1)-erf(w2))/2))
+  pen <- -(m+d+1+1)/2*log(N)
+  t0+t1+t2+t3+t4+pen
+}
+
+
+#' Version of BIC for PCA according ro Rajan, Rayner model
+#' 
+#' Computes the value of BIC criterion for given data set and 
+#' number of factors.
+#' 
+#' @param X a matrix with only continuous variables
+#' @param k number of principal components fitted
+#' @keywords internal
+#' @references Automatic choice of dimensionality for PCA, Thomas P. Minka
+#' @return BIC value of BIC criterion
+rajan.BIC <- function(X, k){
+  d <- dim(X)[1]
+  N <- dim(X)[2]
+  m <- d*k - k*(k+1)/2
+  
+  lambda <- eigen(cov(t(X)), only.values = TRUE)$values
+  v <- sum(lambda[(k+1):d])/(d-k) 
+  
+  t0 <- -N*d/2*log(2*pi)
+  t1 <- -N*k/2*log(mean(lambda[1:k]))
+  t2 <- -N*(d-k)/2*log(v)
+  t3 <- -N*d/2
+  pen <- -(m+d+1+1)/2*log(N)
+  t0+t1+t2+t3+pen
+}
+
+
+#' Version of BIC for PCA according ro Rajan, Rayner model
+#' 
+#' Computes the value of BIC criterion for given data set and 
+#' number of factors.
+#' 
+#' @param X a matrix with only continuous variables
+#' @param k number of principal components fitted
+#' @keywords internal
+#' @references Automatic choice of dimensionality for PCA, Thomas P. Minka
+#' @return BIC value of BIC criterion
+rajan.noBIC <- function(X, k){
+  d <- dim(X)[1]
+  N <- dim(X)[2]
+  m <- d*k - k*(k+1)/2
+  
+  lambda <- eigen(cov(t(X)), only.values = TRUE)$values
+  v <- sum(lambda[(k+1):d])/(d-k) 
+  
+  t0 <- -N*d/2*log(2*pi)
+  t1 <- -N*k/2*log(mean(lambda[1:k]))
+  t2 <- -N*(d-k)/2*log(v)
+  t3 <- -N*d/2
+  t0+t1+t2+t3
+}
 
 #' Version of BIC for PCA
 #' 
@@ -21,7 +109,7 @@ pca.new.BIC <- function(X, k){
     t1 <- -N/2*sum(log(lambda[1:k]))
     t2 <- -N*(d-k)/2*log(v)
     t3 <- -N*d/2
-    pen <- -(m+d+d+1)/2*log(N)
+    pen <- -(m+d+k+1)/2*log(N)
     t0+t1+t2+t3+pen
 }
 
