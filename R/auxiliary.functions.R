@@ -1,12 +1,11 @@
-#' Version of BIC for PCA according ro Rajan, Rayner model
+#' Version of BIC for PCA based on paper by Rajan, Rayner
 #' 
 #' Computes the value of BIC criterion for given data set and 
-#' number of factors.
+#' number of factors. Assumes uniform distribution of coefficients.
 #' 
 #' @param X a matrix with only continuous variables
 #' @param k number of principal components fitted
 #' @keywords internal
-#' @references Automatic choice of dimensionality for PCA, Thomas P. Minka
 #' @return BIC value of BIC criterion
 rajan.uniform.BIC <- function(X, k){
   erf <- function(x) 2 * pnorm(x * sqrt(2)) - 1
@@ -35,15 +34,14 @@ rajan.uniform.BIC <- function(X, k){
 }
 
 
-#' Version of BIC for PCA according ro Rajan, Rayner model
+#' Penalized likelihood criterion for PCA based on paper by Rajan, Rayner
 #' 
 #' Computes the value of BIC criterion for given data set and 
-#' number of factors.
+#' number of factors. Assumes normal distribution of coefficients.
 #' 
 #' @param X a matrix with only continuous variables
 #' @param k number of principal components fitted
 #' @keywords internal
-#' @references Automatic choice of dimensionality for PCA, Thomas P. Minka
 #' @return BIC value of BIC criterion
 rajan.BIC <- function(X, k){
   d <- dim(X)[1]
@@ -62,10 +60,10 @@ rajan.BIC <- function(X, k){
 }
 
 
-#' Version of BIC for PCA according ro Rajan, Rayner model
+#' Non-penalized likelihood criterion for PCA based on paper by Rajan, Rayner
 #' 
 #' Computes the value of BIC criterion for given data set and 
-#' number of factors.
+#' number of factors. Assumes normal distribution of coefficients.
 #' 
 #' @param X a matrix with only continuous variables
 #' @param k number of principal components fitted
@@ -87,15 +85,15 @@ rajan.noBIC <- function(X, k){
   t0+t1+t2+t3
 }
 
-#' Version of BIC for PCA
+#' Penalized likelihood for PCA
 #' 
-#' Computes the value of BIC criterion for given data set and 
-#' number of factors.
+#' Computes the value of BIC-like criterion for given data set and 
+#' number of factors. Assumes that number of variables is large
+#' compared to number of observations
 #' 
 #' @param X a matrix with only continuous variables
 #' @param k number of principal components fitted
 #' @keywords internal
-#' @references Automatic choice of dimensionality for PCA, Thomas P. Minka
 #' @return BIC value of BIC criterion
 pca.new.BIC <- function(X, k){
   d <- dim(X)[1]
@@ -132,10 +130,6 @@ pca.BIC <- function(X, k){
   lambda <- eigen(cov(t(X)), only.values = TRUE)$values
   v <- sum(lambda[(k+1):d])/(d-k) 
   
-#   t1 <- -N/2*sum(log(lambda[1:k]))
-#   t2 <- -N*(d-k)/2*log(v)
-#   t3 <- -(m+k)/2*log(N)
-#   t1+t2+t3
   -N/2*sum(log(lambda[1:k])) -N*(d-k)/2*log(v) -(m+k)/2*log(N)
 }
 

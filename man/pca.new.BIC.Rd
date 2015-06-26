@@ -2,7 +2,7 @@
 % Please edit documentation in R/auxiliary.functions.R
 \name{pca.new.BIC}
 \alias{pca.new.BIC}
-\title{Version of BIC for PCA}
+\title{Penalized likelihood for PCA}
 \usage{
 pca.new.BIC(X, k)
 }
@@ -15,11 +15,9 @@ pca.new.BIC(X, k)
 BIC value of BIC criterion
 }
 \description{
-Computes the value of BIC criterion for given data set and
-number of factors.
-}
-\references{
-Automatic choice of dimensionality for PCA, Thomas P. Minka
+Computes the value of BIC-like criterion for given data set and
+number of factors. Assumes that number of variables is large
+compared to number of observations
 }
 \keyword{internal}
 

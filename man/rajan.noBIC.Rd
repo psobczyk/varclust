@@ -2,7 +2,7 @@
 % Please edit documentation in R/auxiliary.functions.R
 \name{rajan.noBIC}
 \alias{rajan.noBIC}
-\title{Version of BIC for PCA according ro Rajan, Rayner model}
+\title{Non-penalized likelihood criterion for PCA based on paper by Rajan, Rayner}
 \usage{
 rajan.noBIC(X, k)
 }
@@ -16,7 +16,7 @@ BIC value of BIC criterion
 }
 \description{
 Computes the value of BIC criterion for given data set and
-number of factors.
+number of factors. Assumes normal distribution of coefficients.
 }
 \references{
 Automatic choice of dimensionality for PCA, Thomas P. Minka

@@ -2,7 +2,7 @@
 % Please edit documentation in R/auxiliary.functions.R
 \name{rajan.uniform.BIC}
 \alias{rajan.uniform.BIC}
-\title{Version of BIC for PCA according ro Rajan, Rayner model}
+\title{Version of BIC for PCA based on paper by Rajan, Rayner}
 \usage{
 rajan.uniform.BIC(X, k)
 }
@@ -16,10 +16,7 @@ BIC value of BIC criterion
 }
 \description{
 Computes the value of BIC criterion for given data set and
-number of factors.
-}
-\references{
-Automatic choice of dimensionality for PCA, Thomas P. Minka
+number of factors. Assumes uniform distribution of coefficients.
 }
 \keyword{internal}
 
