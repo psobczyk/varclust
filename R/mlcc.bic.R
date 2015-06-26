@@ -43,7 +43,7 @@
 #' }
 mlcc.bic <- function(X, numb.clusters = 1:10, numb.runs = 20, stop.criterion = 1, max.iter = 20,
                      max.dim = 4, scale = TRUE, numb.cores = NULL, greedy = TRUE, estimate.dimensions = TRUE,
-                     verbose = FALSE, flat.prior = FALSE, old.BIC = FALSE){
+                     verbose = FALSE, flat.prior = FALSE){
   if (is.data.frame(X)) {
     warning("X is not a matrix. Casting to matrix.")
     X = as.matrix(X)
@@ -76,8 +76,7 @@ mlcc.bic <- function(X, numb.clusters = 1:10, numb.runs = 20, stop.criterion = 1
                           scale = FALSE, #because we've already scaled
                           numb.cores = numb.cores,
                           estimate.dimensions = estimate.dimensions,
-                          flat.prior = flat.prior,
-                          old.BIC = old.BIC)
+                          flat.prior = flat.prior)
 
     results[[i]] <- list(segmentation = MPCV.fit$segmentation,
                          BIC = MPCV.fit$BIC,

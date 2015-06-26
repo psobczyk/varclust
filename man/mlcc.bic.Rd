@@ -8,7 +8,7 @@ and their dimension}
 mlcc.bic(X, numb.clusters = 1:10, numb.runs = 20, stop.criterion = 1,
   max.iter = 20, max.dim = 4, scale = TRUE, numb.cores = NULL,
   greedy = TRUE, estimate.dimensions = TRUE, verbose = FALSE,
-  flat.prior = FALSE, old.BIC = FALSE)
+  flat.prior = FALSE)
 }
 \arguments{
 \item{X}{a data frame or a matrix with only continuous variables}

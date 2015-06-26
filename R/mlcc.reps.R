@@ -36,7 +36,7 @@
 #' }
 mlcc.reps <- function(X, numb.clusters = 2, numb.runs = 20, stop.criterion = 1, max.iter = 20, 
                       initial.segmentations = NULL, max.dim = 4, scale = TRUE, numb.cores = NULL,
-                      estimate.dimensions = TRUE, flat.prior = FALSE, old.BIC = FALSE){
+                      estimate.dimensions = TRUE, flat.prior = FALSE){
   if (is.data.frame(X)) {
     warning("X is not a matrix. Casting to matrix.")
     X = as.matrix(X)
@@ -68,26 +68,17 @@ mlcc.reps <- function(X, numb.clusters = 2, numb.runs = 20, stop.criterion = 1, 
   segmentations <- NULL
   segmentations <- foreach(i=(1:numb.runs)) %dopar% {
     MPCV.res <- mlcc.kmeans(X=X, number.clusters=numb.clusters, max.subspace.dim=max.dim, max.iter=max.iter, 
-                            estimate.dimensions = estimate.dimensions, old.BIC = old.BIC)
+                            estimate.dimensions = estimate.dimensions)
     current.segmentation <- MPCV.res$segmentation
     current.pcas <- MPCV.res$pcas
-    if (old.BIC) {
-      list(current.segmentation, 
-           adjusted.cluster.BIC(X = X, 
-                                current.segmentation,
-                                sapply(current.pcas, ncol), 
-                                numb.clusters),
-           current.pcas)
-    } else {
-      list(current.segmentation, 
-           cluster.pca.BIC(X, 
-                           current.segmentation,
-                           sapply(current.pcas, ncol), 
-                           numb.clusters,
-                           max.dim = max.dim,
-                           flat.prior = flat.prior), 
-           current.pcas)
-    }
+    list(current.segmentation, 
+         cluster.pca.BIC(X, 
+                         current.segmentation,
+                         sapply(current.pcas, ncol), 
+                         numb.clusters,
+                         max.dim = max.dim,
+                         flat.prior = flat.prior), 
+         current.pcas)
   }
   i <- NULL
   #running user specified clusters

@@ -7,7 +7,7 @@
 mlcc.reps(X, numb.clusters = 2, numb.runs = 20, stop.criterion = 1,
   max.iter = 20, initial.segmentations = NULL, max.dim = 4,
   scale = TRUE, numb.cores = NULL, estimate.dimensions = TRUE,
-  flat.prior = FALSE, old.BIC = FALSE)
+  flat.prior = FALSE)
 }
 \arguments{
 \item{X}{a data frame or a matrix with only continuous variables}
