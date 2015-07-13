@@ -43,7 +43,7 @@ Version: 0.9.27
 \examples{
 \donttest{
 sim.data <- data.simulation(n = 50, SNR = 1, K = 3, numb.vars = 50, max.dim = 3)
-mlcc.bic(sim.data$X, numb.clusters = 1:5, numb.runs = 20)
+mlcc.bic(sim.data$X, numb.clusters = 1:5, numb.runs = 20, verbose = TRUE)
 mlcc.reps(sim.data$X, numb.clusters = 3, numb.runs = 20)}
 }
 \author{
