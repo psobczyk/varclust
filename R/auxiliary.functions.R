@@ -112,6 +112,34 @@ pca.new.BIC <- function(X, k){
 }
 
 
+#' Penalized likelihood for PCA
+#' 
+#' Computes the value of BIC-like criterion for given data set and 
+#' number of factors. Assumes that number of variables is large
+#' compared to number of observations
+#' 
+#' @param X a matrix with only continuous variables
+#' @param k number of principal components fitted
+#' @keywords internal
+#' @return BIC value of BIC criterion
+pca.new.BIC.fast <- function(X, k){
+  d <- dim(X)[1]
+  N <- dim(X)[2]
+  m <- d*k - k*(k+1)/2
+  
+  # lambda <- eigen(cov(t(X)), only.values = TRUE)$values
+  lambda <- svd(X, nu = 0, nv = 0)$d^2/(N-1)
+  v <- sum(lambda[(k+1):d])/(d-k) 
+  
+  t0 <- -N*d/2*log(2*pi)
+  t1 <- -N/2*sum(log(lambda[1:k]))
+  t2 <- -N*(d-k)/2*log(v)
+  t3 <- -N*d/2
+  pen <- -(m+d+k+1)/2*log(N)
+  t0+t1+t2+t3+pen
+}
+
+
 #' BIC for PCA, as given by Minka
 #' 
 #' Computes the value of BIC criterion for given data set and 

@@ -2,41 +2,37 @@
 % Please edit documentation in R/estim.ncp.R
 \name{estim.ncp}
 \alias{estim.ncp}
-\title{Estimating number of important Principal Components in PCA}
+\title{Estimating number of relevant (non noise) Principal Components in PCA}
 \usage{
-estim.ncp(X, ncp.min = 1, ncp.max = 10, method = c("penalizedLikelihood",
-  "homogenousPenalizedLikelihood", "minkaBIC", "laplaceEvidence"),
-  scale = TRUE, verbose = FALSE)
+estim.ncp(X, ncp.min = 1, ncp.max = 10, scale = TRUE, verbose = FALSE)
 }
 \arguments{
-\item{X}{a data frame or a matrix with only continuous variables}
+\item{X}{a data frame or a matrix contatining only continuous variables}
 
-\item{ncp.min}{minimal number of principal components}
+\item{ncp.min}{minimal number of principal components, for all the possible number of
+PCs between ncp.min and ncp.max criterion is computed}
 
-\item{ncp.max}{maximal number of principal components}
+\item{ncp.max}{maximal number of principal components, if greater than dimensions of X,
+min(ncol(X), nrow(X))-1 is used, for all the possible number of
+PCs between ncp.min and ncp.max criterion is computed}
 
-\item{method}{a crtierion to be used}
-
-\item{scale}{a boolean, if TRUE (default value) then data is scaled}
+\item{scale}{a boolean, if TRUE (default value) then data is scaled before applying
+criterion}
 
 \item{verbose}{a boolean, if TRUE plot with BIC values for different
-numbers of components is produced}
+numbers of components is produced (default value is FALSE)}
 }
 \value{
-Number of components
+number of components
 }
 \description{
-For a given data set, estimates numberof PCs according to
-one of four different penalized likelihood criterions.
+For a given numeric data set, estimates number of PCs according to
+penalized likelihood criterion
 }
-\details{
-Here we give methods description:
-\itemize{
- \item penalizedLikelihood - penalized likelihood for transposed PPCA
- \item homogenousPenalizedLikelihood - penalized likelihood with singular values assumed equal
-and normal prior on coefficients with variance not equal 1
- \item minkaBIC - BIC criterion dervied by Minka in Automatic choice of dimensionality for PCA
- \item laplaceEvidence - prior dependent criterion dervied by Minka in Automatic choice of dimensionality for PCA
-}
+\examples{
+\dontrun{
+library(MetabolAnalyze)
+data(UrineSpectra)
+estim.ncp(UrineSpectra[[1]], verbose=TRUE)}
 }
 

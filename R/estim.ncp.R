@@ -1,40 +1,59 @@
-#' Estimating number of important Principal Components in PCA
+#' Estimating number of relevant (non noise) Principal Components in PCA
 #' 
-#' For a given data set, estimates numberof PCs according to 
-#' one of four different penalized likelihood criterions.
+#' For a given numeric data set, estimates number of PCs according to 
+#' penalized likelihood criterion
 #' 
-#' Here we give methods description:
-#' \itemize{
-#'  \item penalizedLikelihood - penalized likelihood for transposed PPCA
-#'  \item homogenousPenalizedLikelihood - penalized likelihood with singular values assumed equal
-#' and normal prior on coefficients with variance not equal 1
-#'  \item minkaBIC - BIC criterion dervied by Minka in Automatic choice of dimensionality for PCA
-#'  \item laplaceEvidence - prior dependent criterion dervied by Minka in Automatic choice of dimensionality for PCA
-#' }
 #' 
-#' @param X a data frame or a matrix with only continuous variables
-#' @param ncp.min minimal number of principal components
-#' @param ncp.max maximal number of principal components
-#' @param method a crtierion to be used
-#' @param scale a boolean, if TRUE (default value) then data is scaled
+#' @param X a data frame or a matrix contatining only continuous variables
+#' @param ncp.min minimal number of principal components, for all the possible number of
+#' PCs between ncp.min and ncp.max criterion is computed
+#' @param ncp.max maximal number of principal components, if greater than dimensions of X,
+#' min(ncol(X), nrow(X))-1 is used, for all the possible number of
+#' PCs between ncp.min and ncp.max criterion is computed
+#' @param scale a boolean, if TRUE (default value) then data is scaled before applying
+#' criterion
 #' @param verbose a boolean, if TRUE plot with BIC values for different
-#'        numbers of components is produced 
+#'        numbers of components is produced (default value is FALSE)
 #' @export
-#' @return Number of components
-#' 
-estim.ncp <- function(X, ncp.min = 1, ncp.max = 10, method = c("penalizedLikelihood", "homogenousPenalizedLikelihood", 
-                                                               "minkaBIC", "laplaceEvidence"), 
-                      scale = TRUE, verbose = FALSE){
-  method <- match.arg(method)
+#' @return number of components
+#' @examples
+#' \dontrun{
+#' library(MetabolAnalyze)
+#' data(UrineSpectra)
+#' estim.ncp(UrineSpectra[[1]], verbose=TRUE)}
+estim.ncp <- function(X, ncp.min = 1, ncp.max = 10, scale = TRUE, verbose = FALSE){
+  # preprocessing on X
+  # number of components must be smaller than dimensions of X
+  n <- nrow(X)
+  p <- ncol(X)
+  ncp.max <- min(ncp.max, min(n,p)-1)
+  
+  if(class(X) == "data.frame"){
+    X <- as.matrix(X)
+  }
+  
+  if(sum(sapply(X, is.numeric)) < p){
+    stop("All the variables have to be numeric")
+  }
+  
+  missing <- which(is.na(X))
+  if(length(missing) !=  0){
+    stop("There are missing values")
+  }
+  
   if(scale)
     X <- scale(X)
+  
+  # choosing the method to use accordingly to the dimensions of X
+  method <- if(n>p){
+    "Penalized likelihood, random factors model"
+    } else "Penalized likelihood, random coefficients model"
+  
   vals <- switch(method,
-                 penalizedLikelihood = sapply(ncp.min:ncp.max, function(j) pca.new.BIC(X, j)),
-                 homogenousPenalizedLikelihood = sapply(ncp.min:ncp.max, function(j) rajan.BIC(X, j)),
-                 minkaBIC = sapply(ncp.min:ncp.max, function(j) pca.BIC(X, j)),
-                 laplaceEvidence = sapply(ncp.min:ncp.max, function(j) pca.Laplace(X, j)))
+                 "Penalized likelihood, random coefficients model" = sapply(ncp.min:ncp.max, function(j) pca.new.BIC(X, j)),
+                 "Penalized likelihood, random factors model" = sapply(ncp.min:ncp.max, function(j) pca.BIC(X, j)))
   if(verbose){
-    caption <- paste0("Criterion: ", method)
+    caption <- paste0("Criterion:\n", method)
     plot(ncp.min:ncp.max, vals, xlab = "Number of components", ylab = "Criterion value",
          main = caption, type = "b")
     points(ncp.min-1+which.max(vals), max(vals), col = "red")
