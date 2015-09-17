@@ -33,9 +33,11 @@
 #'
 #' @docType package
 #' @name varclust
-#' @details Version: 0.9.27
+#' @details Version: 0.9.28
 #' @importFrom RcppEigen fastLmPure
-#' @importFrom doMC registerDoMC
+#' @importFrom doParallel registerDoParallel 
+#' @importFrom parallel makeCluster
+#' @importFrom parallel stopCluster
 #' @importFrom parallel detectCores
 #' @import foreach
 #' @author Piotr Sobczyk,

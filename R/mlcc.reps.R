@@ -53,9 +53,12 @@ mlcc.reps <- function(X, numb.clusters = 2, numb.runs = 20, stop.criterion = 1, 
                auxi))
   }
   if (is.null(numb.cores)) {
-    registerDoMC(max(1,detectCores()-1))
+    numb.cores <- max(1,detectCores()-1)
+    cl <- makeCluster(numb.cores)
+    registerDoParallel(cl)
   } else{
-    registerDoMC(numb.cores)
+    cl <- makeCluster(numb.cores)
+    registerDoParallel(cl)
   }
   
   if(scale){
@@ -66,7 +69,7 @@ mlcc.reps <- function(X, numb.clusters = 2, numb.runs = 20, stop.criterion = 1, 
   
   BICs <- NULL 
   segmentations <- NULL
-  segmentations <- foreach(i=(1:numb.runs)) %dopar% {
+  segmentations <- foreach(icount(numb.runs)) %dopar% {
     MPCV.res <- mlcc.kmeans(X=X, number.clusters=numb.clusters, max.subspace.dim=max.dim, max.iter=max.iter, 
                             estimate.dimensions = estimate.dimensions)
     current.segmentation <- MPCV.res$segmentation
@@ -80,6 +83,7 @@ mlcc.reps <- function(X, numb.clusters = 2, numb.runs = 20, stop.criterion = 1, 
                          flat.prior = flat.prior), 
          current.pcas)
   }
+    
   i <- NULL
   #running user specified clusters
   if (is.null(initial.segmentations)) {
@@ -102,6 +106,7 @@ mlcc.reps <- function(X, numb.clusters = 2, numb.runs = 20, stop.criterion = 1, 
            current.pcas)
     }
   }
+  stopCluster(cl)
   segmentations <- append(segmentations, segmentations2)
   BICs <- unlist(lapply(segmentations, function(x) x[2]))
   basis <- lapply(segmentations, function(x) x[3])
