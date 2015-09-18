@@ -33,7 +33,7 @@
 #'
 #' @docType package
 #' @name varclust
-#' @details Version: 0.9.28
+#' @details Version: 0.9.29
 #' @importFrom RcppEigen fastLmPure
 #' @importFrom doParallel registerDoParallel 
 #' @importFrom parallel makeCluster

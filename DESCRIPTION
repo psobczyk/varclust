@@ -1,8 +1,8 @@
 Package: varclust
 Type: Package
 Title: Variables Clustering
-Version: 0.9.28
-Date: 2015-09-17
+Version: 0.9.29
+Date: 2015-09-18
 Author: Piotr Sobczyk, Julie Josse, Malgorzata Bogdan
 Maintainer: Piotr Sobczyk <piotr.sobczyk@pwr.edu.pl>
 Description: Package varclust performs clustering of quantitative variables,
@@ -12,7 +12,7 @@ Description: Package varclust performs clustering of quantitative variables,
     algorithm with different random initializations of cluser centers.
 License: GPL-3
 Depends:
-    R (>= 3.0.2)
+    R (>= 3.2.1)
 Imports:
     RcppEigen,
     foreach,

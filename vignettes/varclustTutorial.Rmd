@@ -105,13 +105,13 @@ For a dataset of 1000 variables and 10 clusters computation takes about
   
 ### Estimating number of clusters
 
-To estimate number of clusters one should use function **estim.ncp**.
+To estimate number of clusters one should use function **estim.npc**.
 One can select:
 
-* minimal number of PCs (*ncp.min*)
-* maximal number of PCs (*ncp.max*)
+* minimal number of PCs (*npc.min*)
+* maximal number of PCs (*npc.max*)
 * one of four methods penLik, RajanPen, minkaBIC, minkaLaplace
 
 ```{r, echo=TRUE}
-estim.ncp(comp[,benchmarkClustering==1], 1, 10)
+estim.npc(comp[,benchmarkClustering==1], 1, 10)
 ```
