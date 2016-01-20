@@ -25,13 +25,13 @@
 #' library(MetabolAnalyze)
 #' data(UrineSpectra)
 #' estim.npc(UrineSpectra[[1]], verbose=TRUE)}
-estim.npc <- function(X, npc.min = 1, npc.max = 10, scale = TRUE, verbose = FALSE){
+estim.npc <- function(X, npc.min = 0, npc.max = 10, scale = TRUE, verbose = FALSE){
   # preprocessing on X
   # number of components must be smaller than dimensions of X
   n <- nrow(X)
   p <- ncol(X)
   npc.max <- min(npc.max, min(n,p)-1)
-  npc.min <- max(npc.min, 1)
+  npc.min <- max(npc.min, 0)
   
   if(class(X) == "data.frame"){
     X <- as.matrix(X)
