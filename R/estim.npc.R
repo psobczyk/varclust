@@ -14,6 +14,7 @@
 #' @param npc.max maximal number of principal components, if greater than dimensions of X,
 #' min(ncol(X), nrow(X))-1 is used, for all the possible number of
 #' PCs between npc.min and npc.max criterion is computed
+#' @param sigma variance of noise. If NULL (default value) then it is estimated
 #' @param scale a boolean, if TRUE (default value) then data is scaled before applying
 #' criterion
 #' @param verbose a boolean, if TRUE plot with BIC values for different
@@ -25,7 +26,7 @@
 #' library(MetabolAnalyze)
 #' data(UrineSpectra)
 #' estim.npc(UrineSpectra[[1]], verbose=TRUE)}
-estim.npc <- function(X, npc.min = 0, npc.max = 10, scale = TRUE, verbose = FALSE){
+estim.npc <- function(X, npc.min = 0, npc.max = 10, sigma=NULL, scale = TRUE, verbose = FALSE){
   # preprocessing on X
   # number of components must be smaller than dimensions of X
   n <- nrow(X)
@@ -55,9 +56,10 @@ estim.npc <- function(X, npc.min = 0, npc.max = 10, scale = TRUE, verbose = FALS
     } else "Penalized likelihood, random coefficients model"
   
   vals <- switch(method,
-                 "Penalized likelihood, random coefficients model" = sapply(npc.min:npc.max, function(j) pca.new.BIC(X, j)),
-                 "Penalized likelihood, random factors model" = sapply(npc.min:npc.max, function(j) pca.BIC(X, j)))
+                 "Penalized likelihood, random coefficients model" = sapply(npc.min:npc.max, function(j) pca.new.BIC(X, j, sigma)),
+                 "Penalized likelihood, random factors model" = sapply(npc.min:npc.max, function(j) pca.BIC(X, j, sigma)))
   if(verbose){
+    print(vals)
     caption <- paste0("Criterion:\n", method)
     plot(npc.min:npc.max, vals, xlab = "Number of components", ylab = "Criterion value",
          main = caption, type = "b")

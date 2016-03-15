@@ -17,7 +17,7 @@ rajan.uniform.BIC <- function(X, k){
   eig <- eigen(cov(t(X)))
   lambda <- eig$values
   U <- eig$vectors
-  Uk <- U[,1:k, drop=F]
+  Uk <- U[,0:k, drop=F]
   v <- sum(lambda[(k+1):d])/(d-k) 
   
   beta <- max(abs(t(Uk)%*%X))
@@ -52,7 +52,7 @@ rajan.BIC <- function(X, k){
   v <- sum(lambda[(k+1):d])/(d-k) 
   
   t0 <- -N*d/2*log(2*pi)
-  t1 <- -N*k/2*log(mean(lambda[1:k]))
+  t1 <- -N*k/2*log(mean(lambda[0:k]))
   t2 <- -N*(d-k)/2*log(v)
   t3 <- -N*d/2
   pen <- -(m+d+1+1)/2*log(N)
@@ -79,7 +79,7 @@ rajan.noBIC <- function(X, k){
   v <- sum(lambda[(k+1):d])/(d-k) 
   
   t0 <- -N*d/2*log(2*pi)
-  t1 <- -N*k/2*log(mean(lambda[1:k]))
+  t1 <- -N*k/2*log(mean(lambda[0:k]))
   t2 <- -N*(d-k)/2*log(v)
   t3 <- -N*d/2
   t0+t1+t2+t3
@@ -93,24 +93,63 @@ rajan.noBIC <- function(X, k){
 #' 
 #' @param X a matrix with only continuous variables
 #' @param k number of principal components fitted
+#' @param sigma variance of noise. If NULL (default value) then it is estimated
 #' @keywords internal
 #' @return BIC value of BIC criterion
-pca.new.BIC <- function(X, k){
+pca.new.BIC <- function(X, k, sigma=NULL){
   d <- dim(X)[1]
   N <- dim(X)[2]
   m <- d*k - k*(k+1)/2
   
   lambda <- eigen(cov(t(X)), only.values = TRUE)$values
-  v <- sum(lambda[(k+1):d])/(d-k) 
-  
+  if(!is.null(sigma)){
+    v <- sigma
+    t0 <- -N*d/2*log(2*pi)
+    t1 <- -N/2*sum(log(lambda[0:k]))
+    t2 <- -N*(d-k)/2*log(v)
+    t3 <- -N*k/2
+    t4 <- -N/(2*v)*sum(lambda[(k+1):p])
+    pen <- -(m+d+k+1)/2*log(N)
+    t0+t1+t2+t3+t4+pen
+  } else {
+    v <- sum(lambda[(k+1):d])/(d-k) 
     t0 <- -N*d/2*log(2*pi)
     t1 <- -N/2*sum(log(lambda[0:k]))
     t2 <- -N*(d-k)/2*log(v)
     t3 <- -N*d/2
     pen <- -(m+d+k+1)/2*log(N)
     t0+t1+t2+t3+pen
+  }
 }
 
+
+#' BIC for PCA, as given by Minka
+#' 
+#' Computes the value of BIC criterion for given data set and 
+#' number of factors.
+#' 
+#' @param X a matrix with only continuous variables
+#' @param k number of principal components fitted
+#' @param sigma variance of noise. If NULL (default value) then it is estimated
+#' @keywords internal
+#' @references Automatic choice of dimensionality for PCA, Thomas P. Minka
+#' @return BIC value of BIC criterion
+pca.BIC <- function(X, k, sigma=NULL){
+  d <- dim(X)[1]
+  N <- dim(X)[2]
+  m <- N*k - k*(k+1)/2
+  
+  lambda <- eigen(cov(X), only.values = TRUE)$values
+  
+  if(!is.null(sigma)){
+    v <- sigma
+    -d/2*sum(log(lambda[0:k])) -d*(N-k)/2*log(v) - d*k/2 - d/(2*v)*sum(lambda[(k+1):N]) -(m+k)/2*log(d)
+  } else {
+    v <- sum(lambda[(k+1):N])/(N-k) 
+    
+    -d/2*sum(log(lambda[0:k])) -d*(N-k)/2*log(v) -(m+k)/2*log(d)
+  }
+}
 
 #' Penalized likelihood for PCA
 #' 
@@ -140,28 +179,6 @@ pca.new.BIC.fast <- function(X, k){
 }
 
 
-#' BIC for PCA, as given by Minka
-#' 
-#' Computes the value of BIC criterion for given data set and 
-#' number of factors.
-#' 
-#' @param X a matrix with only continuous variables
-#' @param k number of principal components fitted
-#' @keywords internal
-#' @references Automatic choice of dimensionality for PCA, Thomas P. Minka
-#' @return BIC value of BIC criterion
-pca.BIC <- function(X, k){
-  d <- dim(X)[1]
-  N <- dim(X)[2]
-  m <- N*k - k*(k+1)/2
-  
-  lambda <- eigen(cov(X), only.values = TRUE)$values
-  v <- sum(lambda[(k+1):N])/(N-k) 
-  
-  -d/2*sum(log(lambda[0:k])) -d*(N-k)/2*log(v) -(m+k)/2*log(d)
-}
-
-
 #' Laplace evidence for PCA, as given by Minka
 #' 
 #' Computes the value of Laplace approximation for given data set and 
@@ -181,13 +198,18 @@ pca.Laplace <- function(X, k, alfa=1){
   lambda <- abs(eigen(cov(t(X)), only.values = TRUE)$values)
   v <- sum(lambda[(k+1):d])/(d-k) 
   
-  t1 <- -N/2*sum(log(lambda[1:k]))
+  t1 <- -N/2*sum(log(lambda[0:k]))
   t2 <- -N*(d-k)/2*log(v)
   t3 <- -k/2*log(N)
-  Az <- sapply(1:k, function(i) sum( log(1/lambda[(i+1):d] - 1/lambda[i] ) + log(lambda[i] - lambda[(i+1):d]) + log(N) ))
-  if( any(is.nan(Az)) )
-    warning(paste("Number of observations ", N, " is to little compared to number of variables ", d, 
-                  " to perform a meaningful estimation"))
+  if(k>0){
+    Az <- sapply(1:k, function(i) sum( log(1/lambda[(i+1):d] - 1/lambda[i] ) + log(lambda[i] - lambda[(i+1):d]) + log(N) ))
+    if( any(is.nan(Az)) )
+      warning(paste("Number of observations ", N, " is to little compared to number of variables ", d, 
+                    " to perform a meaningful estimation"))
+  } else {
+    Az <- 0
+  }
+  
   t4 <- sum(Az)*(-1)/2
   t5 <- log(2*pi)*(m+k)/2
   t6 <- -k*log(2) + sum( lgamma( (d-1:k+1)/2 ) - (d-1:k+1)/2*log(pi) )
@@ -275,9 +297,12 @@ adjusted.cluster.BIC <- function(X, segmentation, dims, numb.clusters, adjustmen
       Xk = X[,segmentation==k, drop=F];
       if(dim(Xk)[2]>max.dim){ #length because it might be onedimensional
         svdSIGNAL= svd(Xk); 
-        SIGNAL = matrix(svdSIGNAL$u[, 1:max.dim], ncol=max.dim) %*% 
-          diag(svdSIGNAL$d[1:max.dim], nrow=max.dim) %*% 
-          t(matrix(svdSIGNAL$v[, 1:max.dim], ncol=max.dim));
+        SIGNAL = matrix(svdSIGNAL$u[, 0:max.dim], ncol=max.dim) %*% 
+          diag(svdSIGNAL$d[0:max.dim], nrow=max.dim) %*% 
+          t(matrix(svdSIGNAL$v[, 0:max.dim], ncol=max.dim));
+        if(ncol(SIGNAL)==0){
+          SIGNAL <- matrix(0, ncol=ncol(Xk), nrow=nrow(Xk))
+        }
         return(sum((Xk - SIGNAL)^2))
       }
       return(0)
@@ -298,9 +323,12 @@ adjusted.cluster.BIC <- function(X, segmentation, dims, numb.clusters, adjustmen
     Xk = X[,segmentation==k, drop=F]
     if(dim(Xk)[2]>max.dim){ #length because it might be onedimensional
       svdSIGNAL= svd(Xk)  
-      SIGNAL = matrix(svdSIGNAL$u[, 1:max.dim], ncol=max.dim) %*% 
-        diag(svdSIGNAL$d[1:max.dim], nrow=max.dim) %*% 
-        t(matrix(svdSIGNAL$v[, 1:max.dim], ncol=max.dim))
+      SIGNAL = matrix(svdSIGNAL$u[, 0:max.dim], ncol=max.dim) %*% 
+        diag(svdSIGNAL$d[0:max.dim], nrow=max.dim) %*% 
+        t(matrix(svdSIGNAL$v[, 0:max.dim], ncol=max.dim))
+      if(ncol(SIGNAL)==0){
+        SIGNAL <- matrix(0, ncol=ncol(Xk), nrow=nrow(Xk))
+      }
       RESIDUAL = Xk - SIGNAL
       if(!estimateJointly & is.null(sigma)) {
         df <- D*ncol(Xk)-ncol(Xk)-D*max.dim-ncol(Xk)*max.dim+max.dim^2+max.dim
