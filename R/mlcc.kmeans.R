@@ -15,18 +15,12 @@
 #' @return A list consisting of:
 #' \item{segmentation}{a vector containing the partition of the variables}
 #' \item{pcas}{a list of matrices, basis vectors for each cluster (subspace)}
-#' \item{time}{a list of time measurements}
 mlcc.kmeans <- function(X, number.clusters=2, stop.criterion=1, max.iter=40, max.subspace.dim=4, 
                         initial.segmentation=NULL, estimate.dimensions=FALSE, mode = "random"){
   numbVars = dim(X)[2]
   rowNumb = dim(X)[1]
   pcas <- list(NULL)
-  initialization_time = 0;
-  mean_iteration_time = 0;
-  number_of_iterations = 0;
-  total_time = 0;
   
-  ptm <- proc.time()
   if(is.null(initial.segmentation)){
     switch(mode,
            "random"={
@@ -61,12 +55,9 @@ mlcc.kmeans <- function(X, number.clusters=2, stop.criterion=1, max.iter=40, max
   else{
     segmentation=initial.segmentation
   }
-  initialization_time = (proc.time() - ptm)[3]
   
   new.segmentation <- segmentation
-  ptm <- proc.time()
   for (iter in 1:max.iter){
-    number_of_iterations = number_of_iterations + 1
     pcas <- lapply(1:number.clusters, function(i){
       sub.dim <- dim(X[,segmentation==i, drop=F])[2]
       if(sub.dim > max.subspace.dim){
@@ -90,10 +81,6 @@ mlcc.kmeans <- function(X, number.clusters=2, stop.criterion=1, max.iter=40, max
     if(sum(new.segmentation!=segmentation)<stop.criterion) break
     segmentation = new.segmentation
   }
-  total_time = (proc.time() - ptm)[3]
-  mean_iteration_time = total_time/number_of_iterations
-  total_time = total_time + initialization_time
-  time <- list(total_time, initialization_time, mean_iteration_time, number_of_iterations)
   return(list(segmentation=segmentation, 
-              pcas=pcas, time = time))
+              pcas=pcas))
 }
