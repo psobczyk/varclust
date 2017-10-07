@@ -122,7 +122,6 @@ mlcc.reps <- function(X, numb.clusters = 2, numb.runs = 20, stop.criterion = 1, 
     }
   }
   stopCluster(cl)
-  #segmentations <- append(segmentations, segmentations2)
   BICs <- unlist(lapply(segmentations, function(x) x[2]))
   basis <- lapply(segmentations, function(x) x[3])
   segmentations <- lapply(segmentations, function(x) x[[1]])
