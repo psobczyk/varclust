@@ -17,7 +17,9 @@ Imports:
     RcppEigen,
     foreach,
     parallel,
-    doParallel
+    doParallel,
+    iterators,
+    PMA
 Suggests:
     knitr,
     mclust,
@@ -25,4 +27,4 @@ Suggests:
     testthat
 NeedsCompilation: no
 VignetteBuilder: knitr
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1
