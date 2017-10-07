@@ -10,33 +10,70 @@
 #' @param max.subspace.dim an integer, maximum dimension of subspaces
 #' @param initial.segmentation a vector, initial segmentation of variables to clusters
 #' @param estimate.dimensions a boolean, if TRUE (value set by default) subspaces dimensions are estimated
+#' @param mode a string, possible values : random, kmeans++, sPCA, determines the intialization mode of the algorithm
 #' @export
 #' @return A list consisting of:
 #' \item{segmentation}{a vector containing the partition of the variables}
 #' \item{pcas}{a list of matrices, basis vectors for each cluster (subspace)}
+#' \item{time}{a list of time measurements}
 mlcc.kmeans <- function(X, number.clusters=2, stop.criterion=1, max.iter=40, max.subspace.dim=4, 
-                        initial.segmentation=NULL, estimate.dimensions=FALSE){
+                        initial.segmentation=NULL, estimate.dimensions=FALSE, mode = "random"){
   numbVars = dim(X)[2]
   rowNumb = dim(X)[1]
   pcas <- list(NULL)
+  initialization_time = 0;
+  mean_iteration_time = 0;
+  number_of_iterations = 0;
+  total_time = 0;
   
+  ptm <- proc.time()
   if(is.null(initial.segmentation)){
-    los = sample(1:numbVars,number.clusters)
-    pcas = lapply(1:number.clusters, function(i) matrix(X[,los[i]], nrow=rowNumb))
-    segmentation <- sapply(1:numbVars,  function(j) choose.cluster(X[,j],pcas, number.clusters))
+    switch(mode,
+           "random"={
+             los = sample(1:numbVars,number.clusters)
+             pcas = lapply(1:number.clusters, function(i) matrix(X[,los[i]], nrow=rowNumb))
+           },
+           "kmeans++"={
+               los = sample(1:numbVars,1)
+               pcas = list(matrix(X[,los], nrow = rowNumb))
+               for( k in 2:number.clusters ){
+                 dists = vapply(1:numbVars, function(i) calculate.distance.kmeanspp(X[,i],pcas,k-1), 0.9)
+                 distsum = sum(dists)
+                 new_center_index = sample(1:numbVars, 1 , prob = dists/distsum)
+                 pcas[[k]] <- matrix(X[,new_center_index], nrow = rowNumb)
+               }
+             },
+             "sPCA"={
+                if(rowNumb < number.clusters){
+                  stop("Number of cluster cannot be bigger than number of rows")
+                }
+                count <- min(round(number.clusters*log(numbVars)), rowNumb)
+                PCs <- SPC(x=X, sumabsv=sqrt(numbVars), niter = 50, K = count, trace = FALSE)$u
+                pcas = list(matrix(PCs[,1],nrow = rowNumb))
+                for( k in 2:number.clusters ){
+                  dists = vapply(1:numbVars, function(i) calculate.distance.kmeanspp(X[,i],pcas,k-1), 0.9)
+                  new_center_index = which.max(dists)
+                  pcas[[k]] <- matrix(X[,new_center_index], nrow = rowNumb)
+                }
+            })
+    segmentation <- sapply(1:numbVars,  function(j) choose.cluster.BIC(X[,j],pcas, number.clusters))
   }
-  else
+  else{
     segmentation=initial.segmentation
+  }
+  initialization_time = (proc.time() - ptm)[3]
   
   new.segmentation <- segmentation
+  ptm <- proc.time()
   for (iter in 1:max.iter){
+    number_of_iterations = number_of_iterations + 1
     pcas <- lapply(1:number.clusters, function(i){
       sub.dim <- dim(X[,segmentation==i, drop=F])[2]
-      if(dim(X[,segmentation==i, drop=F])[2]>max.subspace.dim){
+      if(sub.dim > max.subspace.dim){
         a <- summary(prcomp(x=X[,segmentation==i]))
         if (estimate.dimensions) {
-            cut <- which.max(sapply(1:min(floor(sqrt(sub.dim)), max.subspace.dim), 
-                                  function(dim) pca.new.BIC(X[,segmentation==i], k = dim)))
+            max.dim <- min(floor(sqrt(sub.dim)), max.subspace.dim)
+            cut <- estim.npc(X[,segmentation==i], npc.min = 1, npc.max = max.dim, scale = FALSE)
         }
         else {
           cut <- max.subspace.dim
@@ -44,18 +81,19 @@ mlcc.kmeans <- function(X, number.clusters=2, stop.criterion=1, max.iter=40, max
         return(matrix(a$x[,1:cut], nrow=rowNumb))
       }
       else{
+        #dlaczego cos takiego jest??
         dim <- max(1, floor(sqrt(sub.dim)))
         return(matrix(rnorm(rowNumb*dim), nrow = rowNumb, ncol = dim))
       }
     })
-    if (estimate.dimensions)
-      new.segmentation <- sapply(1:numbVars, function(j) choose.cluster.BIC(X[,j], pcas, number.clusters))
-    else {
-      new.segmentation <- sapply(1:numbVars, function(j) choose.cluster(X[,j], pcas, number.clusters))
-    }
+    new.segmentation <- sapply(1:numbVars, function(j) choose.cluster.BIC(X[,j], pcas, number.clusters))
     if(sum(new.segmentation!=segmentation)<stop.criterion) break
     segmentation = new.segmentation
   }
+  total_time = (proc.time() - ptm)[3]
+  mean_iteration_time = total_time/number_of_iterations
+  total_time = total_time + initialization_time
+  time <- list(total_time, initialization_time, mean_iteration_time, number_of_iterations)
   return(list(segmentation=segmentation, 
-              pcas=pcas))
+              pcas=pcas, time = time))
 }
