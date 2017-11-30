@@ -56,7 +56,7 @@ estim.npc <- function(X, npc.min = 0, npc.max = 10, scale = TRUE, verbose = FALS
   
   vals <- switch(method,
                  "Penalized likelihood, random coefficients model" = sapply(npc.min:npc.max, function(j) pca.new.BIC(X, j)),
-                 "Penalized likelihood, random factors model" = sapply(npc.min:npc.max, function(j) pca.BIC(X, j)))
+                 "Penalized likelihood, random factors model" = sapply(npc.min:npc.max, function(j) pca.new.BIC(t(X), j)))
   if(verbose){
     caption <- paste0("Criterion:\n", method)
     plot(npc.min:npc.max, vals, xlab = "Number of components", ylab = "Criterion value",

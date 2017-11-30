@@ -9,7 +9,8 @@
 #' @param K an integer, number of subspaces
 #' @param numb.vars an integer, number of variables in each subspace
 #' @param max.dim an integer, if equal.dims is TRUE then max.dim is dimension of each subspace.
-#'        If equal.dims is FALSE then subspaces dimensions are drawn from uniform distribution on [1,max.dim]
+#'        If equal.dims is FALSE then subspaces dimensions are drawn from uniform distribution on [min.dim,max.dim]
+#' @param min.dim an integer, minimal dimension of subspace 
 #' @param equal.dims a boolean, if TRUE (value set by default) all clusters are of the same dimension
 #' @export
 #' @return A list consisting of:
@@ -22,7 +23,7 @@
 #' sim.data <- data.simulation()
 #' sim.data2 <- data.simulation(n = 30, SNR = 2, K = 5, numb.vars = 20, 
 #'                              max.dim = 3, equal.dims = FALSE)
-data.simulation <- function(n = 100, SNR = 1, K = 10, numb.vars = 30, max.dim = 2, equal.dims = TRUE){
+data.simulation <- function(n = 100, SNR = 1, K = 10, numb.vars = 30, max.dim = 2, min.dim = 1,equal.dims = TRUE){
   sigma <- 1/SNR
   #subspaces dimensions depend on equal.dims value
   if(equal.dims)
