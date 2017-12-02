@@ -24,9 +24,14 @@ install_github("psobczyk/varclust")
 ```
 * Download the package as an archive and install it manually from **R** console
 * You might need to install package dependencies:
-    * RcppEigen
-    * doMC
-    * parallel
+    * **RcppEigen**
+    * **doMC**
+    * **parallel**
+* To perform sparse PCA one needs to install package **PMA**. Its dependency **impute** is currently not on CRAN. To install it use the following:
+```
+source("https://bioconductor.org/biocLite.R")
+biocLite("impute")
+```
 * No additional configuration is needed
 * Read [vignette](https://psobczyk.shinyapps.io/varclust_online/varclustTutorial.html) to get familiar with basic usage
 

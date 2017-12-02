@@ -41,11 +41,12 @@ library(mclust)
 
 Let us consider some real genomic data. We're going to use 
 [FactoMineR package](http://factominer.free.fr/) data.
+As they are no longer available online we added them to this package
 This data consists of two types of variables. First group are gene 
 expression data. The second is RNA data.
 Please note that it may take few minutes to run the following code:
 ```{r, warning=FALSE}
-comp <- read.table("http://factominer.free.fr/docs/gene.csv",sep=";",header=T,row.names=1) 
+comp <- system.file("extdata", "gene.csv", package = "varclust")
 benchmarkClustering <- c(rep(1, 68), rep(2, 356))    
 comp <- as.matrix(comp[,-ncol(comp)])
 set.seed(2)
