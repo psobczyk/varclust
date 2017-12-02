@@ -10,7 +10,7 @@
 integration <- function(group, true_group){
   n <- length(group)
   K <- max(unique(true_group))
-  if (n != length(true_group)) # || !all(sort(unique(group)) == sort(unique(true_group)))) - zdarzają się puste grupy
+  if (n != length(true_group)) # || !all(sort(unique(group)) == sort(unique(true_group)))) -in case of empty groups
     stop("Partitions are of different lengths")
   integrationMatrix <- matrix(0,nrow = K, ncol = K)
   for (i in 1:n){

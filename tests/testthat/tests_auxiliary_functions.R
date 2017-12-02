@@ -35,12 +35,12 @@ test_that("choose cluster BIC - when n is large we can choose the right model", 
   expect_equal(varclust:::choose.cluster(sim.data$X[,11], list(pca1, pca2), 2), 2)
 })
 
-test_that("choose cluster BIC - warning for suspiciously low noise", {
-  sim.data <- varclust::data.simulation(n = 100, SNR = 1, K = 2, numb.vars = 4, max.dim = 2)
-  pca1 <- summary(prcomp(x=sim.data$signals[,1:4]))$x[,1:2]
-  pca2 <- summary(prcomp(x=sim.data$signals[,1:4]))$x[,1:3]
-  expect_warning(varclust:::choose.cluster.BIC(sim.data$signals[,1], list(pca1, pca2), 2))
-})
+# test_that("choose cluster BIC - warning for suspiciously low noise", {
+#   sim.data <- varclust::data.simulation(n = 100, SNR = 1, K = 2, numb.vars = 4, max.dim = 2)
+#   pca1 <- summary(prcomp(x=sim.data$signals[,1:4]))$x[,1:2]
+#   pca2 <- summary(prcomp(x=sim.data$signals[,1:4]))$x[,1:3]
+#   expect_warning(varclust:::choose.cluster.BIC(sim.data$signals[,1], list(pca1, pca2), 2))
+# })
 
 
 test_that("adjusted cluster BIC - is computed correctly. Works with mlcc.reps", {

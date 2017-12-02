@@ -46,7 +46,8 @@ This data consists of two types of variables. First group are gene
 expression data. The second is RNA data.
 Please note that it may take few minutes to run the following code:
 ```{r, warning=FALSE}
-comp <- system.file("extdata", "gene.csv", package = "varclust")
+comp_file_name <- system.file("extdata", "gene.csv", package = "varclust")
+comp <- read.table(comp_file_name, sep=";", header=T, row.names=1) 
 benchmarkClustering <- c(rep(1, 68), rep(2, 356))    
 comp <- as.matrix(comp[,-ncol(comp)])
 set.seed(2)

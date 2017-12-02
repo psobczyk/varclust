@@ -1,8 +1,8 @@
 Package: varclust
 Type: Package
 Title: Variables Clustering
-Version: 0.9.30
-Date: 2016-01-20
+Version: 0.9.4
+Date: 2017-12-02
 Author: Piotr Sobczyk, Julie Josse, Malgorzata Bogdan
 Maintainer: Piotr Sobczyk <piotr.sobczyk@pwr.edu.pl>
 Description: Package varclust performs clustering of quantitative variables,

@@ -33,7 +33,7 @@
 #'
 #' @docType package
 #' @name varclust
-#' @details Version: 0.9.29
+#' @details Version: 0.9.4
 #' @importFrom RcppEigen fastLmPure
 #' @importFrom doParallel registerDoParallel 
 #' @importFrom parallel makeCluster
@@ -41,6 +41,9 @@
 #' @importFrom parallel detectCores
 #' @importFrom PMA SPC
 #' @importFrom iterators icount
+#' @importFrom graphics axis plot plot.default points
+#' @importFrom stats cov dnorm pnorm prcomp rnorm runif var
+#' @importFrom utils str
 #' @import foreach
 #' @author Piotr Sobczyk,
 #'         Julie Josse,
