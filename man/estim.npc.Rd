@@ -4,7 +4,8 @@
 \alias{estim.npc}
 \title{Automatic estimation of number of principal components in PCA}
 \usage{
-estim.npc(X, npc.min = 0, npc.max = 10, scale = TRUE, verbose = FALSE)
+estim.npc(X, npc.min = 0, npc.max = 10, sigma = NULL, scale = TRUE,
+  verbose = FALSE)
 }
 \arguments{
 \item{X}{a data frame or a matrix contatining only continuous variables}
@@ -15,6 +16,8 @@ PCs between npc.min and npc.max criterion is computed}
 \item{npc.max}{maximal number of principal components, if greater than dimensions of X,
 min(ncol(X), nrow(X))-1 is used, for all the possible number of
 PCs between npc.min and npc.max criterion is computed}
+
+\item{sigma}{variance of noise. If NULL (default value) then it is estimated}
 
 \item{scale}{a boolean, if TRUE (default value) then data is scaled before applying
 criterion}

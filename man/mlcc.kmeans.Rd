@@ -29,7 +29,6 @@ mlcc.kmeans(X, number.clusters = 2, stop.criterion = 1, max.iter = 40,
 A list consisting of:
 \item{segmentation}{a vector containing the partition of the variables}
 \item{pcas}{a list of matrices, basis vectors for each cluster (subspace)}
-\item{time}{a list of time measurements}
 }
 \description{
 Performs k-means based subspace clustering. Center of each cluster is some number 
