@@ -56,8 +56,8 @@ estim.npc <- function(X, npc.min = 0, npc.max = 10, sigma=NULL, scale = TRUE, ve
     } else "Penalized likelihood, random coefficients model"
   
   vals <- switch(method,
-                 "Penalized likelihood, random coefficients model" = sapply(npc.min:npc.max, function(j) pca.new.BIC(X, j, sigma)),
-                 "Penalized likelihood, random factors model" = sapply(npc.min:npc.max, function(j) pca.BIC(X, j, sigma)))
+                 "Penalized likelihood, random coefficients model" = sapply(npc.min:npc.max, function(j) pca.new.BIC(X, j)),
+                 "Penalized likelihood, random factors model" = sapply(npc.min:npc.max, function(j) pca.new.BIC(t(X), j)))
   if(verbose){
     print(vals)
     caption <- paste0("Criterion:\n", method)

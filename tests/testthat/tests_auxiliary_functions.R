@@ -11,6 +11,13 @@ test_that("missclassification works ok", {
   expect_false(varclust::misclassification(part1, part2, 8, 2) == varclust::misclassification(part2, part1, 15, 2))
   expect_error(varclust::misclassification(part1, c(3, part2), 15, 2))
 })
+test_that("integration",{
+  part1 <- c(rep(1, 10), rep(2,10))
+  part2 <- c(rep(1,15), rep(2,5))
+  expect_equal(varclust::integration(part2,part1)[1], 0.75 )
+  expect_equal(varclust::integration(part2,part1)[2], 0.5 )
+})
+
 
 test_that("choose cluster", {
   sim.data <- varclust::data.simulation(n = 100, SNR = 1, K = 2, numb.vars = 4, max.dim = 2)
@@ -53,7 +60,7 @@ test_that("get sigma", {
                      n = 50, p = 2*20, numb.clusters = 2)
   sigma3 <- varclust:::getSigma(X = scale(sim.data$X), segmentation = sim.data$s, max.dim = 3, 
                      n = 50, p = 2*20, numb.clusters = 2)
-  expect_more_than(sigma2, sigma3)
+  expect_gt(sigma2, sigma3)
   sigma2_sig <- varclust:::getSigma(X = scale(sim.data$signals), segmentation = sim.data$s, max.dim = 2, 
                                n = 50, p = 2*20, numb.clusters = 2)
   expect_equal(sigma2_sig, 0)
@@ -65,6 +72,6 @@ test_that("get sigma", {
 test_that("sim.data - factors are orthogonal", {
   set.seed(1)
   sim.data <- varclust::data.simulation(n = 50, SNR = 1, K = 2, numb.vars = 20, max.dim = 2)
-  expect_more_than(cor.test(sim.data$factors[,1], sim.data$factors[,2])$p.value, 0.05)
-  expect_more_than(cor.test(sim.data$factors[,3], sim.data$factors[,4])$p.value, 0.05)
+  expect_gt(cor.test(sim.data$factors[,1], sim.data$factors[,2])$p.value, 0.05)
+  expect_gt(cor.test(sim.data$factors[,3], sim.data$factors[,4])$p.value, 0.05)
 })

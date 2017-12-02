@@ -39,6 +39,8 @@
 #' @importFrom parallel makeCluster
 #' @importFrom parallel stopCluster
 #' @importFrom parallel detectCores
+#' @importFrom PMA SPC
+#' @importFrom iterators icount
 #' @import foreach
 #' @author Piotr Sobczyk,
 #'         Julie Josse,

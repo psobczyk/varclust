@@ -40,4 +40,3 @@ library(MetabolAnalyze)
 data(UrineSpectra)
 estim.npc(UrineSpectra[[1]], verbose=TRUE)}
 }
-
