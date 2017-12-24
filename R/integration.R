@@ -1,16 +1,18 @@
 #' Computes integration of each cluster in given partition
 #' 
-#' 
 #' @param group a vector, first partition
 #' @param true_group a vector, second (reference) partition
-#' @references {TO DO: add reference to Michal Soltys doctoral dissertation}
+#' @references {M. Sołtys. Metody analizy skupień. Master’s thesis, Wrocław University of Technology, 2010}
 #' @export
 #' @return integration
 #' 
 integration <- function(group, true_group){
   n <- length(group)
   K <- max(unique(true_group))
-  if (n != length(true_group)) # || !all(sort(unique(group)) == sort(unique(true_group)))) -in case of empty groups
+  if (max(unique(group)) > K){
+    stop("Number of clusters in given partition has to be less or equal to the number of clusters in true partition")
+  }
+  if (n != length(true_group))
     stop("Partitions are of different lengths")
   integrationMatrix <- matrix(0,nrow = K, ncol = K)
   for (i in 1:n){

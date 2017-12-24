@@ -18,5 +18,5 @@ integration
 Computes integration of each cluster in given partition
 }
 \references{
-{TO DO: add reference to Michal Soltys doctoral dissertation}
+{M. Sołtys. Metody analizy skupień. Master’s thesis, Wrocław University of Technology, 2010}
 }
