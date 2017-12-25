@@ -2,7 +2,7 @@
 % Please edit documentation in R/integration.R
 \name{integration}
 \alias{integration}
-\title{Computes integration of each cluster in given partition}
+\title{Computes integration and acontamination of each cluster in given partition}
 \usage{
 integration(group, true_group)
 }
@@ -12,10 +12,10 @@ integration(group, true_group)
 \item{true_group}{a vector, second (reference) partition}
 }
 \value{
-integration
+(integration, acontamination)
 }
 \description{
-Computes integration of each cluster in given partition
+Computes integration and acontamination of each cluster in given partition
 }
 \references{
 {M. Sołtys. Metody analizy skupień. Master’s thesis, Wrocław University of Technology, 2010}

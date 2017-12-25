@@ -4,12 +4,14 @@
 \alias{pca.new.BIC}
 \title{Penalized likelihood for PCA}
 \usage{
-pca.new.BIC(X, k)
+pca.new.BIC(X, k, show.warnings = FALSE)
 }
 \arguments{
 \item{X}{a matrix with only continuous variables}
 
 \item{k}{number of principal components fitted}
+
+\item{show.warnings}{a boolean - if set to TRUE all warnings are displayed, default value is FALSE}
 }
 \value{
 BIC value of BIC criterion

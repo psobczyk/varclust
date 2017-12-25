@@ -87,7 +87,7 @@ cluster.pca.BIC <- function(X, segmentation, dims, numb.clusters, max.dim, flat.
 }
 
 
-#' Selects subspace closest to given variable (according to BIC)
+#' Selects subspace closest to a given variable (according to BIC)
 #'
 #' @param variable variable variable to be assigned
 #' @param pcas orthogonal basis for different subspaces

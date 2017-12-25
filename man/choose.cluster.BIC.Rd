@@ -2,9 +2,9 @@
 % Please edit documentation in R/auxiliary.functions.R
 \name{choose.cluster.BIC}
 \alias{choose.cluster.BIC}
-\title{Assigns variables to subspaces (according to BIC)}
+\title{Selects subspace closest to a given variable (according to BIC)}
 \usage{
-choose.cluster.BIC(variable, pcas, numberClusters)
+choose.cluster.BIC(variable, pcas, numberClusters, show.warnings = FALSE)
 }
 \arguments{
 \item{variable}{variable variable to be assigned}
@@ -12,11 +12,13 @@ choose.cluster.BIC(variable, pcas, numberClusters)
 \item{pcas}{orthogonal basis for different subspaces}
 
 \item{numberClusters}{number of subspaces (clusters)}
+
+\item{show.warnings}{a boolean - if set to TRUE all warnings are displayed, default value is FALSE}
 }
 \value{
 index number of subspace closest to variable
 }
 \description{
-Selects subspace closest to given variable (according to BIC)
+Selects subspace closest to a given variable (according to BIC)
 }
 \keyword{internal}

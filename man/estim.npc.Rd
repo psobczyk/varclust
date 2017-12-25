@@ -5,7 +5,7 @@
 \title{Automatic estimation of number of principal components in PCA}
 \usage{
 estim.npc(X, npc.min = 0, npc.max = 10, sigma = NULL, scale = TRUE,
-  verbose = FALSE)
+  verbose = FALSE, show.warnings = FALSE)
 }
 \arguments{
 \item{X}{a data frame or a matrix contatining only continuous variables}
@@ -24,6 +24,8 @@ criterion}
 
 \item{verbose}{a boolean, if TRUE plot with BIC values for different
 numbers of components is produced (default value is FALSE)}
+
+\item{show.warnings}{a boolean - if set to TRUE all warnings are displayed, default value is FALSE}
 }
 \value{
 number of components

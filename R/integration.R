@@ -1,10 +1,10 @@
-#' Computes integration of each cluster in given partition
+#' Computes integration and acontamination of each cluster in given partition
 #' 
 #' @param group a vector, first partition
 #' @param true_group a vector, second (reference) partition
 #' @references {M. Sołtys. Metody analizy skupień. Master’s thesis, Wrocław University of Technology, 2010}
 #' @export
-#' @return integration
+#' @return (integration, acontamination)
 #' 
 integration <- function(group, true_group){
   n <- length(group)
