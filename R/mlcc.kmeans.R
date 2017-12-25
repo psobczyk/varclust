@@ -1,7 +1,7 @@
 #' Multiple Latent Components Clustering - kmeans algorithm
 #'
 #' Performs k-means based subspace clustering. Center of each cluster is some number 
-#' of principal components. Similarity measure is R^2 coefficient.
+#' of principal components. Similarity measure is calculated using BIC.
 #'
 #' @param X a matrix with only continuous variables
 #' @param number.clusters an integer, number of clusters to be used
@@ -11,12 +11,13 @@
 #' @param initial.segmentation a vector, initial segmentation of variables to clusters
 #' @param estimate.dimensions a boolean, if TRUE (value set by default) subspaces dimensions are estimated
 #' @param mode a string, possible values : random, kmeans++, sPCA, determines the intialization mode of the algorithm
+#' @param show.warnings a boolean - if set to TRUE all warnings are displayed, default value is FALSE
 #' @export
 #' @return A list consisting of:
 #' \item{segmentation}{a vector containing the partition of the variables}
 #' \item{pcas}{a list of matrices, basis vectors for each cluster (subspace)}
 mlcc.kmeans <- function(X, number.clusters=2, stop.criterion=1, max.iter=40, max.subspace.dim=4, 
-                        initial.segmentation=NULL, estimate.dimensions=FALSE, mode = "random"){
+                        initial.segmentation=NULL, estimate.dimensions=FALSE, mode = "random", show.warnings = FALSE){
   numbVars = dim(X)[2]
   rowNumb = dim(X)[1]
   pcas <- list(NULL)
@@ -50,7 +51,7 @@ mlcc.kmeans <- function(X, number.clusters=2, stop.criterion=1, max.iter=40, max
                   pcas[[k]] <- matrix(X[,new_center_index], nrow = rowNumb)
                 }
             })
-    segmentation <- sapply(1:numbVars,  function(j) choose.cluster.BIC(X[,j],pcas, number.clusters))
+    segmentation <- sapply(1:numbVars,  function(j) choose.cluster.BIC(X[,j],pcas, number.clusters, show.warnings))
   }
   else{
     segmentation=initial.segmentation
@@ -64,7 +65,7 @@ mlcc.kmeans <- function(X, number.clusters=2, stop.criterion=1, max.iter=40, max
         a <- summary(prcomp(x=X[,segmentation==i]))
         if (estimate.dimensions) {
             max.dim <- min(floor(sqrt(sub.dim)), max.subspace.dim)
-            cut <- estim.npc(X[,segmentation==i], npc.min = 1, npc.max = max.dim, scale = FALSE)
+            cut <- estim.npc(X[,segmentation==i], npc.min = 1, npc.max = max.dim, scale = FALSE, show.warnings = show.warnings)
         }
         else {
           cut <- max.subspace.dim
@@ -72,12 +73,12 @@ mlcc.kmeans <- function(X, number.clusters=2, stop.criterion=1, max.iter=40, max
         return(matrix(a$x[,1:cut], nrow=rowNumb))
       }
       else{
-        #dlaczego cos takiego jest??
+        ##TO DO - reconsider this
         dim <- max(1, floor(sqrt(sub.dim)))
         return(matrix(rnorm(rowNumb*dim), nrow = rowNumb, ncol = dim))
       }
     })
-    new.segmentation <- sapply(1:numbVars, function(j) choose.cluster.BIC(X[,j], pcas, number.clusters))
+    new.segmentation <- sapply(1:numbVars, function(j) choose.cluster.BIC(X[,j], pcas, number.clusters, show.warnings))
     if(sum(new.segmentation!=segmentation)<stop.criterion) break
     segmentation = new.segmentation
   }

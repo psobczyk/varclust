@@ -19,6 +19,7 @@
 #' criterion
 #' @param verbose a boolean, if TRUE plot with BIC values for different
 #'        numbers of components is produced (default value is FALSE)
+#' @param show.warnings a boolean - if set to TRUE all warnings are displayed, default value is FALSE
 #' @export
 #' @return number of components
 #' @examples
@@ -26,7 +27,7 @@
 #' library(MetabolAnalyze)
 #' data(UrineSpectra)
 #' estim.npc(UrineSpectra[[1]], verbose=TRUE)}
-estim.npc <- function(X, npc.min = 0, npc.max = 10, sigma=NULL, scale = TRUE, verbose = FALSE){
+estim.npc <- function(X, npc.min = 0, npc.max = 10, sigma=NULL, scale = TRUE, verbose = FALSE, show.warnings = FALSE){
   # preprocessing on X
   # number of components must be smaller than dimensions of X
   n <- nrow(X)
@@ -56,8 +57,8 @@ estim.npc <- function(X, npc.min = 0, npc.max = 10, sigma=NULL, scale = TRUE, ve
     } else "Penalized likelihood, random coefficients model"
   
   vals <- switch(method,
-                 "Penalized likelihood, random coefficients model" = sapply(npc.min:npc.max, function(j) pca.new.BIC(X, j)),
-                 "Penalized likelihood, random factors model" = sapply(npc.min:npc.max, function(j) pca.new.BIC(t(X), j)))
+                 "Penalized likelihood, random coefficients model" = sapply(npc.min:npc.max, function(j) pca.new.BIC(X, j, show.warnings)),
+                 "Penalized likelihood, random factors model" = sapply(npc.min:npc.max, function(j) pca.new.BIC(t(X), j, show.warnings)))
   if(verbose){
     print(vals)
     caption <- paste0("Criterion:\n", method)

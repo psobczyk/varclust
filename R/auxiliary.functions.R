@@ -6,9 +6,10 @@
 #' 
 #' @param X a matrix with only continuous variables
 #' @param k number of principal components fitted
+#' @param show.warnings a boolean - if set to TRUE all warnings are displayed, default value is FALSE
 #' @keywords internal
 #' @return BIC value of BIC criterion
-pca.new.BIC <- function(X, k){
+pca.new.BIC <- function(X, k, show.warnings = FALSE){
   d <- dim(X)[1]
   N <- dim(X)[2]
   m <- d*k - k*(k+1)/2
@@ -16,7 +17,9 @@ pca.new.BIC <- function(X, k){
   ## TO DO: replace eigen with some more robust eigenvalues computation
   lambda <- eigen(cov(t(X)), only.values = TRUE)$values
   if(any(lambda < 0)){
-    #warning("In function pca.new.BIC: some of the eigenvalues were negative due to numerical errors - rounding them to 0")
+    if(show.warnings){
+      warning("In function pca.new.BIC: some of the eigenvalues were negative due to numerical errors - rounding them to 0")
+    }
     lambda[lambda < 0] = 0
   }
   v <- sum(lambda[(k+1):d])/(d-k) 
@@ -46,9 +49,10 @@ pca.new.BIC <- function(X, k){
 #' @param numb.clusters an integer, number of clusters
 #' @param max.dim an integer, upper bound for allowed dimension of subspace
 #' @param flat.prior boolean, if TRUE (default is FALSE) then flat prior on models is used
+#' @param show.warnings a boolean - if set to TRUE all warnings are displayed, default value is FALSE
 #' @keywords internal
 #' @return BIC value of BIC criterion
-cluster.pca.BIC <- function(X, segmentation, dims, numb.clusters, max.dim, flat.prior = FALSE){
+cluster.pca.BIC <- function(X, segmentation, dims, numb.clusters, max.dim, flat.prior = FALSE, show.warnings = FALSE){
   if(!is.matrix(X)){ # if X is one variable it is stored as vector
     X <- matrix(X, ncol=1)
   }
@@ -63,9 +67,9 @@ cluster.pca.BIC <- function(X, segmentation, dims, numb.clusters, max.dim, flat.
     ## TO DO: use R pesel package
     if(dim(Xk)[2] > dim1){
       if(dim(Xk)[2] > D){
-        formula[k] <- pca.new.BIC(Xk, dim1)
+        formula[k] <- pca.new.BIC(Xk, dim1, show.warnings)
       } else{
-        formula[k] <- pca.new.BIC(t(Xk), dim1)
+        formula[k] <- pca.new.BIC(t(Xk), dim1, show.warnings)
       }
     } else{
       ## TO DO: reconsider this!!! Possible undesired behaviour
@@ -83,25 +87,23 @@ cluster.pca.BIC <- function(X, segmentation, dims, numb.clusters, max.dim, flat.
 }
 
 
-#' Assigns variables to subspaces (according to BIC)
-#'
 #' Selects subspace closest to given variable (according to BIC)
 #'
 #' @param variable variable variable to be assigned
 #' @param pcas orthogonal basis for different subspaces
 #' @param numberClusters number of subspaces (clusters)
+#' @param show.warnings a boolean - if set to TRUE all warnings are displayed, default value is FALSE
 #' @keywords internal
 #' @return index number of subspace closest to variable
-choose.cluster.BIC <- function(variable, pcas, numberClusters){
+choose.cluster.BIC <- function(variable, pcas, numberClusters, show.warnings = FALSE){
   BICs <- NULL
   for(i in 1:numberClusters){
     nparams <- ncol(pcas[[i]])
     n <- length(variable)
     res <- fastLmPure(pcas[[i]], variable, method = 0L)$residuals
     sigma.hat <- sqrt(sum(res^2)/n)
-    if (sigma.hat < 1e-15){
-      #TO DO: add parametr verbose so we get rid of warning every time we intialize
-      #warning("In function choose.cluster.BIC: estimated value of noise in cluster is <1e-15. It might corrupt the result.")
+    if (sigma.hat < 1e-15 && show.warnings){
+      warning("In function choose.cluster.BIC: estimated value of noise in cluster is <1e-15. It might corrupt the result.")
     }
     loglik <- sum(dnorm(res, 0, sigma.hat, log=T))
     BICs[i] <- loglik - nparams*log(n)/2
