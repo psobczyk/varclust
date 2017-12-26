@@ -29,7 +29,7 @@
 #' @export
 #' @return A list consisting of
 #' \item{segmentation}{a vector containing the partition of the variables}
-#' \item{BIC}{a numeric, value of \code{\link{cluster.BIC}} criterion}
+#' \item{BIC}{a numeric, value of \code{\link{cluster.pca.BIC}} criterion}
 #' \item{basis}{a list of matrices, the basis vectors for subspaces}
 #' @examples
 #' \donttest{

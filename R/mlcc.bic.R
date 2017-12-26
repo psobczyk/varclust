@@ -32,7 +32,7 @@
 #' @export
 #' @return An object of class mlcc.fit consisting of
 #' \item{segmentation}{a vector containing the partition of the variables}
-#' \item{BIC}{numeric, value of \code{\link{cluster.BIC}} criterion}
+#' \item{BIC}{numeric, value of \code{\link{cluster.pca.BIC}} criterion}
 #' \item{subspacesDimensions}{a list containing dimensions of the subspaces}
 #' \item{nClusters}{an integer, estimated number of clusters}
 #' \item{factors}{a list of matrices, basis for each subspace}
