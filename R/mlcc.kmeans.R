@@ -59,23 +59,22 @@ mlcc.kmeans <- function(X, number.clusters=2, stop.criterion=1, max.iter=40, max
   
   new.segmentation <- segmentation
   for (iter in 1:max.iter){
-    pcas <- lapply(1:number.clusters, function(i){
-      sub.dim <- dim(X[,segmentation==i, drop=F])[2]
-      if(sub.dim > max.subspace.dim){
-        a <- summary(prcomp(x=X[,segmentation==i]))
+    pcas <- lapply(1:number.clusters, function(k){
+      Xk = X[,segmentation==k, drop=F]
+      sub.dim <- dim(Xk)
+      if(sub.dim[2] > 0){
+        a <- summary(prcomp(x=Xk))
         if (estimate.dimensions) {
-            max.dim <- min(floor(sqrt(sub.dim)), max.subspace.dim)
-            cut <- pesel(X = X[,segmentation==i], npc.min = 1, npc.max = max.dim, scale = FALSE, method = "heterogenous")$nPCs
+            max.dim <- min(sub.dim[2], max.subspace.dim)
+            cut <- pesel(X = Xk, npc.min = 1, npc.max = max.dim, scale = FALSE, method = "heterogenous")$nPCs
         }
         else {
-          cut <- max.subspace.dim
+          cut <- min(max.subspace.dim, sub.dim[2], sub.dim[1])
         }
         return(matrix(a$x[,1:cut], nrow=rowNumb))
       }
       else{
-        ##TO DO - reconsider this
-        dim <- max(1, floor(sqrt(sub.dim)))
-        return(matrix(rnorm(rowNumb*dim), nrow = rowNumb, ncol = dim))
+        return(matrix(rnorm(rowNumb*dim), nrow = rowNumb, ncol = 1))
       }
     })
     new.segmentation <- sapply(1:numbVars, function(j) choose.cluster.BIC(X[,j], pcas, number.clusters, show.warnings))
