@@ -65,7 +65,7 @@ mlcc.kmeans <- function(X, number.clusters=2, stop.criterion=1, max.iter=40, max
         a <- summary(prcomp(x=X[,segmentation==i]))
         if (estimate.dimensions) {
             max.dim <- min(floor(sqrt(sub.dim)), max.subspace.dim)
-            cut <- estim.npc(X[,segmentation==i], npc.min = 1, npc.max = max.dim, scale = FALSE, show.warnings = show.warnings)
+            cut <- pesel(X = X[,segmentation==i], npc.min = 1, npc.max = max.dim, scale = FALSE, method = "heterogenous")$nPCs
         }
         else {
           cut <- max.subspace.dim

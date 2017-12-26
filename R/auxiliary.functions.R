@@ -49,10 +49,9 @@ pca.new.BIC <- function(X, k, show.warnings = FALSE){
 #' @param numb.clusters an integer, number of clusters
 #' @param max.dim an integer, upper bound for allowed dimension of subspace
 #' @param flat.prior boolean, if TRUE (default is FALSE) then flat prior on models is used
-#' @param show.warnings a boolean - if set to TRUE all warnings are displayed, default value is FALSE
 #' @keywords internal
 #' @return BIC value of BIC criterion
-cluster.pca.BIC <- function(X, segmentation, dims, numb.clusters, max.dim, flat.prior = FALSE, show.warnings = FALSE){
+cluster.pca.BIC <- function(X, segmentation, dims, numb.clusters, max.dim, flat.prior = FALSE){
   if(!is.matrix(X)){ # if X is one variable it is stored as vector
     X <- matrix(X, ncol=1)
   }
@@ -62,17 +61,12 @@ cluster.pca.BIC <- function(X, segmentation, dims, numb.clusters, max.dim, flat.
   formula <- rep(0, numb.clusters)   
   for(k in 1:numb.clusters){
     #one cluster
-    dim1 = dims[k]
+    dimk = dims[k]
     Xk = X[,segmentation==k, drop=F]
-    ## TO DO: use R pesel package
-    if(dim(Xk)[2] > dim1){
-      if(dim(Xk)[2] > D){
-        formula[k] <- pca.new.BIC(Xk, dim1, show.warnings)
-      } else{
-        formula[k] <- pca.new.BIC(t(Xk), dim1, show.warnings)
-      }
+    if(dim(Xk)[2] > dimk && dim(Xk)[1] > dimk){
+      formula[k] <- pesel(X = Xk, npc.min = dimk, npc.max = dimk, scale = FALSE, method = "heterogenous")$vals[1]
     } else{
-      ## TO DO: reconsider this!!! Possible undesired behaviour
+      #if after reassignment of variables to clusters there are less variables in it than the calculated dimensionality of the cluster
       formula[k] <- - Inf
     }
   }
