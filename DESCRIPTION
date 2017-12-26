@@ -19,7 +19,8 @@ Imports:
     parallel,
     doParallel,
     iterators,
-    PMA
+    PMA,
+    pesel
 Suggests:
     knitr,
     mclust,
