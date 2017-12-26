@@ -8,13 +8,11 @@
 #' 
 integration <- function(group, true_group){
   n <- length(group)
-  K <- max(unique(true_group))
-  if (max(unique(group)) > K){
-    stop("Number of clusters in given partition has to be less or equal to the number of clusters in true partition")
-  }
+  K1 <- max(unique(group))
+  K2 <- max(unique(true_group))
   if (n != length(true_group))
     stop("Partitions are of different lengths")
-  integrationMatrix <- matrix(0,nrow = K, ncol = K)
+  integrationMatrix <- matrix(0,nrow = K1, ncol = K2)
   for (i in 1:n){
     integrationMatrix[group[i],true_group[i]] = integrationMatrix[group[i],true_group[i]] + 1
   }

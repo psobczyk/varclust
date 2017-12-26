@@ -57,6 +57,7 @@ print(mlcc.fit)
 plot(mlcc.fit)
 mclust::adjustedRandIndex(mlcc.fit$segmentation, benchmarkClustering)
 misclassification(mlcc.fit$segmentation, benchmarkClustering, max(table(benchmarkClustering)), 2)
+integration(mlcc.fit$segmentation, benchmarkClustering)
 ```
 
 Please note that although we use *benchmarkClustering* as a reference, it is not
@@ -79,6 +80,7 @@ mlcc.fit3 <- mlcc.reps(comp, numb.clusters = 2, numb.runs = 0, max.dim = 8,
 print(mlcc.fit3)
 mclust::adjustedRandIndex(mlcc.fit3$segmentation, benchmarkClustering)
 misclassification(mlcc.fit3$segmentation, benchmarkClustering, max(table(benchmarkClustering)), 2)
+integration(mlcc.fit3$segmentation, benchmarkClustering)
 ```
 
 #### Execution time
@@ -104,16 +106,3 @@ For a dataset of 1000 variables and 10 clusters computation takes about
   BIC local maximum
 * If **estimate.dimensions** is TRUE subspaces dimensions are estimated. 
   Otherwise all subspaces are assumed to be of dimension *max.dim*
-  
-### Estimating number of clusters
-
-To estimate number of clusters one should use function **estim.npc**.
-One can select:
-
-* minimal number of PCs (*npc.min*)
-* maximal number of PCs (*npc.max*)
-* one of four methods penLik, RajanPen, minkaBIC, minkaLaplace
-
-```{r, echo=TRUE}
-estim.npc(comp[,benchmarkClustering==1], 1, 10)
-```
