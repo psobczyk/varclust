@@ -5,7 +5,7 @@
 \title{BIC for subspace clustering}
 \usage{
 cluster.pca.BIC(X, segmentation, dims, numb.clusters, max.dim,
-  flat.prior = FALSE, show.warnings = FALSE)
+  flat.prior = FALSE)
 }
 \arguments{
 \item{X}{a matrix with only continuous variables}
@@ -21,8 +21,6 @@ that span each subspace.}
 \item{max.dim}{an integer, upper bound for allowed dimension of subspace}
 
 \item{flat.prior}{boolean, if TRUE (default is FALSE) then flat prior on models is used}
-
-\item{show.warnings}{a boolean - if set to TRUE all warnings are displayed, default value is FALSE}
 }
 \value{
 BIC value of BIC criterion

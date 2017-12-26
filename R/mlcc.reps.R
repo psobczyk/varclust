@@ -88,8 +88,7 @@ mlcc.reps <- function(X, numb.clusters = 2, numb.runs = 20, stop.criterion = 1, 
                            sapply(current.pcas, ncol), 
                            numb.clusters,
                            max.dim = max.dim,
-                           flat.prior = flat.prior,
-                           show.warnings = show.warnings), 
+                           flat.prior = flat.prior), 
            current.pcas)
     }
     #running user specified clusters
@@ -107,8 +106,7 @@ mlcc.reps <- function(X, numb.clusters = 2, numb.runs = 20, stop.criterion = 1, 
                            sapply(current.pcas, ncol), 
                            numb.clusters,
                            max.dim = max.dim,
-                           flat.prior = flat.prior,
-                           show.warnings = show.warnings), 
+                           flat.prior = flat.prior), 
            current.pcas)
     }
   }

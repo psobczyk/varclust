@@ -1,37 +1,3 @@
-#' Penalized likelihood for PCA
-#' 
-#' Computes the value of BIC-like criterion for given data set and 
-#' number of factors. Assumes that number of variables is large
-#' compared to number of observations
-#' 
-#' @param X a matrix with only continuous variables
-#' @param k number of principal components fitted
-#' @param show.warnings a boolean - if set to TRUE all warnings are displayed, default value is FALSE
-#' @keywords internal
-#' @return BIC value of BIC criterion
-pca.new.BIC <- function(X, k, show.warnings = FALSE){
-  d <- dim(X)[1]
-  N <- dim(X)[2]
-  m <- d*k - k*(k+1)/2
-  
-  ## TO DO: replace eigen with some more robust eigenvalues computation
-  lambda <- eigen(cov(t(X)), only.values = TRUE)$values
-  if(any(lambda < 0)){
-    if(show.warnings){
-      warning("In function pca.new.BIC: some of the eigenvalues were negative due to numerical errors - rounding them to 0")
-    }
-    lambda[lambda < 0] = 0
-  }
-  v <- sum(lambda[(k+1):d])/(d-k) 
-  
-  t0 <- -N*d/2*log(2*pi)
-  t1 <- -N/2*sum(log(lambda[1:k]))
-  t2 <- -N*(d-k)/2*log(v)
-  t3 <- -N*d/2
-  pen <- -(m+d+k+1)/2*log(N)
-  t0+t1+t2+t3+pen
-}
-
 #' BIC for subspace clustering
 #' 
 #' Computes the value of BIC criterion for given data set and partition.
@@ -80,7 +46,6 @@ cluster.pca.BIC <- function(X, segmentation, dims, numb.clusters, max.dim, flat.
   return(BIC)
 }
 
-
 #' Selects subspace closest to a given variable (according to BIC)
 #'
 #' @param variable variable variable to be assigned
@@ -124,8 +89,6 @@ calculate.distance.kmeanspp <- function(variable, pcas, numberClusters){
   }
   min(dists)
 }
-
-
 
 #' Plot mlcc.fit class object
 #' 
