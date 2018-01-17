@@ -65,11 +65,11 @@ mlcc.kmeans <- function(X, number.clusters=2, stop.criterion=1, max.iter=40, max
       if(sub.dim[2] > 0){
         a <- summary(prcomp(x=Xk))
         if (estimate.dimensions) {
-            max.dim <- min(sub.dim[2], max.subspace.dim)
+            max.dim <- min(max.subspace.dim, floor(sqrt(sub.dim[2])), sub.dim[1])
             cut <- pesel(X = Xk, npc.min = 1, npc.max = max.dim, scale = FALSE, method = "heterogenous")$nPCs
         }
         else {
-          cut <- min(max.subspace.dim, sub.dim[2], sub.dim[1])
+          cut <- min(max.subspace.dim, floor(sqrt(sub.dim[2])), sub.dim[1])
         }
         return(matrix(a$x[,1:cut], nrow=rowNumb))
       }
