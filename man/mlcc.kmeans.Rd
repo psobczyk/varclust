@@ -6,7 +6,7 @@
 \usage{
 mlcc.kmeans(X, number.clusters = 2, stop.criterion = 1, max.iter = 40,
   max.subspace.dim = 4, initial.segmentation = NULL,
-  estimate.dimensions = FALSE, mode = "random")
+  estimate.dimensions = FALSE, mode = "random", show.warnings = FALSE)
 }
 \arguments{
 \item{X}{a matrix with only continuous variables}
@@ -24,6 +24,8 @@ mlcc.kmeans(X, number.clusters = 2, stop.criterion = 1, max.iter = 40,
 \item{estimate.dimensions}{a boolean, if TRUE (value set by default) subspaces dimensions are estimated}
 
 \item{mode}{a string, possible values : random, kmeans++, sPCA, determines the intialization mode of the algorithm}
+
+\item{show.warnings}{a boolean - if set to TRUE all warnings are displayed, default value is FALSE}
 }
 \value{
 A list consisting of:
@@ -32,5 +34,5 @@ A list consisting of:
 }
 \description{
 Performs k-means based subspace clustering. Center of each cluster is some number 
-of principal components. Similarity measure is R^2 coefficient.
+of principal components. Similarity measure is calculated using BIC.
 }

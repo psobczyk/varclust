@@ -8,7 +8,7 @@ and their dimension}
 mlcc.bic(X, numb.clusters = 1:10, numb.runs = 20, stop.criterion = 1,
   max.iter = 20, max.dim = 4, scale = TRUE, numb.cores = NULL,
   greedy = TRUE, estimate.dimensions = TRUE, verbose = FALSE,
-  flat.prior = FALSE, mode = "random")
+  flat.prior = FALSE, mode = "random", show.warnings = FALSE)
 }
 \arguments{
 \item{X}{a data frame or a matrix with only continuous variables}
@@ -44,11 +44,13 @@ for every number of clusters and subspaces dimensions, are printed
 number of models for a given number of clusters, flat prior is used}
 
 \item{mode}{a string, possible values : random, kmeans++, sPCA, the intialization mode of the algorithm}
+
+\item{show.warnings}{a boolean - if set to TRUE all warnings are displayed, default value is FALSE}
 }
 \value{
 An object of class mlcc.fit consisting of
 \item{segmentation}{a vector containing the partition of the variables}
-\item{BIC}{numeric, value of \code{\link{cluster.BIC}} criterion}
+\item{BIC}{numeric, value of \code{\link{cluster.pca.BIC}} criterion}
 \item{subspacesDimensions}{a list containing dimensions of the subspaces}
 \item{nClusters}{an integer, estimated number of clusters}
 \item{factors}{a list of matrices, basis for each subspace}

@@ -10,6 +10,7 @@ Description: Package varclust performs clustering of quantitative variables,
     variables, number of clusters and their dimensions are selected based on
     BIC. Candidate models are identified based on many runs of K-means
     algorithm with different random initializations of cluser centers.
+Encoding: UTF-8
 License: GPL-3
 Depends:
     R (>= 3.2.1)
@@ -19,7 +20,8 @@ Imports:
     parallel,
     doParallel,
     iterators,
-    PMA
+    PMA,
+    pesel
 Suggests:
     knitr,
     mclust,

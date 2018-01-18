@@ -40,6 +40,7 @@
 #' @importFrom parallel stopCluster
 #' @importFrom parallel detectCores
 #' @importFrom PMA SPC
+#' @importFrom pesel pesel
 #' @importFrom iterators icount
 #' @importFrom graphics axis plot plot.default points
 #' @importFrom stats cov dnorm pnorm prcomp rnorm runif var
