@@ -66,7 +66,7 @@ mlcc.kmeans <- function(X, number.clusters=2, stop.criterion=1, max.iter=40, max
         a <- summary(prcomp(x=Xk))
         if (estimate.dimensions) {
             max.dim <- min(max.subspace.dim, floor(sqrt(sub.dim[2])), sub.dim[1])
-            cut <- pesel(X = Xk, npc.min = 1, npc.max = max.dim, scale = FALSE, method = "heterogenous")$nPCs
+            cut <- max(1,pesel(X = Xk, npc.min = 1, npc.max = max.dim, scale = FALSE, method = "heterogenous")$nPCs)
         }
         else {
           cut <- min(max.subspace.dim, floor(sqrt(sub.dim[2])), sub.dim[1])
@@ -74,7 +74,7 @@ mlcc.kmeans <- function(X, number.clusters=2, stop.criterion=1, max.iter=40, max
         return(matrix(a$x[,1:cut], nrow=rowNumb))
       }
       else{
-        return(matrix(rnorm(rowNumb*dim), nrow = rowNumb, ncol = 1))
+        return(matrix(rnorm(rowNumb), nrow = rowNumb, ncol = 1))
       }
     })
     new.segmentation <- sapply(1:numbVars, function(j) choose.cluster.BIC(X[,j], pcas, number.clusters, show.warnings))
