@@ -17,7 +17,7 @@
 #' \item{segmentation}{a vector containing the partition of the variables}
 #' \item{pcas}{a list of matrices, basis vectors for each cluster (subspace)}
 mlcc.kmeans <- function(X, number.clusters=2, stop.criterion=1, max.iter=40, max.subspace.dim=4, 
-                        initial.segmentation=NULL, estimate.dimensions=FALSE, mode = "random", show.warnings = FALSE){
+                        initial.segmentation=NULL, estimate.dimensions=TRUE, mode = "random", show.warnings = FALSE){
   numbVars = dim(X)[2]
   rowNumb = dim(X)[1]
   pcas <- list(NULL)
@@ -81,6 +81,25 @@ mlcc.kmeans <- function(X, number.clusters=2, stop.criterion=1, max.iter=40, max
     if(sum(new.segmentation!=segmentation)<stop.criterion) break
     segmentation = new.segmentation
   }
+  # no function extraction because, time consuming(?) passing of all the parameters (like data matrx) to function
+  pcas <- lapply(1:number.clusters, function(k){
+    Xk = X[,segmentation==k, drop=F]
+    sub.dim <- dim(Xk)
+    if(sub.dim[2] > 0){
+      a <- summary(prcomp(x=Xk))
+      if (estimate.dimensions) {
+        max.dim <- min(max.subspace.dim, floor(sqrt(sub.dim[2])), sub.dim[1])
+        cut <- max(1,pesel(X = Xk, npc.min = 1, npc.max = max.dim, scale = FALSE, method = "heterogenous")$nPCs)
+      }
+      else {
+        cut <- min(max.subspace.dim, floor(sqrt(sub.dim[2])), sub.dim[1])
+      }
+      return(matrix(a$x[,1:cut], nrow=rowNumb))
+    }
+    else{
+      return(matrix(rnorm(rowNumb), nrow = rowNumb, ncol = 1))
+    }
+  })
   return(list(segmentation=segmentation, 
               pcas=pcas))
 }
