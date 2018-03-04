@@ -43,7 +43,7 @@
 #' sim.data <- data.simulation(n = 50, SNR = 1, K = 3, numb.vars = 50, max.dim = 3)
 #' mlcc.bic(sim.data$X, numb.clusters = 1:10, numb.runs = 20, verbose=TRUE)
 #' }
-mlcc.bic <- function(X, numb.clusters = 1:10, numb.runs = 20, stop.criterion = 1, max.iter = 20,
+mlcc.bic <- function(X, numb.clusters = 1:10, numb.runs = 20, stop.criterion = 1, max.iter = 40,
                      max.dim = 4, scale = TRUE, numb.cores = NULL, greedy = TRUE, estimate.dimensions = TRUE,
                      verbose = FALSE, flat.prior = FALSE, mode = "random", show.warnings = FALSE){
   if (is.data.frame(X)) {

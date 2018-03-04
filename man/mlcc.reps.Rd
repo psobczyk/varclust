@@ -5,7 +5,7 @@
 \title{Subspace clustering assuming that the number of clusters is known}
 \usage{
 mlcc.reps(X, numb.clusters = 2, numb.runs = 20, stop.criterion = 1,
-  max.iter = 20, initial.segmentations = NULL, max.dim = 4,
+  max.iter = 40, initial.segmentations = NULL, max.dim = 4,
   scale = TRUE, numb.cores = NULL, estimate.dimensions = TRUE,
   flat.prior = FALSE, mode = "random", show.warnings = FALSE)
 }
