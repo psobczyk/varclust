@@ -23,6 +23,7 @@ Imports:
     PMA,
     pesel
 Remotes:
+    bioc::3.6/impute
     psobczyk/pesel
 Suggests:
     knitr,
