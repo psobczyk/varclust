@@ -5,7 +5,7 @@
 \title{Subspace clustering with automatic estimation of number of clusters
 and their dimension}
 \usage{
-mlcc.bic(X, numb.clusters = 1:10, numb.runs = 20, stop.criterion = 1,
+mlcc.bic(X, numb.clusters = 1:10, numb.runs = 30, stop.criterion = 1,
   max.iter = 40, max.dim = 4, scale = TRUE, numb.cores = NULL,
   greedy = TRUE, estimate.dimensions = TRUE, verbose = FALSE,
   flat.prior = FALSE, mode = "random", show.warnings = FALSE)

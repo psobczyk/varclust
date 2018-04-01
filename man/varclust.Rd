@@ -48,6 +48,7 @@ mlcc.reps(sim.data$X, numb.clusters = 3, numb.runs = 20)}
 }
 \author{
 Piotr Sobczyk,
+        Stanislaw Wilczynski,
         Julie Josse,
         Malgorzata Bogdan
 
