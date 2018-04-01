@@ -17,7 +17,7 @@
 #' @param max.dim an integer, upper bound for allowed dimension of subspace
 #' @param flat.prior boolean, if TRUE (default is FALSE) then flat prior on models is used
 #' @keywords internal
-#' @return mBIC value of mBIC
+#' @return value of mBIC
 cluster.pca.BIC <- function(X, segmentation, dims, numb.clusters, max.dim, flat.prior = FALSE){
   if(!is.matrix(X)){ # if X is one variable it is stored as vector
     X <- matrix(X, ncol=1)

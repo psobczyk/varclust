@@ -5,7 +5,13 @@
 #' @references {M. Sołtys. Metody analizy skupień. Master’s thesis, Wrocław University of Technology, 2010}
 #' @export
 #' @return (integration, acontamination)
-#' 
+#' @examples
+#' \donttest{
+#' sim.data <- data.simulation(n = 20, SNR = 1, K = 2, numb.vars = 50, max.dim = 2)
+#' true_segmentation <- rep(1:2, each=50)
+#' mlcc.fit <- mlcc.reps(sim.data$X, numb.clusters = 2, max.dim = 2)
+#' integration(true_segmentation, mlcc.fit$segmentation)
+#' }
 integration <- function(group, true_group){
   n <- length(group)
   K1 <- max(unique(group))

@@ -16,6 +16,11 @@
 #' @return A list consisting of:
 #' \item{segmentation}{a vector containing the partition of the variables}
 #' \item{pcas}{a list of matrices, basis vectors for each cluster (subspace)}
+#' @examples
+#' \donttest{
+#' sim.data <- data.simulation(n = 50, SNR = 1, K = 5, numb.vars = 50, max.dim = 3)
+#' mlcc.kmeans(sim.data$X, number.clusters = 5, max.iter = 20, max.subspace.dim = 3, mode = "kmeans++")
+#' }
 mlcc.kmeans <- function(X, number.clusters=2, stop.criterion=1, max.iter=40, max.subspace.dim=4, 
                         initial.segmentation=NULL, estimate.dimensions=TRUE, mode = "random", show.warnings = FALSE){
   numbVars = dim(X)[2]

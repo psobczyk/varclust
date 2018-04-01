@@ -36,3 +36,9 @@ A list consisting of:
 Performs k-means based subspace clustering. Center of each cluster is some number 
 of principal components. Similarity measure is calculated using BIC.
 }
+\examples{
+\donttest{
+sim.data <- data.simulation(n = 50, SNR = 1, K = 5, numb.vars = 50, max.dim = 3)
+mlcc.kmeans(sim.data$X, number.clusters = 5, max.iter = 20, max.subspace.dim = 3, mode = "kmeans++")
+}
+}

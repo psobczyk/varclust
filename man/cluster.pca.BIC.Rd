@@ -23,7 +23,7 @@ numbers should be from range [1, numb.clusters]}
 \item{flat.prior}{boolean, if TRUE (default is FALSE) then flat prior on models is used}
 }
 \value{
-mBIC value of mBIC
+value of mBIC
 }
 \description{
 Computes the value of modified Bayesian Information Criterion (mBIC)

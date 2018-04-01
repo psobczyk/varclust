@@ -17,6 +17,14 @@ integration(group, true_group)
 \description{
 Computes integration and acontamination of each cluster in given partition
 }
+\examples{
+\donttest{
+sim.data <- data.simulation(n = 20, SNR = 1, K = 2, numb.vars = 50, max.dim = 2)
+true_segmentation <- rep(1:2, each=50)
+mlcc.fit <- mlcc.reps(sim.data$X, numb.clusters = 2, max.dim = 2)
+integration(true_segmentation, mlcc.fit$segmentation)
+}
+}
 \references{
 {M. Sołtys. Metody analizy skupień. Master’s thesis, Wrocław University of Technology, 2010}
 }

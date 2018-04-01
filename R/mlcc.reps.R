@@ -1,10 +1,9 @@
 #' Subspace clustering assuming that the number of clusters is known
 #'
-#' For a fixed number of cluster and fixed number of components per cluster
-#' function returns the best partition and basis for each subspace.
+#' For a fixed number of cluster function returns the best partition and basis for each subspace.
 #' 
 #' In more detail, an algorithm \code{\link{mlcc.kmeans}} 
-#' is run a \emph{numb.runs} of times with random initializations. 
+#' is run a \emph{numb.runs} of times with random or custom initializations. 
 #' The best partition is selected according to the BIC.
 #' 
 #'
