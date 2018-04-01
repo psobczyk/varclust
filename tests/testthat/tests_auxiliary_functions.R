@@ -47,9 +47,3 @@ test_that("sim.data - factors are orthogonal", {
   expect_gt(cor.test(sim.data$factors[,1], sim.data$factors[,2])$p.value, 0.05)
   expect_gt(cor.test(sim.data$factors[,3], sim.data$factors[,4])$p.value, 0.05)
 })
-
-test_that("warning for -inf", {
-  load("test_data/small_matrix.rda")
-  segmentation <- c(rep(1, each=98),2,2)
-  expect_warning(varclust::cluster.pca.BIC(X, segmentation, c(5,3), 2, 7), "The dimensionality *")
-})
