@@ -7,16 +7,16 @@ considers (for every subspace) a subset of its principal components and tries
 to fit a linear model with the variable as the response. Then the method chooses 
 the subspace for which the value of BIC was the highest.}
 \usage{
-choose.cluster.BIC(variable, pcas, numberClusters, show.warnings = FALSE)
+choose.cluster.BIC(variable, pcas, number.clusters, show.warnings = FALSE)
 }
 \arguments{
 \item{variable}{a variable to be assigned}
 
 \item{pcas}{orthogonal basis for each of the subspaces}
 
-\item{show.warnings}{a boolean - if set to TRUE all warnings are displayed, default value is FALSE}
-
 \item{number.clusters}{number of subspaces (clusters)}
+
+\item{show.warnings}{a boolean - if set to TRUE all warnings are displayed, default value is FALSE}
 }
 \value{
 index number of subspace closest to variable

@@ -22,6 +22,8 @@ Imports:
     iterators,
     PMA,
     pesel
+Remotes:
+    psobczyk/pesel
 Suggests:
     knitr,
     mclust,

@@ -3,8 +3,6 @@
 language: R
 sudo: false
 cache: packages
-r_github_packages: 
-  psobczyk/pesel
 before_install:
   - R -e 'source("https://bioconductor.org/biocLite.R"); biocLite("impute")'
 r:
