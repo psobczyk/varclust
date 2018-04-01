@@ -20,6 +20,12 @@ mlcc.kmeans <- function(X, number.clusters=2, stop.criterion=1, max.iter=40, max
                         initial.segmentation=NULL, estimate.dimensions=TRUE, mode = "random", show.warnings = FALSE){
   numbVars = dim(X)[2]
   rowNumb = dim(X)[1]
+  if(!is.null(initial.segmentation) && length(initial.segmentation) != numbVars){
+    stop(paste("The lenght of initial segmentation was incorrect: ", length(initial.segmentation), ".It should be: ", numbVars))
+  }
+  if(!is.null(initial.segmentation) && max(initial.segmentation) > number.clusters){
+    stop(paste("Too many cluster indices in initial segmentation. Should be in range [1, number.clusters]."))
+  }
   pcas <- list(NULL)
   
   if(is.null(initial.segmentation)){

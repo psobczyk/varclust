@@ -33,7 +33,8 @@ cluster.pca.BIC <- function(X, segmentation, dims, numb.clusters, max.dim, flat.
     if(dim(Xk)[2] > dimk && dim(Xk)[1] > dimk){
       formula[k] <- pesel(X = Xk, npc.min = dimk, npc.max = dimk, scale = FALSE, method = "heterogenous")$vals[1]
     } else{
-      #if after reassignment of variables to clusters there are less variables in it than the calculated dimensionality of the cluster
+      warning("The dimensionality of the cluster was greater or equal than max(number of observation, number of variables) in the cluster.
+              This may happen when after reassignemnt the cluster became empty. The mBIC is set to -infinity")
       formula[k] <- - Inf
     }
   }
