@@ -6,3 +6,6 @@ cache: packages
 r:
   - release
   - devel
+
+before_install:
+  - R -e 'source("https://bioconductor.org/biocLite.R"); biocLite("impute")'
