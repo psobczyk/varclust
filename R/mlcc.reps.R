@@ -1,10 +1,9 @@
 #' Subspace clustering assuming that the number of clusters is known
 #'
-#' For a fixed number of cluster and fixed number of components per cluster
-#' function returns the best partition and basis for each subspace.
+#' For a fixed number of cluster function returns the best partition and basis for each subspace.
 #' 
 #' In more detail, an algorithm \code{\link{mlcc.kmeans}} 
-#' is run a \emph{numb.runs} of times with random initializations. 
+#' is run a \emph{numb.runs} of times with random or custom initializations. 
 #' The best partition is selected according to the BIC.
 #' 
 #'
@@ -36,7 +35,7 @@
 #' sim.data <- data.simulation(n = 50, SNR = 1, K = 5, numb.vars = 50, max.dim = 3)
 #' mlcc.reps(sim.data$X, numb.clusters = 5, numb.runs = 20, max.dim = 4)
 #' }
-mlcc.reps <- function(X, numb.clusters = 2, numb.runs = 20, stop.criterion = 1, max.iter = 20, 
+mlcc.reps <- function(X, numb.clusters = 2, numb.runs = 30, stop.criterion = 1, max.iter = 40, 
                       initial.segmentations = NULL, max.dim = 4, scale = TRUE, numb.cores = NULL,
                       estimate.dimensions = TRUE, flat.prior = FALSE, mode = "random", show.warnings = FALSE){
   if (is.data.frame(X)) {

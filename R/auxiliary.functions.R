@@ -1,22 +1,23 @@
-#' BIC for subspace clustering
+#' mBIC for subspace clustering
 #' 
-#' Computes the value of BIC criterion for given data set and partition.
-#' In each cluster we assume that variables are spanned by few factors.
+#' Computes the value of modified Bayesian Information Criterion (mBIC)
+#' for given data set and partition. In each cluster we assume that 
+#' variables are spanned by few factors.
 #' Considering maximum likelihood we get that those factors are in fact
-#' principal components. Noise sigma can be computed jointly for all clusters (default),
-#' seperately for each cluster or be specified as input.
+#' principal components. Additionally, it uses by default an informative 
+#' prior distribution on models. 
 #' 
 #' 
 #' @param X a matrix with only continuous variables
 #' @param segmentation a vector, segmentation for which likelihood is computed. Clusters
 #'        numbers should be from range [1, numb.clusters]
 #' @param dims a vector of integers, dimensions of subspaces. Number of principal components
-#'        that span each subspace.
+#'        (chosen by PESEL criterion) that span each subspace.
 #' @param numb.clusters an integer, number of clusters
 #' @param max.dim an integer, upper bound for allowed dimension of subspace
 #' @param flat.prior boolean, if TRUE (default is FALSE) then flat prior on models is used
 #' @keywords internal
-#' @return BIC value of BIC criterion
+#' @return value of mBIC
 cluster.pca.BIC <- function(X, segmentation, dims, numb.clusters, max.dim, flat.prior = FALSE){
   if(!is.matrix(X)){ # if X is one variable it is stored as vector
     X <- matrix(X, ncol=1)
@@ -32,7 +33,8 @@ cluster.pca.BIC <- function(X, segmentation, dims, numb.clusters, max.dim, flat.
     if(dim(Xk)[2] > dimk && dim(Xk)[1] > dimk){
       formula[k] <- pesel(X = Xk, npc.min = dimk, npc.max = dimk, scale = FALSE, method = "heterogenous")$vals[1]
     } else{
-      #if after reassignment of variables to clusters there are less variables in it than the calculated dimensionality of the cluster
+      warning("The dimensionality of the cluster was greater or equal than max(number of observation, number of variables) in the cluster.
+              This may happen when after reassignemnt the cluster became empty. The mBIC is set to -infinity")
       formula[k] <- - Inf
     }
   }
@@ -46,17 +48,20 @@ cluster.pca.BIC <- function(X, segmentation, dims, numb.clusters, max.dim, flat.
   return(BIC)
 }
 
-#' Selects subspace closest to a given variable (according to BIC)
+#' Selects subspace closest to a given variable. To select the subspace, the method 
+#' considers (for every subspace) a subset of its principal components and tries 
+#' to fit a linear model with the variable as the response. Then the method chooses 
+#' the subspace for which the value of BIC was the highest.
 #'
-#' @param variable variable variable to be assigned
-#' @param pcas orthogonal basis for different subspaces
-#' @param numberClusters number of subspaces (clusters)
+#' @param variable a variable to be assigned
+#' @param pcas orthogonal basis for each of the subspaces
+#' @param number.clusters number of subspaces (clusters)
 #' @param show.warnings a boolean - if set to TRUE all warnings are displayed, default value is FALSE
 #' @keywords internal
 #' @return index number of subspace closest to variable
-choose.cluster.BIC <- function(variable, pcas, numberClusters, show.warnings = FALSE){
+choose.cluster.BIC <- function(variable, pcas, number.clusters, show.warnings = FALSE){
   BICs <- NULL
-  for(i in 1:numberClusters){
+  for(i in 1:number.clusters){
     nparams <- ncol(pcas[[i]])
     n <- length(variable)
     res <- fastLmPure(pcas[[i]], variable, method = 0L)$residuals
@@ -70,16 +75,49 @@ choose.cluster.BIC <- function(variable, pcas, numberClusters, show.warnings = F
   which.max(BICs)
 }
 
-#' Calculates pseudo-distance from given variable to one dimensional clusters by BIC (initialization of kmeans++)
+#' Calculates principal components for every cluster and chooses the dimesionality using PESEL criterion. 
+#'
+#' @param X a data matrix
+#' @param segmentation a vector, segmentation of variables into clusters
+#' @param number.clusters number of subspaces (clusters)
+#' @param max.subspace.dim an integer, upper bound for allowed dimension of subspace
+#' @param estimate.dimensions a boolean, if TRUE subspaces dimensions are estimated
+#' @keywords internal
+#' @return A subset of principal components for every cluster
+calculate.pcas <- function(X, segmentation, number.clusters, max.subspace.dim, estimate.dimensions){
+  rowNumb = dim(X)[1]
+  pcas <- lapply(1:number.clusters, function(k){
+    Xk = X[,segmentation==k, drop=F]
+    sub.dim <- dim(Xk)
+    if(sub.dim[2] > 0){
+      a <- summary(prcomp(x=Xk))
+      if (estimate.dimensions) {
+        max.dim <- min(max.subspace.dim, floor(sqrt(sub.dim[2])), sub.dim[1])
+        cut <- max(1,pesel(X = Xk, npc.min = 1, npc.max = max.dim, scale = FALSE, method = "heterogenous")$nPCs)
+      }
+      else {
+        cut <- min(max.subspace.dim, floor(sqrt(sub.dim[2])), sub.dim[1])
+      }
+      return(matrix(a$x[,1:cut], nrow=rowNumb))
+    }
+    else{
+      return(matrix(rnorm(rowNumb), nrow = rowNumb, ncol = 1))
+    }
+  })
+  return(pcas)
+}
+
+#' Calculates pseudo-distance from given variable to one dimensional clusters by BIC 
+#' (needed in initialization, which has an idea based on kmeans++)
 #'
 #' @param variable variable for which the pseudo-distance is calculated 
-#' @param pcas orthogonal basis for different subspaces
-#' @param numberClusters number of subspaces (clusters)
+#' @param pcas orthogonal basis for each of the subspaces
+#' @param number.clusters number of subspaces (clusters)
 #' @keywords internal
 #' @return minimal distance to a subspace
-calculate.distance.kmeanspp <- function(variable, pcas, numberClusters){
+calculate.distance.kmeanspp <- function(variable, pcas, number.clusters){
   dists <- NULL
-  for(i in 1:numberClusters){
+  for(i in 1:number.clusters){
     if(ncol(pcas[[i]]) != 1){
       stop("For one dimensional clusters only")
     }

@@ -2,21 +2,23 @@
 % Please edit documentation in R/auxiliary.functions.R
 \name{calculate.distance.kmeanspp}
 \alias{calculate.distance.kmeanspp}
-\title{Calculates pseudo-distance from given variable to one dimensional clusters by BIC (initialization of kmeans++)}
+\title{Calculates pseudo-distance from given variable to one dimensional clusters by BIC 
+(needed in initialization, which has an idea based on kmeans++)}
 \usage{
-calculate.distance.kmeanspp(variable, pcas, numberClusters)
+calculate.distance.kmeanspp(variable, pcas, number.clusters)
 }
 \arguments{
 \item{variable}{variable for which the pseudo-distance is calculated}
 
-\item{pcas}{orthogonal basis for different subspaces}
+\item{pcas}{orthogonal basis for each of the subspaces}
 
-\item{numberClusters}{number of subspaces (clusters)}
+\item{number.clusters}{number of subspaces (clusters)}
 }
 \value{
 minimal distance to a subspace
 }
 \description{
-Calculates pseudo-distance from given variable to one dimensional clusters by BIC (initialization of kmeans++)
+Calculates pseudo-distance from given variable to one dimensional clusters by BIC 
+(needed in initialization, which has an idea based on kmeans++)
 }
 \keyword{internal}

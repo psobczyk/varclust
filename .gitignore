@@ -2,6 +2,6 @@
 .Rhistory
 .RData
 MPCV.Rproj
-.Rbuildignore
 TODO.md
 varclust.Rproj
+R/test.R

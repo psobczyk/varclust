@@ -1,10 +1,8 @@
 # R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
-# copied from pesel repo
 
 language: R
 sudo: false
 cache: packages
 r:
-  - oldrel
   - release
   - devel

@@ -2,7 +2,7 @@
 % Please edit documentation in R/auxiliary.functions.R
 \name{cluster.pca.BIC}
 \alias{cluster.pca.BIC}
-\title{BIC for subspace clustering}
+\title{mBIC for subspace clustering}
 \usage{
 cluster.pca.BIC(X, segmentation, dims, numb.clusters, max.dim,
   flat.prior = FALSE)
@@ -14,7 +14,7 @@ cluster.pca.BIC(X, segmentation, dims, numb.clusters, max.dim,
 numbers should be from range [1, numb.clusters]}
 
 \item{dims}{a vector of integers, dimensions of subspaces. Number of principal components
-that span each subspace.}
+(chosen by PESEL criterion) that span each subspace.}
 
 \item{numb.clusters}{an integer, number of clusters}
 
@@ -23,13 +23,14 @@ that span each subspace.}
 \item{flat.prior}{boolean, if TRUE (default is FALSE) then flat prior on models is used}
 }
 \value{
-BIC value of BIC criterion
+value of mBIC
 }
 \description{
-Computes the value of BIC criterion for given data set and partition.
-In each cluster we assume that variables are spanned by few factors.
+Computes the value of modified Bayesian Information Criterion (mBIC)
+for given data set and partition. In each cluster we assume that 
+variables are spanned by few factors.
 Considering maximum likelihood we get that those factors are in fact
-principal components. Noise sigma can be computed jointly for all clusters (default),
-seperately for each cluster or be specified as input.
+principal components. Additionally, it uses by default an informative 
+prior distribution on models.
 }
 \keyword{internal}

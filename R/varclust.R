@@ -47,6 +47,7 @@
 #' @importFrom utils str
 #' @import foreach
 #' @author Piotr Sobczyk,
+#'         Stanislaw Wilczynski,
 #'         Julie Josse,
 #'         Malgorzata Bogdan
 #' 

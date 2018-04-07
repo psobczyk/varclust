@@ -16,10 +16,21 @@
 #' @return A list consisting of:
 #' \item{segmentation}{a vector containing the partition of the variables}
 #' \item{pcas}{a list of matrices, basis vectors for each cluster (subspace)}
+#' @examples
+#' \donttest{
+#' sim.data <- data.simulation(n = 50, SNR = 1, K = 5, numb.vars = 50, max.dim = 3)
+#' mlcc.kmeans(sim.data$X, number.clusters = 5, max.iter = 20, max.subspace.dim = 3, mode = "kmeans++")
+#' }
 mlcc.kmeans <- function(X, number.clusters=2, stop.criterion=1, max.iter=40, max.subspace.dim=4, 
-                        initial.segmentation=NULL, estimate.dimensions=FALSE, mode = "random", show.warnings = FALSE){
+                        initial.segmentation=NULL, estimate.dimensions=TRUE, mode = "random", show.warnings = FALSE){
   numbVars = dim(X)[2]
   rowNumb = dim(X)[1]
+  if(!is.null(initial.segmentation) && length(initial.segmentation) != numbVars){
+    stop(paste("The lenght of initial segmentation was incorrect: ", length(initial.segmentation), ".It should be: ", numbVars))
+  }
+  if(!is.null(initial.segmentation) && max(initial.segmentation) > number.clusters){
+    stop(paste("Too many cluster indices in initial segmentation. Should be in range [1, number.clusters]."))
+  }
   pcas <- list(NULL)
   
   if(is.null(initial.segmentation)){
@@ -59,28 +70,12 @@ mlcc.kmeans <- function(X, number.clusters=2, stop.criterion=1, max.iter=40, max
   
   new.segmentation <- segmentation
   for (iter in 1:max.iter){
-    pcas <- lapply(1:number.clusters, function(k){
-      Xk = X[,segmentation==k, drop=F]
-      sub.dim <- dim(Xk)
-      if(sub.dim[2] > 0){
-        a <- summary(prcomp(x=Xk))
-        if (estimate.dimensions) {
-            max.dim <- min(max.subspace.dim, floor(sqrt(sub.dim[2])), sub.dim[1])
-            cut <- max(1,pesel(X = Xk, npc.min = 1, npc.max = max.dim, scale = FALSE, method = "heterogenous")$nPCs)
-        }
-        else {
-          cut <- min(max.subspace.dim, floor(sqrt(sub.dim[2])), sub.dim[1])
-        }
-        return(matrix(a$x[,1:cut], nrow=rowNumb))
-      }
-      else{
-        return(matrix(rnorm(rowNumb), nrow = rowNumb, ncol = 1))
-      }
-    })
+    pcas <- calculate.pcas(X, segmentation, number.clusters, max.subspace.dim, estimate.dimensions) 
     new.segmentation <- sapply(1:numbVars, function(j) choose.cluster.BIC(X[,j], pcas, number.clusters, show.warnings))
     if(sum(new.segmentation!=segmentation)<stop.criterion) break
     segmentation = new.segmentation
   }
+  pcas <- calculate.pcas(X, segmentation, number.clusters, max.subspace.dim, estimate.dimensions) 
   return(list(segmentation=segmentation, 
               pcas=pcas))
 }
