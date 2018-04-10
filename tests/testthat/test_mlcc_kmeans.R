@@ -3,7 +3,8 @@ context("Testing mlcc.kmeans")
 library(varclust)
 
 test_that("principal components returned by mlcc.kmeans are in fact principal components of the clusters", {
-  X <- varclust::data.simulation.factors(n=20, K = 2, numb.vars = 50, numb.factors = 5)$X
+  set.seed(1)
+  X <- data.simulation.factors(n=20, K = 2, numb.vars = 50, numb.factors = 5)$X
   result <- mlcc.kmeans(X, number.clusters = 2, max.iter = 1)
   segmentation <- result[[1]]
   pcas <- result[[2]]
@@ -29,6 +30,7 @@ test_that("incorrect initial segmentation", {
 })
 
 test_that("perfect segmentation", {
+  set.seed(1)
   load("test_data/small_matrix.rda")
   true_segmentation <- rep(1:2, each=50)
   segmentation <- mlcc.kmeans(X, initial.segmentation = true_segmentation)$segmentation

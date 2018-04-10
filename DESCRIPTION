@@ -20,7 +20,6 @@ Imports:
     parallel,
     doParallel,
     iterators,
-    PMA,
     pesel
 Remotes:
     psobczyk/pesel
