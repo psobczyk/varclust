@@ -1,7 +1,5 @@
 
-[![Build Status](https://travis-ci.org/sjwilczynski/varclust.svg?branch=master)](https://travis-ci.org/sjwilczynski/varclust)
-
-[![codecov](https://codecov.io/gh/sjwilczynski/varclust/branch/master/graph/badge.svg)](https://codecov.io/gh/sjwilczynski/varclust)
+[![Build Status](https://travis-ci.org/sjwilczynski/varclust.svg?branch=master)](https://travis-ci.org/sjwilczynski/varclust) [![codecov](https://codecov.io/gh/sjwilczynski/varclust/branch/master/graph/badge.svg)](https://codecov.io/gh/sjwilczynski/varclust)
 
 [<img src="http://www.ideal.rwth-aachen.de/wp-content/uploads/2013/08/banner1.png">](http://www.ideal.rwth-aachen.de/)
 
