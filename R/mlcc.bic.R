@@ -27,7 +27,6 @@
 #'        (value set by default is FALSE)
 #' @param flat.prior a boolean, if TRUE then, instead of a prior that takes into account
 #'        number of models for a given number of clusters, flat prior is used
-#' @param mode a string, possible values : random, kmeans++, sPCA, the intialization mode of the algorithm
 #' @param show.warnings a boolean - if set to TRUE all warnings are displayed, default value is FALSE
 #' @export
 #' @return An object of class mlcc.fit consisting of
@@ -45,7 +44,7 @@
 #' }
 mlcc.bic <- function(X, numb.clusters = 1:10, numb.runs = 30, stop.criterion = 1, max.iter = 40,
                      max.dim = 4, scale = TRUE, numb.cores = NULL, greedy = TRUE, estimate.dimensions = TRUE,
-                     verbose = FALSE, flat.prior = FALSE, mode = "random", show.warnings = FALSE){
+                     verbose = FALSE, flat.prior = FALSE, show.warnings = FALSE){
   if (is.data.frame(X)) {
     warning("X is not a matrix. Casting to matrix.")
     X = as.matrix(X)
@@ -78,7 +77,7 @@ mlcc.bic <- function(X, numb.clusters = 1:10, numb.runs = 30, stop.criterion = 1
                           scale = FALSE, #because we've already scaled
                           numb.cores = numb.cores,
                           estimate.dimensions = estimate.dimensions,
-                          flat.prior = flat.prior, mode = mode, show.warnings = show.warnings)
+                          flat.prior = flat.prior, show.warnings = show.warnings)
 
     results[[i]] <- list(segmentation = MPCV.fit$segmentation,
                          BIC = MPCV.fit$BIC,

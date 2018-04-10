@@ -107,27 +107,6 @@ calculate.pcas <- function(X, segmentation, number.clusters, max.subspace.dim, e
   return(pcas)
 }
 
-#' Calculates pseudo-distance from given variable to one dimensional clusters by BIC 
-#' (needed in initialization, which has an idea based on kmeans++)
-#'
-#' @param variable variable for which the pseudo-distance is calculated 
-#' @param pcas orthogonal basis for each of the subspaces
-#' @param number.clusters number of subspaces (clusters)
-#' @keywords internal
-#' @return minimal distance to a subspace
-calculate.distance.kmeanspp <- function(variable, pcas, number.clusters){
-  dists <- NULL
-  for(i in 1:number.clusters){
-    if(ncol(pcas[[i]]) != 1){
-      stop("For one dimensional clusters only")
-    }
-    n <- length(variable)
-    res <- fastLmPure(pcas[[i]], variable, method = 0L)$residuals
-    dists[i] <- sum(res^2)/n
-  }
-  min(dists)
-}
-
 #' Plot mlcc.fit class object
 #' 
 #' @param x mlcc.fit class object

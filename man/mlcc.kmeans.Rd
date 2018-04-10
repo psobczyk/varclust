@@ -6,7 +6,7 @@
 \usage{
 mlcc.kmeans(X, number.clusters = 2, stop.criterion = 1, max.iter = 40,
   max.subspace.dim = 4, initial.segmentation = NULL,
-  estimate.dimensions = TRUE, mode = "random", show.warnings = FALSE)
+  estimate.dimensions = TRUE, show.warnings = FALSE)
 }
 \arguments{
 \item{X}{a matrix with only continuous variables}
@@ -22,8 +22,6 @@ mlcc.kmeans(X, number.clusters = 2, stop.criterion = 1, max.iter = 40,
 \item{initial.segmentation}{a vector, initial segmentation of variables to clusters}
 
 \item{estimate.dimensions}{a boolean, if TRUE (value set by default) subspaces dimensions are estimated}
-
-\item{mode}{a string, possible values : random, kmeans++, sPCA, determines the intialization mode of the algorithm}
 
 \item{show.warnings}{a boolean - if set to TRUE all warnings are displayed, default value is FALSE}
 }

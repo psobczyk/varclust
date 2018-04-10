@@ -7,7 +7,7 @@
 mlcc.reps(X, numb.clusters = 2, numb.runs = 30, stop.criterion = 1,
   max.iter = 40, initial.segmentations = NULL, max.dim = 4,
   scale = TRUE, numb.cores = NULL, estimate.dimensions = TRUE,
-  flat.prior = FALSE, mode = "random", show.warnings = FALSE)
+  flat.prior = FALSE, show.warnings = FALSE)
 }
 \arguments{
 \item{X}{a data frame or a matrix with only continuous variables}
@@ -36,8 +36,6 @@ dataset are scaled to zero mean and unit variance}
 
 \item{flat.prior}{a boolean, if TRUE then, instead of a prior that takes into account
 number of models for a given number of clusters, flat prior is used}
-
-\item{mode}{a string, possible values : random, kmeans++, sPCA, determines the intialization mode of the algorithm}
 
 \item{show.warnings}{a boolean - if set to TRUE all warnings are displayed, default value is FALSE}
 }
