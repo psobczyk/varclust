@@ -19,7 +19,7 @@ Imports:
     foreach,
     parallel,
     doParallel,
-    iterators,
+    doRNG,
     pesel
 Remotes:
     psobczyk/pesel

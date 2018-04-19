@@ -28,6 +28,8 @@
 #' @param flat.prior a boolean, if TRUE then, instead of a prior that takes into account
 #'        number of models for a given number of clusters, flat prior is used
 #' @param show.warnings a boolean - if set to TRUE all warnings are displayed, default value is FALSE
+#' @param deterministic a boolean - if set to TRUE the results of the method will be reproductible
+#' (run with the same parameters will return the same result), default value is FALSE
 #' @export
 #' @return An object of class mlcc.fit consisting of
 #' \item{segmentation}{a vector containing the partition of the variables}
@@ -43,8 +45,9 @@
 #' mlcc.bic(sim.data$X, numb.clusters = 1:10, numb.runs = 20, verbose=TRUE)
 #' }
 mlcc.bic <- function(X, numb.clusters = 1:10, numb.runs = 30, stop.criterion = 1, max.iter = 40,
-                     max.dim = 4, scale = TRUE, numb.cores = NULL, greedy = TRUE, estimate.dimensions = TRUE,
-                     verbose = FALSE, flat.prior = FALSE, show.warnings = FALSE){
+                     max.dim = 4, scale = TRUE, numb.cores = NULL, greedy = TRUE, 
+                     estimate.dimensions = TRUE, verbose = FALSE, flat.prior = FALSE, 
+                     show.warnings = FALSE, deterministic = FALSE) {
   if (is.data.frame(X)) {
     warning("X is not a matrix. Casting to matrix.")
     X = as.matrix(X)
@@ -72,18 +75,20 @@ mlcc.bic <- function(X, numb.clusters = 1:10, numb.runs = 30, stop.criterion = 1
 
   for(i in 1:length(numb.clusters)){
     number.clusters <- numb.clusters[i]
-    MPCV.fit <- mlcc.reps(X = X, numb.clusters = number.clusters,
+    MLCC.fit <- mlcc.reps(X = X, numb.clusters = number.clusters,
                           numb.runs = numb.runs, max.dim = max.dim, 
                           scale = FALSE, #because we've already scaled
                           numb.cores = numb.cores,
                           estimate.dimensions = estimate.dimensions,
-                          flat.prior = flat.prior, show.warnings = show.warnings)
+                          flat.prior = flat.prior, 
+                          show.warnings = show.warnings, 
+                          deterministic = deterministic)
 
-    results[[i]] <- list(segmentation = MPCV.fit$segmentation,
-                         BIC = MPCV.fit$BIC,
-                         subspacesDimensions = lapply(MPCV.fit$basis, ncol),
+    results[[i]] <- list(segmentation = MLCC.fit$segmentation,
+                         BIC = MLCC.fit$BIC,
+                         subspacesDimensions = lapply(MLCC.fit$basis, ncol),
                          nClusters = number.clusters,
-                         factors = MPCV.fit$basis)
+                         factors = MLCC.fit$basis)
     if (greedy & (i>2)) {
       if ( (results[[i]]$BIC < results[[i-1]]$BIC) &
              (results[[i-2]]$BIC < results[[i-1]]$BIC) ){

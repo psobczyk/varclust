@@ -21,21 +21,20 @@ Package **varclust**
 ### How do I get set up? ###
 
 * Install **varclust** package using devtools package
-```
+```R
 install_github("psobczyk/varclust")
 ```
 * Download the package as an archive and install it manually from **R** console
 * You might need to install package dependencies:
-    * **RcppEigen**
-    * **doMC**
     * **parallel**
     * **doParallel**
     * **foreach**
-    * **iterators**
+    * **doRNG**
+    * **RcppEigen**
     * **pesel**
 
 * The **pesel** package can be installed using devtools package
-```
+```R
 install_github("psobczyk/pesel")
 ```
 

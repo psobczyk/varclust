@@ -24,6 +24,8 @@
 #' @param flat.prior a boolean, if TRUE then, instead of a prior that takes into account
 #'        number of models for a given number of clusters, flat prior is used
 #' @param show.warnings a boolean - if set to TRUE all warnings are displayed, default value is FALSE
+#' @param deterministic a boolean - if set to TRUE the results of the method will be reproductible
+#' (run with the same parameters will return the same result), default value is FALSE
 #' @export
 #' @return A list consisting of
 #' \item{segmentation}{a vector containing the partition of the variables}
@@ -36,7 +38,8 @@
 #' }
 mlcc.reps <- function(X, numb.clusters = 2, numb.runs = 30, stop.criterion = 1, max.iter = 40, 
                       initial.segmentations = NULL, max.dim = 4, scale = TRUE, numb.cores = NULL,
-                      estimate.dimensions = TRUE, flat.prior = FALSE, show.warnings = FALSE){
+                      estimate.dimensions = TRUE, flat.prior = FALSE, 
+                      show.warnings = FALSE, deterministic = FALSE) {
   if (is.data.frame(X)) {
     warning("X is not a matrix. Casting to matrix.")
     X = as.matrix(X)
@@ -54,29 +57,26 @@ mlcc.reps <- function(X, numb.clusters = 2, numb.runs = 30, stop.criterion = 1, 
   }
   if (is.null(numb.cores)) {
     numb.cores <- max(1,detectCores()-1)
-    cl <- makeCluster(numb.cores)
-    registerDoParallel(cl)
-  } else{
-    cl <- makeCluster(numb.cores)
-    registerDoParallel(cl)
   }
+  cl <- makeCluster(numb.cores)
+  registerDoParallel(cl)
   
   if(scale){
     X <- scale(X)
-  } else {
-    X <- X
   }
   
-    
   i <- NULL
   BICs <- NULL 
   segmentations <- NULL
+  if(deterministic){
+    set.seed(dim(X)[1] + numb.clusters)
+  }
   if (is.null(initial.segmentations)) {
-    segmentations <- foreach(icount(numb.runs)) %dopar% {
-      MPCV.res <- mlcc.kmeans(X=X, number.clusters=numb.clusters, max.subspace.dim=max.dim, max.iter=max.iter, 
+    segmentations <- foreach(i=(1:numb.runs)) %dorng% {
+      MLCC.res <- mlcc.kmeans(X=X, number.clusters=numb.clusters, max.subspace.dim=max.dim, max.iter=max.iter, 
                               estimate.dimensions = estimate.dimensions, show.warnings = show.warnings)
-      current.segmentation <- MPCV.res$segmentation
-      current.pcas <- MPCV.res$pcas
+      current.segmentation <- MLCC.res$segmentation
+      current.pcas <- MLCC.res$pcas
       list(current.segmentation, 
            cluster.pca.BIC(X, 
                            current.segmentation,
@@ -88,13 +88,13 @@ mlcc.reps <- function(X, numb.clusters = 2, numb.runs = 30, stop.criterion = 1, 
     }
     #running user specified clusters
   } else {
-    segmentations <- foreach(i=(1:length(initial.segmentations))) %dopar% { 
-      MPCV.res <- mlcc.kmeans(X = X, number.clusters = numb.clusters, 
+    segmentations <- foreach(i=(1:length(initial.segmentations))) %dorng% { 
+      MLCC.res <- mlcc.kmeans(X = X, number.clusters = numb.clusters, 
                               max.subspace.dim = max.dim, max.iter = max.iter, 
                               initial.segmentation = initial.segmentations[[i]],
                               estimate.dimensions = estimate.dimensions, show.warnings = show.warnings)
-      current.segmentation <- MPCV.res$segmentation
-      current.pcas <- MPCV.res$pcas
+      current.segmentation <- MLCC.res$segmentation
+      current.pcas <- MLCC.res$pcas
       list(current.segmentation, 
            cluster.pca.BIC(X, 
                            current.segmentation,

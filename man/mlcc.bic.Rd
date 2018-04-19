@@ -8,7 +8,7 @@ and their dimension}
 mlcc.bic(X, numb.clusters = 1:10, numb.runs = 30, stop.criterion = 1,
   max.iter = 40, max.dim = 4, scale = TRUE, numb.cores = NULL,
   greedy = TRUE, estimate.dimensions = TRUE, verbose = FALSE,
-  flat.prior = FALSE, show.warnings = FALSE)
+  flat.prior = FALSE, show.warnings = FALSE, deterministic = FALSE)
 }
 \arguments{
 \item{X}{a data frame or a matrix with only continuous variables}
@@ -44,6 +44,9 @@ for every number of clusters and subspaces dimensions, are printed
 number of models for a given number of clusters, flat prior is used}
 
 \item{show.warnings}{a boolean - if set to TRUE all warnings are displayed, default value is FALSE}
+
+\item{deterministic}{a boolean - if set to TRUE the results of the method will be reproductible
+(run with the same parameters will return the same result), default value is FALSE}
 }
 \value{
 An object of class mlcc.fit consisting of

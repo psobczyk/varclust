@@ -30,7 +30,6 @@ test_that("incorrect initial segmentation", {
 })
 
 test_that("perfect segmentation", {
-  set.seed(1)
   load("test_data/small_matrix.rda")
   true_segmentation <- rep(1:2, each=50)
   segmentation <- mlcc.kmeans(X, initial.segmentation = true_segmentation)$segmentation
