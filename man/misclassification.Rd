@@ -28,8 +28,9 @@ It is assumed that there are K classes of maximum M elements.
 Additional requirement is that classes labels are from range [1, K].
 }
 \examples{
+\donttest{
 sim.data <- data.simulation(n = 100, SNR = 1, K = 5, numb.vars = 30, max.dim = 2)
-mlcc.fit <- mlcc.reps(sim.data$X, numb.clusters = 5, numb.runs = 20, max.dim = 2)
+mlcc.fit <- mlcc.reps(sim.data$X, numb.clusters = 5, numb.runs = 20, max.dim = 2, numb.cores=1)
 misclassification(mlcc.fit$segmentation,sim.data$s, 30, 5)
 
 
@@ -37,7 +38,7 @@ misclassification(mlcc.fit$segmentation,sim.data$s, 30, 5)
 partition1 <- sample(10, 300, replace = TRUE)
 partition2 <- sample(10, 300, replace = TRUE)
 misclassification(partition1, partition1, max(table(partition1)), 10)
-misclassification(partition1, partition2, max(table(partition2)), 10)
+misclassification(partition1, partition2, max(table(partition2)), 10)}
 }
 \references{
 {R. Vidal. Subspace clustering. Signal Processing Magazine, IEEE, 28(2):52-68,2011}

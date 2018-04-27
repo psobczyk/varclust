@@ -22,10 +22,11 @@
 #' @export
 #' @return An array containing values of integration and acontamination.
 #' @examples
+#' \donttest{
 #' sim.data <- data.simulation(n = 20, SNR = 1, K = 2, numb.vars = 50, max.dim = 2)
 #' true_segmentation <- rep(1:2, each=50)
 #' mlcc.fit <- mlcc.reps(sim.data$X, numb.clusters = 2, max.dim = 2, numb.cores=1)
-#' integration(mlcc.fit$segmentation, true_segmentation)
+#' integration(mlcc.fit$segmentation, true_segmentation)}
 #' 
 integration <- function(group, true_group){
   n <- length(group)

@@ -31,10 +31,11 @@ acontamination for the whole dataset is \eqn{Acont(A,B) = \frac{1}{n}
 \sum_{j=1}^n Acont(A_j)}
 }
 \examples{
+\donttest{
 sim.data <- data.simulation(n = 20, SNR = 1, K = 2, numb.vars = 50, max.dim = 2)
 true_segmentation <- rep(1:2, each=50)
 mlcc.fit <- mlcc.reps(sim.data$X, numb.clusters = 2, max.dim = 2, numb.cores=1)
-integration(mlcc.fit$segmentation, true_segmentation)
+integration(mlcc.fit$segmentation, true_segmentation)}
 
 }
 \references{
