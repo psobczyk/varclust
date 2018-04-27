@@ -1,23 +1,24 @@
 #' mBIC for subspace clustering
 #' 
-#' Computes the value of modified Bayesian Information Criterion (mBIC)
-#' for given data set and partition. In each cluster we assume that 
-#' variables are spanned by few factors.
-#' Considering maximum likelihood we get that those factors are in fact
-#' principal components. Additionally, it uses by default an informative 
-#' prior distribution on models. 
+#' Computes the value of modified Bayesian Information Criterion (mBIC) for 
+#' given data set partition and clusters' dimensionalities. In each cluster we 
+#' assume that variables are spanned by few factors. Considering maximum 
+#' likelihood we get that those factors are in fact principal components. 
+#' Additionally, it uses by default an informative prior distribution on models.
 #' 
 #' 
-#' @param X a matrix with only continuous variables
-#' @param segmentation a vector, segmentation for which likelihood is computed. Clusters
-#'        numbers should be from range [1, numb.clusters]
-#' @param dims a vector of integers, dimensions of subspaces. Number of principal components
-#'        (chosen by PESEL criterion) that span each subspace.
-#' @param numb.clusters an integer, number of clusters
-#' @param max.dim an integer, upper bound for allowed dimension of subspace
-#' @param flat.prior boolean, if TRUE (default is FALSE) then flat prior on models is used
+#' @param X A matrix with only quantitative variables.
+#' @param segmentation A vector, segmentation for which likelihood is computed. 
+#'   Clusters numbers should be from range [1, numb.clusters].
+#' @param dims A vector of integers, dimensions of subspaces. Number of 
+#'   principal components (fixed or chosen by PESEL criterion) that span each 
+#'   subspace.
+#' @param numb.clusters An integer, number of clusters.
+#' @param max.dim An integer, upper bound for allowed dimension of a subspace.
+#' @param flat.prior A boolean, if TRUE (default is FALSE) then flat prior on 
+#'   models is used.
 #' @keywords internal
-#' @return value of mBIC
+#' @return Value of mBIC
 cluster.pca.BIC <- function(X, segmentation, dims, numb.clusters, max.dim, flat.prior = FALSE){
   if(!is.matrix(X)){ # if X is one variable it is stored as vector
     X <- matrix(X, ncol=1)
@@ -48,17 +49,19 @@ cluster.pca.BIC <- function(X, segmentation, dims, numb.clusters, max.dim, flat.
   return(BIC)
 }
 
-#' Selects subspace closest to a given variable. To select the subspace, the method 
+#' Choses a subspace for a variable
+#' 
+#' Selects a subspace closest to a given variable. To select the subspace, the method 
 #' considers (for every subspace) a subset of its principal components and tries 
 #' to fit a linear model with the variable as the response. Then the method chooses 
 #' the subspace for which the value of BIC was the highest.
 #'
-#' @param variable a variable to be assigned
-#' @param pcas orthogonal basis for each of the subspaces
-#' @param number.clusters number of subspaces (clusters)
-#' @param show.warnings a boolean - if set to TRUE all warnings are displayed, default value is FALSE
+#' @param variable A variable to be assigned.
+#' @param pcas Orthogonal basis for each of the subspaces.
+#' @param number.clusters Number of subspaces (clusters).
+#' @param show.warnings A boolean - if set to TRUE all warnings are displayed, default value is FALSE.
 #' @keywords internal
-#' @return index number of subspace closest to variable
+#' @return index Number of most similar subspace to variable.
 choose.cluster.BIC <- function(variable, pcas, number.clusters, show.warnings = FALSE){
   BICs <- NULL
   for(i in 1:number.clusters){
@@ -75,15 +78,18 @@ choose.cluster.BIC <- function(variable, pcas, number.clusters, show.warnings = 
   which.max(BICs)
 }
 
-#' Calculates principal components for every cluster and chooses the dimesionality using PESEL criterion. 
+#' Calculates principal components for every cluster
 #'
-#' @param X a data matrix
-#' @param segmentation a vector, segmentation of variables into clusters
-#' @param number.clusters number of subspaces (clusters)
-#' @param max.subspace.dim an integer, upper bound for allowed dimension of subspace
-#' @param estimate.dimensions a boolean, if TRUE subspaces dimensions are estimated
+#' For given segmentation this function estimates dimensionality of each cluster (or chooses fixed dimensionality)
+#' and for each cluster calculates the number of principal components equal to the this dimensionality 
+#'
+#' @param X A data matrix.
+#' @param segmentation A vector, segmentation of variables into clusters.
+#' @param number.clusters An integer, number of subspaces (clusters).
+#' @param max.subspace.dim An integer, upper bound for allowed dimension of subspace.
+#' @param estimate.dimensions A boolean, if TRUE subspaces dimensions are estimated using PESEL.
 #' @keywords internal
-#' @return A subset of principal components for every cluster
+#' @return A subset of principal components for every cluster.
 calculate.pcas <- function(X, segmentation, number.clusters, max.subspace.dim, estimate.dimensions){
   rowNumb = dim(X)[1]
   pcas <- lapply(1:number.clusters, function(k){
@@ -137,7 +143,8 @@ print.mlcc.fit <- function(x,...){
 #' Print mlcc.reps.fit class object
 #' 
 #' @param x mlcc.reps.fit class object
-#' @param ... Further arguments to be passed to or from other methods. They are ignored in this function.
+#' @param ... Further arguments to be passed to or from other methods. They are
+#'   ignored in this function.
 #' @export
 #' @keywords internal
 print.mlcc.reps.fit <- function(x,...){

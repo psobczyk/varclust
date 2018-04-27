@@ -1,42 +1,51 @@
-#' Subspace clustering assuming that the number of clusters is known
-#'
-#' For a fixed number of cluster function returns the best partition and basis for each subspace.
+#' Multiple Latent Components Clustering - Subspace clustering assuming that the
+#' number of clusters is known
 #' 
-#' In more detail, an algorithm \code{\link{mlcc.kmeans}} 
-#' is run a \emph{numb.runs} of times with random or custom initializations. 
-#' The best partition is selected according to the BIC.
+#' For a fixed number of cluster function returns the best partition and basis 
+#' for each subspace.
 #' 
-#'
-#' @param X a data frame or a matrix with only continuous variables
-#' @param numb.clusters an integer, number of cluster
-#' @param numb.runs an integer, number of runs of \code{\link{mlcc.kmeans} algorithm} with random initialization
-#' @param stop.criterion an integer, if an iteration of \code{\link{mlcc.kmeans}} algorithm 
-#'        makes less changes in partitions than \code{stop.criterion}, 
-#'        \code{\link{mlcc.kmeans}} stops.
-#' @param max.iter an integer, maximum number of iterations of \code{\link{mlcc.kmeans}} algorithm
-#' @param initial.segmentations a list of vectors, segmentations that user wants to be 
-#'        used as an initial segmentation in \code{\link{mlcc.kmeans}} algorithm
-#' @param max.dim an integer, dimension of subspaces (all are assumed to be equal)
-#' @param scale a boolean, if TRUE (value set by default) then variables in 
-#'        dataset are scaled to zero mean and unit variance
-#' @param numb.cores an integer, number of cores to be used, by default all cores are used
-#' @param estimate.dimensions a boolean, if TRUE (value set by default) subspaces dimensions are estimated
-#' @param flat.prior a boolean, if TRUE then, instead of a prior that takes into account
-#'        number of models for a given number of clusters, flat prior is used
-#' @param show.warnings a boolean - if set to TRUE all warnings are displayed, default value is FALSE
-#' @param deterministic a boolean - if set to TRUE the results of the method will be reproductible
-#' (run with the same parameters will return the same result), default value is FALSE
+#' In more detail, an algorithm \code{\link{mlcc.kmeans}} is run a 
+#' \emph{numb.runs} of times with random or custom initializations. The best 
+#' partition is selected according to the BIC.
+#' 
+#' 
+#' @param X A data frame or a matrix with only continuous variables.
+#' @param numb.clusters An integer, number of cluster.
+#' @param numb.runs An integer, number of runs of \code{\link{mlcc.kmeans} 
+#'   algorithm} with random initialization.
+#' @param stop.criterion An integer, if an iteration of 
+#'   \code{\link{mlcc.kmeans}} algorithm makes less changes in partitions than 
+#'   \code{stop.criterion}, \code{\link{mlcc.kmeans}} stops.
+#' @param max.iter An integer, maximum number of iterations of 
+#'   \code{\link{mlcc.kmeans}} algorithm.
+#' @param initial.segmentations A list of vectors, segmentations that user wants
+#'   to be used as an initial segmentation in \code{\link{mlcc.kmeans}} 
+#'   algorithm.
+#' @param max.dim An integer, maximal dimension of subspaces.
+#' @param scale A boolean, if TRUE (value set by default) then variables in 
+#'   dataset are scaled to zero mean and unit variance.
+#' @param numb.cores An integer, number of cores to be used, by default all 
+#'   cores are used.
+#' @param estimate.dimensions A boolean, if TRUE (value set by default) 
+#'   subspaces dimensions are estimated.
+#' @param flat.prior A boolean, if TRUE then, instead of a prior that takes into
+#'   account number of models for a given number of clusters, flat prior is 
+#'   used.
+#' @param show.warnings A boolean, if set to TRUE all warnings are displayed, 
+#'   default value is FALSE.
+#' @param deterministic A boolean, if set to TRUE the results of the method will
+#'   be reproductible (run with the same parameters will return the same 
+#'   result), default value is FALSE.
 #' @export
-#' @return A list consisting of
-#' \item{segmentation}{a vector containing the partition of the variables}
-#' \item{BIC}{a numeric, value of \code{\link{cluster.pca.BIC}} criterion}
-#' \item{basis}{a list of matrices, the basis vectors for subspaces}
+#' @return A list consisting of \item{segmentation}{a vector containing the 
+#'   partition of the variables} \item{BIC}{a numeric, value of the mBIC} 
+#'   \item{basis}{a list of matrices, the factors for each of the subspaces}
 #' @examples
 #' \donttest{
 #' sim.data <- data.simulation(n = 50, SNR = 1, K = 5, numb.vars = 50, max.dim = 3)
 #' mlcc.reps(sim.data$X, numb.clusters = 5, numb.runs = 20, max.dim = 4)
 #' }
-mlcc.reps <- function(X, numb.clusters = 2, numb.runs = 30, stop.criterion = 1, max.iter = 40, 
+mlcc.reps <- function(X, numb.clusters = 2, numb.runs = 30, stop.criterion = 1, max.iter = 30, 
                       initial.segmentations = NULL, max.dim = 4, scale = TRUE, numb.cores = NULL,
                       estimate.dimensions = TRUE, flat.prior = FALSE, 
                       show.warnings = FALSE, deterministic = FALSE) {
@@ -69,7 +78,7 @@ mlcc.reps <- function(X, numb.clusters = 2, numb.runs = 30, stop.criterion = 1, 
   BICs <- NULL 
   segmentations <- NULL
   if(deterministic){
-    set.seed(dim(X)[1] + numb.clusters)
+    set.seed(dim(X)[2] * numb.clusters)
   }
   if (is.null(initial.segmentations)) {
     segmentations <- foreach(i=(1:numb.runs)) %dorng% {

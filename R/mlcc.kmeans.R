@@ -1,26 +1,32 @@
 #' Multiple Latent Components Clustering - kmeans algorithm
-#'
-#' Performs k-means based subspace clustering. Center of each cluster is some number 
-#' of principal components. Similarity measure is calculated using BIC.
-#'
-#' @param X a matrix with only continuous variables
-#' @param number.clusters an integer, number of clusters to be used
-#' @param stop.criterion an integer indicating how many changes in partitions triggers stopping the algorithm
-#' @param max.iter an integer, maximum number of iterations of k-means
-#' @param max.subspace.dim an integer, maximum dimension of subspaces
-#' @param initial.segmentation a vector, initial segmentation of variables to clusters
-#' @param estimate.dimensions a boolean, if TRUE (value set by default) subspaces dimensions are estimated
-#' @param show.warnings a boolean - if set to TRUE all warnings are displayed, default value is FALSE
+#' 
+#' Performs k-means based subspace clustering. Center of each cluster is some
+#' number of principal components. This number can be fixed or estimated by
+#' PESEL. Similarity measure between variable and a cluster is calculated using
+#' BIC.
+#' 
+#' @param X A matrix with only continuous variables.
+#' @param number.clusters An integer, number of clusters to be used.
+#' @param stop.criterion An integer indicating how many changes in partitions
+#'   triggers stopping the algorithm.
+#' @param max.iter An integer, maximum number of iterations of k-means.
+#' @param max.subspace.dim An integer, maximum dimension of subspaces.
+#' @param initial.segmentation A vector, initial segmentation of variables to
+#'   clusters.
+#' @param estimate.dimensions A boolean, if TRUE (value set by default)
+#'   subspaces dimensions are estimated.
+#' @param show.warnings A boolean - if set to TRUE all warnings are displayed,
+#'   default value is FALSE.
 #' @export
-#' @return A list consisting of:
-#' \item{segmentation}{a vector containing the partition of the variables}
-#' \item{pcas}{a list of matrices, basis vectors for each cluster (subspace)}
+#' @return A list consisting of: \item{segmentation}{a vector containing the
+#'   partition of the variables} \item{pcas}{a list of matrices, basis vectors
+#'   for each cluster (subspace)}
 #' @examples
 #' \donttest{
 #' sim.data <- data.simulation(n = 50, SNR = 1, K = 5, numb.vars = 50, max.dim = 3)
-#' mlcc.kmeans(sim.data$X, number.clusters = 5, max.iter = 20, max.subspace.dim = 3, mode = "kmeans++")
+#' mlcc.kmeans(sim.data$X, number.clusters = 5, max.iter = 20, max.subspace.dim = 3)
 #' }
-mlcc.kmeans <- function(X, number.clusters=2, stop.criterion=1, max.iter=40, max.subspace.dim=4, 
+mlcc.kmeans <- function(X, number.clusters=2, stop.criterion=1, max.iter=30, max.subspace.dim=4, 
                         initial.segmentation=NULL, estimate.dimensions=TRUE, show.warnings = FALSE){
   numbVars = dim(X)[2]
   rowNumb = dim(X)[1]

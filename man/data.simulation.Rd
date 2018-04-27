@@ -2,39 +2,40 @@
 % Please edit documentation in R/data.simulation.R
 \name{data.simulation}
 \alias{data.simulation}
-\title{Simulating subspace clustering data}
+\title{Simulates subspace clustering data}
 \usage{
 data.simulation(n = 100, SNR = 1, K = 10, numb.vars = 30, max.dim = 2,
   min.dim = 1, equal.dims = TRUE)
 }
 \arguments{
-\item{n}{an integer, number of individuals}
+\item{n}{An integer, number of individuals.}
 
-\item{SNR}{a numeric, signal to noise ratio measured as variance of the variable, element of a subspace,
-to the variance of noise}
+\item{SNR}{A numeric, signal to noise ratio measured as variance of the
+variable, element of a subspace, to the variance of noise.}
 
-\item{K}{an integer, number of subspaces}
+\item{K}{An integer, number of subspaces.}
 
-\item{numb.vars}{an integer, number of variables in each subspace}
+\item{numb.vars}{An integer, number of variables in each subspace.}
 
-\item{max.dim}{an integer, if equal.dims is TRUE then max.dim is dimension of each subspace.
-If equal.dims is FALSE then subspaces dimensions are drawn from uniform distribution on [min.dim,max.dim]}
+\item{max.dim}{An integer, if equal.dims is TRUE then max.dim is dimension of
+each subspace. If equal.dims is FALSE then subspaces dimensions are drawn
+from uniform distribution on [min.dim,max.dim].}
 
-\item{min.dim}{an integer, minimal dimension of subspace}
+\item{min.dim}{An integer, minimal dimension of subspace .}
 
-\item{equal.dims}{a boolean, if TRUE (value set by default) all clusters are of the same dimension}
+\item{equal.dims}{A boolean, if TRUE (value set by default) all clusters are
+of the same dimension.}
 }
 \value{
-A list consisting of:
-\item{X}{matrix, generated data}
-\item{signals}{matrix, data without noise}
-\item{dims}{vector, dimensions of subspaces}
-\item{factors}{matrix, factors subspaces}
-\item{s}{vector, true partiton of variables}
+A list consisting of: \item{X}{matrix, generated data} 
+  \item{signals}{matrix, data without noise} \item{dims}{vector, dimensions
+  of subspaces} \item{factors}{matrix, factors subspaces} \item{s}{vector,
+  true partiton of variables}
 }
 \description{
-Generating data for simulation with a low-rank subspace structure: 
- variables are clustered and each cluster has a low-rank representation
+Generates data for simulation with a low-rank subspace structure: variables
+are clustered and each cluster has a low-rank representation. Factors than
+span subspaces are not shared between clusters.
 }
 \examples{
 sim.data <- data.simulation()

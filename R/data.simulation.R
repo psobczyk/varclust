@@ -1,24 +1,25 @@
-#' Simulating subspace clustering data
+#' Simulates subspace clustering data
 #' 
-#'  Generating data for simulation with a low-rank subspace structure: 
-#'  variables are clustered and each cluster has a low-rank representation
+#' Generates data for simulation with a low-rank subspace structure: variables
+#' are clustered and each cluster has a low-rank representation. Factors than
+#' span subspaces are not shared between clusters.
 #' 
-#' @param n an integer, number of individuals
-#' @param SNR a numeric, signal to noise ratio measured as variance of the variable, element of a subspace,
-#'        to the variance of noise
-#' @param K an integer, number of subspaces
-#' @param numb.vars an integer, number of variables in each subspace
-#' @param max.dim an integer, if equal.dims is TRUE then max.dim is dimension of each subspace.
-#'        If equal.dims is FALSE then subspaces dimensions are drawn from uniform distribution on [min.dim,max.dim]
-#' @param min.dim an integer, minimal dimension of subspace 
-#' @param equal.dims a boolean, if TRUE (value set by default) all clusters are of the same dimension
+#' @param n An integer, number of individuals.
+#' @param SNR A numeric, signal to noise ratio measured as variance of the
+#'   variable, element of a subspace, to the variance of noise.
+#' @param K An integer, number of subspaces.
+#' @param numb.vars An integer, number of variables in each subspace.
+#' @param max.dim An integer, if equal.dims is TRUE then max.dim is dimension of
+#'   each subspace. If equal.dims is FALSE then subspaces dimensions are drawn
+#'   from uniform distribution on [min.dim,max.dim].
+#' @param min.dim An integer, minimal dimension of subspace .
+#' @param equal.dims A boolean, if TRUE (value set by default) all clusters are
+#'   of the same dimension.
 #' @export
-#' @return A list consisting of:
-#' \item{X}{matrix, generated data}
-#' \item{signals}{matrix, data without noise}
-#' \item{dims}{vector, dimensions of subspaces}
-#' \item{factors}{matrix, factors subspaces}
-#' \item{s}{vector, true partiton of variables}
+#' @return A list consisting of: \item{X}{matrix, generated data} 
+#'   \item{signals}{matrix, data without noise} \item{dims}{vector, dimensions
+#'   of subspaces} \item{factors}{matrix, factors subspaces} \item{s}{vector,
+#'   true partiton of variables}
 #' @examples
 #' sim.data <- data.simulation()
 #' sim.data2 <- data.simulation(n = 30, SNR = 2, K = 5, numb.vars = 20, 
@@ -53,33 +54,23 @@ data.simulation <- function(n = 100, SNR = 1, K = 10, numb.vars = 30, max.dim = 
 }
 
 
-#' Simulating subspace clustering data (shared factors)
+#' Simulates subspace clustering data with shared factors
 #' 
-#'  Generating data for simulation with a low-rank subspace structure: 
-#'  variables are clustered and each cluster has a low-rank representation.
-#'  Factors that span subspaces are shared between clusters
+#' Generating data for simulation with a low-rank subspace structure: variables
+#' are clustered and each cluster has a low-rank representation. Factors that
+#' span subspaces are shared between clusters.
 #' 
-#' @param n an integer, number of individuals
-#' @param SNR a numeric, signal to noise ratio measured as variance of the variable, element of a subspace,
-#'        to the variance of noise
-#' @param K an integer, number of subspaces
-#' @param numb.vars an integer, number of variables in each subspace
-#' @param numb.factors an integer, number of factors from which subspaces basis will be drawn
-#' @param min.dim an integer, if equal.dims is TRUE then max.dim is dimension of each subspace.
-#'        If equal.dims is FALSE then subspaces dimensions are drawn from uniform distribution on [min.dim,max.dim]
-#' @param max.dim an integer, if equal.dims is TRUE then max.dim is dimension of each subspace.
-#'        If equal.dims is FALSE then subspaces dimensions are drawn from uniform distribution on [min.dim,max.dim]
-#' @param equal.dims a boolean, if TRUE (value set by default) all clusters are of the same dimension
+#' @inheritParams data.simulation
+#' @param numb.factors An integer, number of factors from which subspaces basis
+#'   will be drawn.
 #' @param separation.parameter a numeric, coefficients of variables in each 
-#'        subspace basis are drawn from range [separation.parameter,1]
+#'   subspace basis are drawn from range [separation.parameter,1]
 #' @export
-#' @return A list consisting of:
-#' \item{X}{matrix, generated data}
-#' \item{signals}{matrix, data without noise}
-#' \item{factors}{matrix, columns of which span subspaces}
-#' \item{indices}{list of vectors, indices of factors that span subspaces}
-#' \item{dims}{vector, dimensions of subspaces}
-#' \item{s}{vector, true partiton of variables}
+#' @return A list consisting of: \item{X}{matrix, generated data} 
+#'   \item{signals}{matrix, data without noise} \item{factors}{matrix, columns
+#'   of which span subspaces} \item{indices}{list of vectors, indices of factors
+#'   that span subspaces} \item{dims}{vector, dimensions of subspaces} 
+#'   \item{s}{vector, true partiton of variables}
 #' @examples
 #' sim.data <- data.simulation.factors()
 #' sim.data2 <- data.simulation.factors(n = 30, SNR = 2, K = 5, numb.vars = 20,

@@ -2,26 +2,27 @@
 % Please edit documentation in R/auxiliary.functions.R
 \name{calculate.pcas}
 \alias{calculate.pcas}
-\title{Calculates principal components for every cluster and chooses the dimesionality using PESEL criterion.}
+\title{Calculates principal components for every cluster}
 \usage{
 calculate.pcas(X, segmentation, number.clusters, max.subspace.dim,
   estimate.dimensions)
 }
 \arguments{
-\item{X}{a data matrix}
+\item{X}{A data matrix.}
 
-\item{segmentation}{a vector, segmentation of variables into clusters}
+\item{segmentation}{A vector, segmentation of variables into clusters.}
 
-\item{number.clusters}{number of subspaces (clusters)}
+\item{number.clusters}{An integer, number of subspaces (clusters).}
 
-\item{max.subspace.dim}{an integer, upper bound for allowed dimension of subspace}
+\item{max.subspace.dim}{An integer, upper bound for allowed dimension of subspace.}
 
-\item{estimate.dimensions}{a boolean, if TRUE subspaces dimensions are estimated}
+\item{estimate.dimensions}{A boolean, if TRUE subspaces dimensions are estimated using PESEL.}
 }
 \value{
-A subset of principal components for every cluster
+A subset of principal components for every cluster.
 }
 \description{
-Calculates principal components for every cluster and chooses the dimesionality using PESEL criterion.
+For given segmentation this function estimates dimensionality of each cluster (or chooses fixed dimensionality)
+and for each cluster calculates the number of principal components equal to the this dimensionality
 }
 \keyword{internal}

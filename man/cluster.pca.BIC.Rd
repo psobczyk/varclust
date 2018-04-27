@@ -8,29 +8,30 @@ cluster.pca.BIC(X, segmentation, dims, numb.clusters, max.dim,
   flat.prior = FALSE)
 }
 \arguments{
-\item{X}{a matrix with only continuous variables}
+\item{X}{A matrix with only quantitative variables.}
 
-\item{segmentation}{a vector, segmentation for which likelihood is computed. Clusters
-numbers should be from range [1, numb.clusters]}
+\item{segmentation}{A vector, segmentation for which likelihood is computed. 
+Clusters numbers should be from range [1, numb.clusters].}
 
-\item{dims}{a vector of integers, dimensions of subspaces. Number of principal components
-(chosen by PESEL criterion) that span each subspace.}
+\item{dims}{A vector of integers, dimensions of subspaces. Number of 
+principal components (fixed or chosen by PESEL criterion) that span each 
+subspace.}
 
-\item{numb.clusters}{an integer, number of clusters}
+\item{numb.clusters}{An integer, number of clusters.}
 
-\item{max.dim}{an integer, upper bound for allowed dimension of subspace}
+\item{max.dim}{An integer, upper bound for allowed dimension of a subspace.}
 
-\item{flat.prior}{boolean, if TRUE (default is FALSE) then flat prior on models is used}
+\item{flat.prior}{A boolean, if TRUE (default is FALSE) then flat prior on 
+models is used.}
 }
 \value{
-value of mBIC
+Value of mBIC
 }
 \description{
-Computes the value of modified Bayesian Information Criterion (mBIC)
-for given data set and partition. In each cluster we assume that 
-variables are spanned by few factors.
-Considering maximum likelihood we get that those factors are in fact
-principal components. Additionally, it uses by default an informative 
-prior distribution on models.
+Computes the value of modified Bayesian Information Criterion (mBIC) for 
+given data set partition and clusters' dimensionalities. In each cluster we 
+assume that variables are spanned by few factors. Considering maximum 
+likelihood we get that those factors are in fact principal components. 
+Additionally, it uses by default an informative prior distribution on models.
 }
 \keyword{internal}

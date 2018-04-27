@@ -8,19 +8,18 @@
 #' It is assumed that there are K classes of maximum M elements. 
 #' Additional requirement is that classes labels are from range [1, K].
 #' 
-#' @param group a vector, first partition
-#' @param true_group a vector, second (reference) partition
-#' @param M an integer, maximal number of elements in one class
-#' @param K an integer, number of classes
+#' @param group A vector, first partition.
+#' @param true_group A vector, second (reference) partition.
+#' @param M An integer, maximal number of elements in one class.
+#' @param K An integer, number of classes.
 #' @references {R. Vidal. Subspace clustering. Signal Processing Magazine, IEEE, 28(2):52-68,2011}
 #' @export
-#' @return misclassification rate
+#' @return Misclassification rate.
 #' @examples
-#' \donttest{
 #' sim.data <- data.simulation(n = 100, SNR = 1, K = 5, numb.vars = 30, max.dim = 2)
 #' mlcc.fit <- mlcc.reps(sim.data$X, numb.clusters = 5, numb.runs = 20, max.dim = 2)
 #' misclassification(mlcc.fit$segmentation,sim.data$s, 30, 5)
-#' }
+#'
 #' 
 #' #one can use this function not only for clusters
 #' partition1 <- sample(10, 300, replace = TRUE)
