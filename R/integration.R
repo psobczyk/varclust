@@ -1,4 +1,4 @@
-#' Computes integration and acontamination of each cluster in given partition
+#' Computes integration and acontamination of the clustering
 #' 
 #' Integartion and acontamination are measures of the quality of a clustering 
 #' with a reference to a true partition. Let \eqn{X = (x_1, \ldots x_p)} be the 

@@ -16,8 +16,8 @@
 #' @param stop.criterion An integer, if an iteration of 
 #'   \code{\link{mlcc.kmeans}} algorithm makes less changes in partitions than 
 #'   \code{stop.criterion}, \code{\link{mlcc.kmeans}} stops.
-#' @param max.iter An integer, maximum number of iterations of 
-#'   \code{\link{mlcc.kmeans}} algorithm.
+#' @param max.iter max.iter An integer, maximum number of iterations of the loop
+#'   in \code{\link{mlcc.kmeans}} algorithm.
 #' @param initial.segmentations A list of vectors, segmentations that user wants
 #'   to be used as an initial segmentation in \code{\link{mlcc.kmeans}} 
 #'   algorithm.

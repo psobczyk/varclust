@@ -10,7 +10,7 @@ data.simulation(n = 100, SNR = 1, K = 10, numb.vars = 30, max.dim = 2,
 \arguments{
 \item{n}{An integer, number of individuals.}
 
-\item{SNR}{A numeric, signal to noise ratio measured as variance of the
+\item{SNR}{A numeric, signal to noise ratio measured as variance of the 
 variable, element of a subspace, to the variance of noise.}
 
 \item{K}{An integer, number of subspaces.}
@@ -18,23 +18,23 @@ variable, element of a subspace, to the variance of noise.}
 \item{numb.vars}{An integer, number of variables in each subspace.}
 
 \item{max.dim}{An integer, if equal.dims is TRUE then max.dim is dimension of
-each subspace. If equal.dims is FALSE then subspaces dimensions are drawn
+each subspace. If equal.dims is FALSE then subspaces dimensions are drawn 
 from uniform distribution on [min.dim,max.dim].}
 
 \item{min.dim}{An integer, minimal dimension of subspace .}
 
-\item{equal.dims}{A boolean, if TRUE (value set by default) all clusters are
+\item{equal.dims}{A boolean, if TRUE (value set by default) all clusters are 
 of the same dimension.}
 }
 \value{
 A list consisting of: \item{X}{matrix, generated data} 
-  \item{signals}{matrix, data without noise} \item{dims}{vector, dimensions
-  of subspaces} \item{factors}{matrix, factors subspaces} \item{s}{vector,
-  true partiton of variables}
+  \item{signals}{matrix, data without noise} \item{dims}{vector, dimensions 
+  of subspaces} \item{factors}{matrix, columns of which span subspaces} 
+  \item{s}{vector, true partiton of variables}
 }
 \description{
-Generates data for simulation with a low-rank subspace structure: variables
-are clustered and each cluster has a low-rank representation. Factors than
+Generates data for simulation with a low-rank subspace structure: variables 
+are clustered and each cluster has a low-rank representation. Factors than 
 span subspaces are not shared between clusters.
 }
 \examples{

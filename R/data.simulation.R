@@ -1,25 +1,25 @@
 #' Simulates subspace clustering data
 #' 
-#' Generates data for simulation with a low-rank subspace structure: variables
-#' are clustered and each cluster has a low-rank representation. Factors than
+#' Generates data for simulation with a low-rank subspace structure: variables 
+#' are clustered and each cluster has a low-rank representation. Factors than 
 #' span subspaces are not shared between clusters.
 #' 
 #' @param n An integer, number of individuals.
-#' @param SNR A numeric, signal to noise ratio measured as variance of the
+#' @param SNR A numeric, signal to noise ratio measured as variance of the 
 #'   variable, element of a subspace, to the variance of noise.
 #' @param K An integer, number of subspaces.
 #' @param numb.vars An integer, number of variables in each subspace.
 #' @param max.dim An integer, if equal.dims is TRUE then max.dim is dimension of
-#'   each subspace. If equal.dims is FALSE then subspaces dimensions are drawn
+#'   each subspace. If equal.dims is FALSE then subspaces dimensions are drawn 
 #'   from uniform distribution on [min.dim,max.dim].
 #' @param min.dim An integer, minimal dimension of subspace .
-#' @param equal.dims A boolean, if TRUE (value set by default) all clusters are
+#' @param equal.dims A boolean, if TRUE (value set by default) all clusters are 
 #'   of the same dimension.
 #' @export
 #' @return A list consisting of: \item{X}{matrix, generated data} 
-#'   \item{signals}{matrix, data without noise} \item{dims}{vector, dimensions
-#'   of subspaces} \item{factors}{matrix, factors subspaces} \item{s}{vector,
-#'   true partiton of variables}
+#'   \item{signals}{matrix, data without noise} \item{dims}{vector, dimensions 
+#'   of subspaces} \item{factors}{matrix, columns of which span subspaces} 
+#'   \item{s}{vector, true partiton of variables}
 #' @examples
 #' sim.data <- data.simulation()
 #' sim.data2 <- data.simulation(n = 30, SNR = 2, K = 5, numb.vars = 20, 

@@ -1,25 +1,27 @@
 #' Multiple Latent Components Clustering - kmeans algorithm
 #' 
-#' Performs k-means based subspace clustering. Center of each cluster is some
-#' number of principal components. This number can be fixed or estimated by
-#' PESEL. Similarity measure between variable and a cluster is calculated using
+#' Performs k-means based subspace clustering. Center of each cluster is some 
+#' number of principal components. This number can be fixed or estimated by 
+#' PESEL. Similarity measure between variable and a cluster is calculated using 
 #' BIC.
 #' 
 #' @param X A matrix with only continuous variables.
 #' @param number.clusters An integer, number of clusters to be used.
-#' @param stop.criterion An integer indicating how many changes in partitions
+#' @param stop.criterion An integer indicating how many changes in partitions 
 #'   triggers stopping the algorithm.
-#' @param max.iter An integer, maximum number of iterations of k-means.
+#' @param max.iter An integer, maximum number of iterations of k-means loop.
 #' @param max.subspace.dim An integer, maximum dimension of subspaces.
-#' @param initial.segmentation A vector, initial segmentation of variables to
+#' @param initial.segmentation A vector, initial segmentation of variables to 
 #'   clusters.
-#' @param estimate.dimensions A boolean, if TRUE (value set by default)
+#' @param estimate.dimensions A boolean, if TRUE (value set by default) 
 #'   subspaces dimensions are estimated.
-#' @param show.warnings A boolean - if set to TRUE all warnings are displayed,
+#' @param show.warnings A boolean, if set to TRUE all warnings are displayed, 
 #'   default value is FALSE.
+#' @references \emph{Bayesian dimensionality reduction with PCA using penalized semi-integrated likelihood},
+#' Piotr Sobczyk, Malgorzata Bogdan, Julie Josse
 #' @export
-#' @return A list consisting of: \item{segmentation}{a vector containing the
-#'   partition of the variables} \item{pcas}{a list of matrices, basis vectors
+#' @return A list consisting of: \item{segmentation}{a vector containing the 
+#'   partition of the variables} \item{pcas}{a list of matrices, basis vectors 
 #'   for each cluster (subspace)}
 #' @examples
 #' \donttest{

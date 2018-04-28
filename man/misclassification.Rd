@@ -19,13 +19,16 @@ misclassification(group, true_group, M, K)
 Misclassification rate.
 }
 \description{
-Missclasification is a commonly used performance measure in subspace clustering.
-It allows to compare two partitions with the same number of clusters.
- 
-As getting exact value of misclassification requires checking all permutations 
-and is therefore intrackable even for modest number of clusters, a heuristic approach is proposed.
-It is assumed that there are K classes of maximum M elements. 
-Additional requirement is that classes labels are from range [1, K].
+Missclasification is a commonly used performance measure in subspace
+clustering. It allows to compare two partitions with the same number of
+clusters.
+}
+\details{
+As getting exact value of misclassification requires checking all
+permutations and is therefore intrackable even for modest number of clusters,
+a heuristic approach is proposed. It is assumed that there are K classes of
+maximum M elements. Additional requirement is that classes labels are from
+range [1, K].
 }
 \examples{
 \donttest{
@@ -41,5 +44,6 @@ misclassification(partition1, partition1, max(table(partition1)), 10)
 misclassification(partition1, partition2, max(table(partition2)), 10)}
 }
 \references{
-{R. Vidal. Subspace clustering. Signal Processing Magazine, IEEE, 28(2):52-68,2011}
+{R. Vidal. Subspace clustering. Signal Processing Magazine, IEEE,
+  28(2):52-68,2011}
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/integration.R
 \name{integration}
 \alias{integration}
-\title{Computes integration and acontamination of each cluster in given partition}
+\title{Computes integration and acontamination of the clustering}
 \usage{
 integration(group, true_group)
 }

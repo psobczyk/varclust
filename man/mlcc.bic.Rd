@@ -2,7 +2,7 @@
 % Please edit documentation in R/mlcc.bic.R
 \name{mlcc.bic}
 \alias{mlcc.bic}
-\title{Multiple Latent Components Clustering - Subspace clustering with automatic
+\title{Multiple Latent Components Clustering - Subspace clustering with automatic 
 estimation of number of clusters and their dimension}
 \usage{
 mlcc.bic(X, numb.clusters = 1:10, numb.runs = 30, stop.criterion = 1,
@@ -15,13 +15,14 @@ mlcc.bic(X, numb.clusters = 1:10, numb.runs = 30, stop.criterion = 1,
 
 \item{numb.clusters}{A vector, numbers of clusters to be checked.}
 
-\item{numb.runs}{An integer, number of runs of \code{\link{mlcc.kmeans}}.}
+\item{numb.runs}{An integer, number of runs (initializations) of 
+\code{\link{mlcc.kmeans}}.}
 
 \item{stop.criterion}{An integer, if an iteration of 
 \code{\link{mlcc.kmeans}} algorithm makes less changes in partitions than 
 \code{stop.criterion}, \code{\link{mlcc.kmeans}} stops.}
 
-\item{max.iter}{An integer, maximum number of iterations of 
+\item{max.iter}{An integer, maximum number of iterations of the loop in 
 \code{\link{mlcc.kmeans}} algorithm.}
 
 \item{max.dim}{An integer, if estimate.dimensions is FALSE then max.dim is 
@@ -40,8 +41,8 @@ estimated in a greedy way - first local minimum of mBIC is chosen.}
 \item{estimate.dimensions}{A boolean, if TRUE (value set by default) 
 subspaces dimensions are estimated.}
 
-\item{verbose}{A boolean, if TRUE plot with BIC values for different numbers 
-of clusters is produced and values of BIC, computed for every number of 
+\item{verbose}{A boolean, if TRUE plot with mBIC values for different numbers
+of clusters is produced and values of mBIC, computed for every number of 
 clusters and subspaces dimensions, are printed (value set by default is 
 FALSE).}
 
@@ -59,19 +60,19 @@ result), default value is FALSE.}
 \value{
 An object of class mlcc.fit consisting of \item{segmentation}{a 
   vector containing the partition of the variables} \item{BIC}{numeric, value
-  of mBIC} \item{subspacesDimensions}{a list containing dimensions of the
-  subspaces} \item{nClusters}{an integer, estimated number of clusters}
+  of mBIC} \item{subspacesDimensions}{a list containing dimensions of the 
+  subspaces} \item{nClusters}{an integer, estimated number of clusters} 
   \item{factors}{a list of matrices, basis for each subspace} 
-  \item{all.fit}{a list of segmentation, BIC, subspaces dimension for all 
+  \item{all.fit}{a list of segmentation, mBIC, subspaces dimension for all 
   numbers of clusters considered for an estimated subspace dimensions} 
-  \item{all.fit.dims}{a list of lists of segmentation, BIC, subspaces 
+  \item{all.fit.dims}{a list of lists of segmentation, mBIC, subspaces 
   dimension for all numbers of clusters and subspaces dimensions considered}
 }
 \description{
 This function is an implementation of Multiple Latent Components Clustering 
 (MLCC) algorithm which clusteres quantitative variables into a number, chosen
 using mBIC, of groups. For each considered number of clusters in 
-\emph{numb.clusters} \code{link{mlcc.reps}} function is called. It invokes 
+\emph{numb.clusters} \code{\link{mlcc.reps}} function is called. It invokes 
 K-means based algorithm (\code{\link{mlcc.kmeans}}) finding local minimum of 
 mBIC, which is run a given number of times (\emph{numb.runs}) with different 
 initializations. The best partition is choosen with mBIC (see 

@@ -22,8 +22,8 @@ algorithm} with random initialization.}
 \code{\link{mlcc.kmeans}} algorithm makes less changes in partitions than 
 \code{stop.criterion}, \code{\link{mlcc.kmeans}} stops.}
 
-\item{max.iter}{An integer, maximum number of iterations of 
-\code{\link{mlcc.kmeans}} algorithm.}
+\item{max.iter}{max.iter An integer, maximum number of iterations of the loop
+in \code{\link{mlcc.kmeans}} algorithm.}
 
 \item{initial.segmentations}{A list of vectors, segmentations that user wants
 to be used as an initial segmentation in \code{\link{mlcc.kmeans}} 

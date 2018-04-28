@@ -11,7 +11,7 @@ data.simulation.factors(n = 100, SNR = 1, K = 10, numb.vars = 30,
 \arguments{
 \item{n}{An integer, number of individuals.}
 
-\item{SNR}{A numeric, signal to noise ratio measured as variance of the
+\item{SNR}{A numeric, signal to noise ratio measured as variance of the 
 variable, element of a subspace, to the variance of noise.}
 
 \item{K}{An integer, number of subspaces.}
@@ -24,10 +24,10 @@ will be drawn.}
 \item{min.dim}{An integer, minimal dimension of subspace .}
 
 \item{max.dim}{An integer, if equal.dims is TRUE then max.dim is dimension of
-each subspace. If equal.dims is FALSE then subspaces dimensions are drawn
+each subspace. If equal.dims is FALSE then subspaces dimensions are drawn 
 from uniform distribution on [min.dim,max.dim].}
 
-\item{equal.dims}{A boolean, if TRUE (value set by default) all clusters are
+\item{equal.dims}{A boolean, if TRUE (value set by default) all clusters are 
 of the same dimension.}
 
 \item{separation.parameter}{a numeric, coefficients of variables in each 
