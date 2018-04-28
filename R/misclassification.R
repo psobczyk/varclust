@@ -30,7 +30,7 @@
 #' partition2 <- sample(10, 300, replace = TRUE)
 #' misclassification(partition1, partition1, max(table(partition1)), 10)
 #' misclassification(partition1, partition2, max(table(partition2)), 10)}
-misclassification <-function(group, true_group, M, K){
+misclassification <-function(group, true_group, M, K) {
   if (length(group) != length(true_group))
     stop("Partitions are of different lengths")
   forbidden <- NULL
@@ -49,7 +49,7 @@ misclassification <-function(group, true_group, M, K){
       }
     }
   }
-  mis <- 1-suma/length(true_group)
+  mis <- 1 - suma/length(true_group)
   return(mis)
 }
 

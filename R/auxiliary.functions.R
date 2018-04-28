@@ -19,31 +19,33 @@
 #'   models is used.
 #' @keywords internal
 #' @return Value of mBIC
-cluster.pca.BIC <- function(X, segmentation, dims, numb.clusters, max.dim, flat.prior = FALSE){
-  if(!is.matrix(X)){ # if X is one variable it is stored as vector
-    X <- matrix(X, ncol=1)
+cluster.pca.BIC <- function(X, segmentation, dims, numb.clusters, max.dim, flat.prior = FALSE) {
+  if (!is.matrix(X)) {
+    # if X is one variable it is stored as vector
+    X <- matrix(X, ncol = 1)
   }
-  D = dim(X)[1]
-  p = dim(X)[2]
+  D <- dim(X)[1]
+  p <- dim(X)[2]
   
-  formula <- rep(0, numb.clusters)   
-  for(k in 1:numb.clusters){
-    #one cluster
-    dimk = dims[k]
-    Xk = X[,segmentation==k, drop=F]
-    if(dim(Xk)[2] > dimk && dim(Xk)[1] > dimk){
-      formula[k] <- pesel(X = Xk, npc.min = dimk, npc.max = dimk, scale = FALSE, method = "heterogenous")$vals[1]
-    } else{
+  formula <- rep(0, numb.clusters)
+  for (k in 1:numb.clusters) {
+    # one cluster
+    dimk <- dims[k]
+    Xk <- X[, segmentation == k, drop = F]
+    if (dim(Xk)[2] > dimk && dim(Xk)[1] > dimk) {
+      formula[k] <- pesel(X = Xk, npc.min = dimk, npc.max = dimk, scale = FALSE, 
+        method = "heterogenous")$vals[1]
+    } else {
       warning("The dimensionality of the cluster was greater or equal than max(number of observation, number of variables) in the cluster.
-              This may happen when after reassignemnt the cluster became empty. The mBIC is set to -infinity")
-      formula[k] <- - Inf
+        This may happen when after reassignemnt the cluster became empty. The mBIC is set to -infinity")
+      formula[k] <- -Inf
     }
   }
-  #apriori
-  apriori.segmentations <- -p*log(numb.clusters)
-  apriori.dimensions <- - log(max.dim)*numb.clusters
+  # apriori
+  apriori.segmentations <- -p * log(numb.clusters)
+  apriori.dimensions <- -log(max.dim) * numb.clusters
   BIC <- sum(formula)
-  if (!flat.prior){
+  if (!flat.prior) {
     BIC <- BIC + apriori.segmentations + apriori.dimensions
   }
   return(BIC)
@@ -62,18 +64,18 @@ cluster.pca.BIC <- function(X, segmentation, dims, numb.clusters, max.dim, flat.
 #' @param show.warnings A boolean - if set to TRUE all warnings are displayed, default value is FALSE.
 #' @keywords internal
 #' @return index Number of most similar subspace to variable.
-choose.cluster.BIC <- function(variable, pcas, number.clusters, show.warnings = FALSE){
+choose.cluster.BIC <- function(variable, pcas, number.clusters, show.warnings = FALSE) {
   BICs <- NULL
-  for(i in 1:number.clusters){
+  for (i in 1:number.clusters) {
     nparams <- ncol(pcas[[i]])
     n <- length(variable)
     res <- fastLmPure(pcas[[i]], variable, method = 0L)$residuals
     sigma.hat <- sqrt(sum(res^2)/n)
-    if (sigma.hat < 1e-15 && show.warnings){
+    if (sigma.hat < 1e-15 && show.warnings) {
       warning("In function choose.cluster.BIC: estimated value of noise in cluster is <1e-15. It might corrupt the result.")
     }
-    loglik <- sum(dnorm(res, 0, sigma.hat, log=T))
-    BICs[i] <- loglik - nparams*log(n)/2
+    loglik <- sum(dnorm(res, 0, sigma.hat, log = T))
+    BICs[i] <- loglik - nparams * log(n)/2
   }
   which.max(BICs)
 }
@@ -90,23 +92,22 @@ choose.cluster.BIC <- function(variable, pcas, number.clusters, show.warnings = 
 #' @param estimate.dimensions A boolean, if TRUE subspaces dimensions are estimated using PESEL.
 #' @keywords internal
 #' @return A subset of principal components for every cluster.
-calculate.pcas <- function(X, segmentation, number.clusters, max.subspace.dim, estimate.dimensions){
-  rowNumb = dim(X)[1]
-  pcas <- lapply(1:number.clusters, function(k){
-    Xk = X[,segmentation==k, drop=F]
+calculate.pcas <- function(X, segmentation, number.clusters, max.subspace.dim, estimate.dimensions) {
+  rowNumb <- dim(X)[1]
+  pcas <- lapply(1:number.clusters, function(k) {
+    Xk <- X[, segmentation == k, drop = F]
     sub.dim <- dim(Xk)
-    if(sub.dim[2] > 0){
-      a <- summary(prcomp(x=Xk))
+    if (sub.dim[2] > 0) {
+      a <- summary(prcomp(x = Xk))
       if (estimate.dimensions) {
         max.dim <- min(max.subspace.dim, floor(sqrt(sub.dim[2])), sub.dim[1])
-        cut <- max(1,pesel(X = Xk, npc.min = 1, npc.max = max.dim, scale = FALSE, method = "heterogenous")$nPCs)
-      }
-      else {
+        cut <- max(1, pesel(X = Xk, npc.min = 1, npc.max = max.dim, scale = FALSE, 
+          method = "heterogenous")$nPCs)
+      } else {
         cut <- min(max.subspace.dim, floor(sqrt(sub.dim[2])), sub.dim[1])
       }
-      return(matrix(a$x[,1:cut], nrow=rowNumb))
-    }
-    else{
+      return(matrix(a$x[, 1:cut], nrow = rowNumb))
+    } else {
       return(matrix(rnorm(rowNumb), nrow = rowNumb, ncol = 1))
     }
   })
@@ -119,11 +120,11 @@ calculate.pcas <- function(X, segmentation, number.clusters, max.subspace.dim, e
 #' @param ... Further arguments to be passed to or from other methods. They are ignored in this function.
 #' @export
 #' @keywords internal
-plot.mlcc.fit <- function(x,...){
+plot.mlcc.fit <- function(x, ...) {
   clusterNumbs <- lapply(x$all.fit, function(y) y$nClusters)
   BICVals <- lapply(x$all.fit, function(y) y$BIC)
-  plot.default(clusterNumbs, BICVals, type="b", xaxt="n", ylab="BIC", xlab="Number of clusters")
-  axis(side = 1, labels = clusterNumbs, at=clusterNumbs)
+  plot.default(clusterNumbs, BICVals, type = "b", xaxt = "n", ylab = "BIC", xlab = "Number of clusters")
+  axis(side = 1, labels = clusterNumbs, at = clusterNumbs)
 }
 
 #' Print mlcc.fit class object
@@ -132,7 +133,7 @@ plot.mlcc.fit <- function(x,...){
 #' @param ... Further arguments to be passed to or from other methods. They are ignored in this function.
 #' @export
 #' @keywords internal
-print.mlcc.fit <- function(x,...){
+print.mlcc.fit <- function(x, ...) {
   cat("$nClusters: ", x$nClusters, "\n")
   cat("$segmentation:\n")
   print(x$segmentation)
@@ -147,7 +148,7 @@ print.mlcc.fit <- function(x,...){
 #'   ignored in this function.
 #' @export
 #' @keywords internal
-print.mlcc.reps.fit <- function(x,...){
+print.mlcc.reps.fit <- function(x, ...) {
   cat("$segmentation:\n")
   print(x$segmentation)
   cat("$BIC: ", x$BIC, "\n")

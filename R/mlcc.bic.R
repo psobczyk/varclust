@@ -57,76 +57,72 @@
 #' sim.data <- data.simulation(n = 50, SNR = 1, K = 3, numb.vars = 50, max.dim = 3)
 #' mlcc.bic(sim.data$X, numb.clusters = 1:10, numb.runs = 20, verbose=TRUE)
 #' }
-mlcc.bic <- function(X, numb.clusters = 1:10, numb.runs = 30, stop.criterion = 1, max.iter = 30,
-                     max.dim = 4, scale = TRUE, numb.cores = NULL, greedy = TRUE, 
-                     estimate.dimensions = TRUE, verbose = FALSE, flat.prior = FALSE, 
-                     show.warnings = FALSE, deterministic = FALSE) {
+mlcc.bic <- function(X, numb.clusters = 1:10, numb.runs = 30, stop.criterion = 1, 
+  max.iter = 30, max.dim = 4, scale = TRUE, numb.cores = NULL, greedy = TRUE, estimate.dimensions = TRUE, 
+  verbose = FALSE, flat.prior = FALSE, show.warnings = FALSE, deterministic = FALSE) {
   if (is.data.frame(X)) {
     warning("X is not a matrix. Casting to matrix.")
-    X = as.matrix(X)
+    X <- as.matrix(X)
   }
   if (any(is.na(X))) {
     warning("Missing values are imputed by the mean of the variable")
-    X[is.na(X)] = matrix(apply(X, 2, mean, na.rm = TRUE), ncol = ncol(X), nrow = nrow(X), byrow = TRUE)[is.na(X)]
+    X[is.na(X)] = matrix(apply(X, 2, mean, na.rm = TRUE), ncol = ncol(X), nrow = nrow(X), 
+      byrow = TRUE)[is.na(X)]
   }
   if (any(!sapply(X, is.numeric))) {
-    auxi = NULL
-    for (j in 1:ncol(X)) if (!is.numeric(X[, j]))
-      auxi = c(auxi, j)
-    stop(paste("\nThe following variables are not quantitative: ",
-               auxi))
+    auxi <- NULL
+    for (j in 1:ncol(X)) if (!is.numeric(X[, j])) {
+      auxi <- c(auxi, j)
+    }
+    stop(paste("\nThe following variables are not quantitative: ", auxi))
   }
-  if (scale){
-    X = scale(X)
+  if (scale) {
+    X <- scale(X)
   }
   n <- nrow(X)
   p <- ncol(X)
   greedy.stop <- max(numb.clusters)
   results <- list()
-  if (verbose)
+  if (verbose) 
     cat("Number of clusters \t BIC \n")
-
-  for(i in 1:length(numb.clusters)){
+  
+  for (i in 1:length(numb.clusters)) {
     number.clusters <- numb.clusters[i]
-    MLCC.fit <- mlcc.reps(X = X, numb.clusters = number.clusters,
-                          numb.runs = numb.runs, max.dim = max.dim, 
-                          scale = FALSE, #because we've already scaled
-                          numb.cores = numb.cores,
-                          estimate.dimensions = estimate.dimensions,
-                          flat.prior = flat.prior, 
-                          show.warnings = show.warnings, 
-                          deterministic = deterministic)
-
-    results[[i]] <- list(segmentation = MLCC.fit$segmentation,
-                         BIC = MLCC.fit$BIC,
-                         subspacesDimensions = lapply(MLCC.fit$basis, ncol),
-                         nClusters = number.clusters,
-                         factors = MLCC.fit$basis)
-    if (greedy & (i>2)) {
-      if ( (results[[i]]$BIC < results[[i-1]]$BIC) &
-             (results[[i-2]]$BIC < results[[i-1]]$BIC) ){
+    MLCC.fit <- mlcc.reps(X = X, numb.clusters = number.clusters, numb.runs = numb.runs, 
+      max.dim = max.dim, scale = FALSE, numb.cores = numb.cores, estimate.dimensions = estimate.dimensions, 
+      flat.prior = flat.prior, show.warnings = show.warnings, deterministic = deterministic)
+    
+    results[[i]] <- list(segmentation = MLCC.fit$segmentation, BIC = MLCC.fit$BIC, 
+      subspacesDimensions = lapply(MLCC.fit$basis, ncol), nClusters = number.clusters, 
+      factors = MLCC.fit$basis)
+    if (greedy & (i > 2)) {
+      if ((results[[i]]$BIC < results[[i - 1]]$BIC) & (results[[i - 2]]$BIC < 
+        results[[i - 1]]$BIC)) {
         greedy.stop <- i
-        if (verbose) cat(paste("       ", number.clusters, "        ",
-                               formatC(results[[i]]$BIC, digits =
-                                         ceiling(log(abs(results[[i]]$BIC),10))), "\n"))
+        if (verbose) {
+          cat(paste("       ", number.clusters, "        ", formatC(results[[i]]$BIC, 
+          digits = ceiling(log(abs(results[[i]]$BIC), 10))), "\n"))
+        }
         break
       }
     }
-    if (verbose) cat(paste("       ", number.clusters, "        ",
-                           formatC(results[[i]]$BIC, digits =
-                                     ceiling(log(abs(results[[i]]$BIC),10))), "\n"))
+    if (verbose) {
+      cat(paste("       ", number.clusters, "        ", formatC(results[[i]]$BIC, 
+        digits = ceiling(log(abs(results[[i]]$BIC), 10))), "\n"))
+    }
   }
   BICs <- lapply(results, function(res) res$BIC)
   if (verbose) {
-    plot(numb.clusters[1:greedy.stop], BICs, type="b", xaxt="n", ylab="BIC",
-         xlab="Number of clusters")
-    axis(side = 1, labels = numb.clusters[1:greedy.stop], at=numb.clusters[1:greedy.stop])
+    plot(numb.clusters[1:greedy.stop], BICs, type = "b", xaxt = "n", ylab = "BIC", 
+      xlab = "Number of clusters")
+    axis(side = 1, labels = numb.clusters[1:greedy.stop], at = numb.clusters[1:greedy.stop])
   }
   result <- results[[which.max(BICs)]]
   result$factors <- lapply(1:result$nClusters, function(i) {
-    d <- ncol(result$factors[[i]]);
-    colnames(result$factors[[i]]) <- paste(i, 1:d);
-    result$factors[[i]] } )
+    d <- ncol(result$factors[[i]])
+    colnames(result$factors[[i]]) <- paste(i, 1:d)
+    result$factors[[i]]
+  })
   result$all.fit <- results
   class(result) <- "mlcc.fit"
   return(result)

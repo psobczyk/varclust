@@ -46,82 +46,69 @@
 #' mlcc.reps(sim.data$X, numb.clusters = 5, numb.runs = 20, max.dim = 4)
 #' }
 mlcc.reps <- function(X, numb.clusters = 2, numb.runs = 30, stop.criterion = 1, max.iter = 30, 
-                      initial.segmentations = NULL, max.dim = 4, scale = TRUE, numb.cores = NULL,
-                      estimate.dimensions = TRUE, flat.prior = FALSE, 
-                      show.warnings = FALSE, deterministic = FALSE) {
+  initial.segmentations = NULL, max.dim = 4, scale = TRUE, numb.cores = NULL, estimate.dimensions = TRUE, 
+  flat.prior = FALSE, show.warnings = FALSE, deterministic = FALSE) {
   if (is.data.frame(X)) {
     warning("X is not a matrix. Casting to matrix.")
-    X = as.matrix(X)
+    X <- as.matrix(X)
   }
   if (any(is.na(X))) {
     warning("Missing values are imputed by the mean of the variable")
-    X[is.na(X)] = matrix(apply(X, 2, mean, na.rm = TRUE), ncol = ncol(X), nrow = nrow(X), byrow = TRUE)[is.na(X)]
+    X[is.na(X)] = matrix(apply(X, 2, mean, na.rm = TRUE), ncol = ncol(X), nrow = nrow(X), 
+      byrow = TRUE)[is.na(X)]
   }
   if (any(!sapply(X, is.numeric))) {
-    auxi = NULL
-    for (j in 1:ncol(X)) if (!is.numeric(X[, j])) 
-      auxi = c(auxi, j)
-    stop(paste("\nThe following variables are not quantitative: ", 
-               auxi))
+    auxi <- NULL
+    for (j in 1:ncol(X)) if (!is.numeric(X[, j])) {
+      auxi <- c(auxi, j)
+    }
+    stop(paste("\nThe following variables are not quantitative: ", auxi))
   }
   if (is.null(numb.cores)) {
-    numb.cores <- max(1,detectCores()-1)
+    numb.cores <- max(1, detectCores() - 1)
   }
   cl <- makeCluster(numb.cores)
   registerDoParallel(cl)
   
-  if(scale){
+  if (scale) {
     X <- scale(X)
   }
   
   i <- NULL
-  BICs <- NULL 
+  BICs <- NULL
   segmentations <- NULL
-  if(deterministic){
+  if (deterministic) {
     set.seed(dim(X)[2] * numb.clusters)
   }
   if (is.null(initial.segmentations)) {
-    segmentations <- foreach(i=(1:numb.runs)) %dorng% {
-      MLCC.res <- mlcc.kmeans(X=X, number.clusters=numb.clusters, max.subspace.dim=max.dim, max.iter=max.iter, 
-                              estimate.dimensions = estimate.dimensions, show.warnings = show.warnings)
+    segmentations <- foreach(i = (1:numb.runs)) %dorng% {
+      MLCC.res <- mlcc.kmeans(X = X, number.clusters = numb.clusters, max.subspace.dim = max.dim, 
+        max.iter = max.iter, estimate.dimensions = estimate.dimensions, show.warnings = show.warnings)
       current.segmentation <- MLCC.res$segmentation
       current.pcas <- MLCC.res$pcas
-      list(current.segmentation, 
-           cluster.pca.BIC(X, 
-                           current.segmentation,
-                           sapply(current.pcas, ncol), 
-                           numb.clusters,
-                           max.dim = max.dim,
-                           flat.prior = flat.prior), 
-           current.pcas)
+      list(current.segmentation, cluster.pca.BIC(X, current.segmentation, sapply(current.pcas, 
+        ncol), numb.clusters, max.dim = max.dim, flat.prior = flat.prior), 
+        current.pcas)
     }
-    #running user specified clusters
+    # running user specified clusters
   } else {
-    segmentations <- foreach(i=(1:length(initial.segmentations))) %dorng% { 
-      MLCC.res <- mlcc.kmeans(X = X, number.clusters = numb.clusters, 
-                              max.subspace.dim = max.dim, max.iter = max.iter, 
-                              initial.segmentation = initial.segmentations[[i]],
-                              estimate.dimensions = estimate.dimensions, show.warnings = show.warnings)
+    segmentations <- foreach(i = (1:length(initial.segmentations))) %dorng% {
+      MLCC.res <- mlcc.kmeans(X = X, number.clusters = numb.clusters, max.subspace.dim = max.dim, 
+        max.iter = max.iter, initial.segmentation = initial.segmentations[[i]], 
+        estimate.dimensions = estimate.dimensions, show.warnings = show.warnings)
       current.segmentation <- MLCC.res$segmentation
       current.pcas <- MLCC.res$pcas
-      list(current.segmentation, 
-           cluster.pca.BIC(X, 
-                           current.segmentation,
-                           sapply(current.pcas, ncol), 
-                           numb.clusters,
-                           max.dim = max.dim,
-                           flat.prior = flat.prior), 
-           current.pcas)
+      list(current.segmentation, cluster.pca.BIC(X, current.segmentation, sapply(current.pcas, 
+        ncol), numb.clusters, max.dim = max.dim, flat.prior = flat.prior), 
+        current.pcas)
     }
   }
   stopCluster(cl)
   BICs <- unlist(lapply(segmentations, function(x) x[2]))
   basis <- lapply(segmentations, function(x) x[3])
   segmentations <- lapply(segmentations, function(x) x[[1]])
-  result <- list(
-              segmentation = segmentations[[which.max(BICs)]], 
-              BIC = BICs[which.max(BICs)],
-              basis = basis[[which.max(BICs)]][[1]])
+  result <- list(segmentation = segmentations[[which.max(BICs)]], BIC = BICs[which.max(BICs)], 
+    basis = basis[[which.max(BICs)]][[1]])
   class(result) <- "mlcc.reps.fit"
   return(result)
 }
