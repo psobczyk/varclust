@@ -8,7 +8,7 @@ number of clusters is known}
 mlcc.reps(X, numb.clusters = 2, numb.runs = 30, stop.criterion = 1,
   max.iter = 30, initial.segmentations = NULL, max.dim = 4,
   scale = TRUE, numb.cores = NULL, estimate.dimensions = TRUE,
-  flat.prior = FALSE, show.warnings = FALSE, deterministic = FALSE)
+  flat.prior = FALSE, show.warnings = FALSE, seed = NULL)
 }
 \arguments{
 \item{X}{A data frame or a matrix with only continuous variables.}
@@ -47,9 +47,8 @@ used.}
 \item{show.warnings}{A boolean, if set to TRUE all warnings are displayed, 
 default value is FALSE.}
 
-\item{deterministic}{A boolean, if set to TRUE the results of the method will
-be reproductible (run with the same parameters will return the same 
-result), default value is FALSE.}
+\item{seed}{An integer, a seed for random number generator which allows 
+making results reproductible}
 }
 \value{
 A list consisting of \item{segmentation}{a vector containing the 
