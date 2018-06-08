@@ -4,7 +4,7 @@ library(varclust)
 
 test_that("mlcc.reps on small matrix", {
   load("test_data/small_matrix.rda")
-  result <- mlcc.reps(X, max.dim = 2, numb.cores = 1, deterministic = TRUE)
+  result <- mlcc.reps(X, max.dim = 2, numb.cores = 1, seed = 10)
   true_segmentation <- rep(1:2, each=50)
   scores <- integration(result$segmentation, true_segmentation)
   expect_equal(scores[1],1)
@@ -15,7 +15,7 @@ test_that("perfect segmentation", {
   load("test_data/small_matrix.rda")
   true_segmentation <- rep(1:2, each=50)
   bad_segmentation <- c(rep(1:2, each=25), rep(1:2, each=25))
-  segmentation <- mlcc.reps(X, initial.segmentations = list(true_segmentation, bad_segmentation), numb.cores = 1, deterministic = TRUE)$segmentation
+  segmentation <- mlcc.reps(X, initial.segmentations = list(true_segmentation, bad_segmentation), numb.cores = 1, seed = 10)$segmentation
   expect_equal(segmentation, true_segmentation)
 })
 

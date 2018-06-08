@@ -3,7 +3,7 @@ context("Testing mlcc.kmeans")
 library(varclust)
 
 test_that("principal components returned by mlcc.kmeans are in fact principal components of the clusters", {
-  set.seed(1)
+  set.seed(10)
   X <- data.simulation.factors(n=20, K = 2, numb.vars = 50, numb.factors = 5)$X
   result <- mlcc.kmeans(X, number.clusters = 2, max.iter = 1)
   segmentation <- result[[1]]
