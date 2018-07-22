@@ -8,7 +8,7 @@ estimation of number of clusters and their dimension}
 mlcc.bic(X, numb.clusters = 1:10, numb.runs = 30, stop.criterion = 1,
   max.iter = 30, max.dim = 4, scale = TRUE, numb.cores = NULL,
   greedy = TRUE, estimate.dimensions = TRUE, verbose = FALSE,
-  flat.prior = FALSE, show.warnings = FALSE, seed = NULL)
+  flat.prior = FALSE, show.warnings = FALSE)
 }
 \arguments{
 \item{X}{A data frame or a matrix with only continuous variables.}
@@ -52,9 +52,6 @@ flat prior is used.}
 
 \item{show.warnings}{A boolean, if set to TRUE all warnings are displayed, 
 default value is FALSE.}
-
-\item{seed}{An integer, a seed for random number generator which allows 
-making results reproductible}
 }
 \value{
 An object of class mlcc.fit consisting of \item{segmentation}{a 

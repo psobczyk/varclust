@@ -39,8 +39,6 @@
 #'   flat prior is used.
 #' @param show.warnings A boolean, if set to TRUE all warnings are displayed, 
 #'   default value is FALSE.
-#' @param seed An integer, a seed for random number generator which allows 
-#' making results reproductible
 #' @export
 #' @return An object of class mlcc.fit consisting of \item{segmentation}{a 
 #'   vector containing the partition of the variables} \item{BIC}{numeric, value
@@ -58,7 +56,7 @@
 #' }
 mlcc.bic <- function(X, numb.clusters = 1:10, numb.runs = 30, stop.criterion = 1, 
   max.iter = 30, max.dim = 4, scale = TRUE, numb.cores = NULL, greedy = TRUE, estimate.dimensions = TRUE, 
-  verbose = FALSE, flat.prior = FALSE, show.warnings = FALSE, seed = NULL) {
+  verbose = FALSE, flat.prior = FALSE, show.warnings = FALSE) {
   if (is.data.frame(X)) {
     warning("X is not a matrix. Casting to matrix.")
     X <- as.matrix(X)
@@ -89,7 +87,7 @@ mlcc.bic <- function(X, numb.clusters = 1:10, numb.runs = 30, stop.criterion = 1
     number.clusters <- numb.clusters[i]
     MLCC.fit <- mlcc.reps(X = X, numb.clusters = number.clusters, numb.runs = numb.runs, 
       max.dim = max.dim, scale = FALSE, numb.cores = numb.cores, estimate.dimensions = estimate.dimensions, 
-      flat.prior = flat.prior, show.warnings = show.warnings, seed = seed)
+      flat.prior = flat.prior, show.warnings = show.warnings)
     
     results[[i]] <- list(segmentation = MLCC.fit$segmentation, BIC = MLCC.fit$BIC, 
       subspacesDimensions = lapply(MLCC.fit$basis, ncol), nClusters = number.clusters, 

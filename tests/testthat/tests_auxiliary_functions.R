@@ -6,9 +6,9 @@ test_that("missclassification works ok", {
   part1 <- c(rep(1, 10), rep(2,10))
   part2 <- c(rep(1,15), rep(2,5))
   expect_equal(misclassification(part1, part2, 15, 2), 0.25)
-  expect_equal(misclassification(part1, part2, 15, 2), varclust::misclassification(part2, part1, 15, 2))
-  expect_equal(misclassification(part1, part2, 25, 2), varclust::misclassification(part2, part1, 15, 2))
-  expect_false(misclassification(part1, part2, 8, 2) == varclust::misclassification(part2, part1, 15, 2))
+  expect_equal(misclassification(part1, part2, 15, 2), misclassification(part2, part1, 15, 2))
+  expect_equal(misclassification(part1, part2, 25, 2), misclassification(part2, part1, 15, 2))
+  expect_false(misclassification(part1, part2, 8, 2) == misclassification(part2, part1, 15, 2))
   expect_error(misclassification(part1, c(3, part2), 15, 2))
 })
 test_that("integration",{
@@ -20,7 +20,7 @@ test_that("integration",{
 
 test_that("choose cluster BIC", {
   set.seed(1)
-  sim.data <- varclust::data.simulation(n = 100, SNR = 1, K = 2, numb.vars = 4, max.dim = 2)
+  sim.data <- data.simulation(n = 100, SNR = 1, K = 2, numb.vars = 4, max.dim = 2)
   pca1 <- summary(prcomp(x=sim.data$signals[,1:4]))$x[,1:2]
   pca2 <- summary(prcomp(x=sim.data$signals[,5:8]))$x[,1:2]
   expect_equal(choose.cluster.BIC(sim.data$signals[,1], list(pca1, pca2), 2), 1)
@@ -29,7 +29,7 @@ test_that("choose cluster BIC", {
 
 test_that("choose cluster BIC - when n is large we can choose the right model", {
   set.seed(1)
-  sim.data <- varclust::data.simulation(n = 100, SNR = 10, K = 2, numb.vars = 10, max.dim = 2)
+  sim.data <- data.simulation(n = 100, SNR = 10, K = 2, numb.vars = 10, max.dim = 2)
   pca1 <- summary(prcomp(x=sim.data$X[,1:10]))$x[,1:2]
   pca2 <- summary(prcomp(x=sim.data$X[,11:20]))$x[,1:2]
   expect_equal(choose.cluster.BIC(sim.data$X[,1], list(pca1, pca2), 2), 1)
