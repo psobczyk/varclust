@@ -4,8 +4,8 @@
 \alias{mlcc.kmeans}
 \title{Multiple Latent Components Clustering - kmeans algorithm}
 \usage{
-mlcc.kmeans(X, number.clusters = 2, stop.criterion = 1, max.iter = 30,
-  max.subspace.dim = 4, initial.segmentation = NULL,
+mlcc.kmeans(X, number.clusters = 2, stop.criterion = 1,
+  max.iter = 30, max.subspace.dim = 4, initial.segmentation = NULL,
   estimate.dimensions = TRUE, show.warnings = FALSE)
 }
 \arguments{
@@ -43,7 +43,8 @@ BIC.
 \examples{
 \donttest{
 sim.data <- data.simulation(n = 50, SNR = 1, K = 5, numb.vars = 50, max.dim = 3)
-mlcc.kmeans(sim.data$X, number.clusters = 5, max.iter = 20, max.subspace.dim = 3)
+mlcc.res <- mlcc.kmeans(sim.data$X, number.clusters = 5, max.iter = 20, max.subspace.dim = 3)
+show.clusters(sim.data$X, mlcc.res$segmentation)
 }
 }
 \references{

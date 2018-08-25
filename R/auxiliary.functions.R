@@ -155,3 +155,22 @@ print.mlcc.reps.fit <- function(x, ...) {
   cat("$basis:\n")
   cat(str(x$basis))
 }
+
+#' Print clusters obtained from MLCC
+#' 
+#' @param data The original data set.
+#' @param segmentation A vector, segmentation of variables into clusters.
+#' @export
+show.clusters <- function(data, segmentation) {
+  data <- as.data.frame(data)
+  max_cluster_size <- max(as.data.frame(table(segmentation))$Freq)
+  clusters <- lapply(1:max(segmentation), function(i) {
+    colnames_in_cluster <- colnames(data)[segmentation == i]
+    current_cluster_size <- length(colnames_in_cluster)
+    c(colnames_in_cluster,
+      rep("-", times = max_cluster_size - current_cluster_size))
+  })
+  clusters <- as.data.frame(clusters)
+  colnames(clusters) <- paste("cluster", 1:max(segmentation), sep = "_")
+  print(clusters)
+}

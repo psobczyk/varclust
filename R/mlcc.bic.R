@@ -52,7 +52,8 @@
 #' @examples
 #' \donttest{
 #' sim.data <- data.simulation(n = 50, SNR = 1, K = 3, numb.vars = 50, max.dim = 3)
-#' mlcc.bic(sim.data$X, numb.clusters = 1:10, numb.runs = 20, verbose=TRUE)
+#' mlcc.res <- mlcc.bic(sim.data$X, numb.clusters = 1:5, numb.runs = 20, verbose=TRUE)
+#' show.clusters(sim.data$X, mlcc.res$segmentation)
 #' }
 mlcc.bic <- function(X, numb.clusters = 1:10, numb.runs = 30, stop.criterion = 1, 
   max.iter = 30, max.dim = 4, scale = TRUE, numb.cores = NULL, greedy = TRUE, estimate.dimensions = TRUE, 

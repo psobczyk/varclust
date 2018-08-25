@@ -4,7 +4,8 @@
 \alias{choose.cluster.BIC}
 \title{Choses a subspace for a variable}
 \usage{
-choose.cluster.BIC(variable, pcas, number.clusters, show.warnings = FALSE)
+choose.cluster.BIC(variable, pcas, number.clusters,
+  show.warnings = FALSE)
 }
 \arguments{
 \item{variable}{A variable to be assigned.}

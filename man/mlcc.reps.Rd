@@ -64,6 +64,7 @@ partition is selected according to the BIC.
 \examples{
 \donttest{
 sim.data <- data.simulation(n = 50, SNR = 1, K = 5, numb.vars = 50, max.dim = 3)
-mlcc.reps(sim.data$X, numb.clusters = 5, numb.runs = 20, max.dim = 4)
+mlcc.res <- mlcc.reps(sim.data$X, numb.clusters = 5, numb.runs = 20, max.dim = 4)
+show.clusters(sim.data$X, mlcc.res$segmentation)
 }
 }

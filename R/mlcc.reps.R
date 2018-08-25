@@ -40,7 +40,8 @@
 #' @examples
 #' \donttest{
 #' sim.data <- data.simulation(n = 50, SNR = 1, K = 5, numb.vars = 50, max.dim = 3)
-#' mlcc.reps(sim.data$X, numb.clusters = 5, numb.runs = 20, max.dim = 4)
+#' mlcc.res <- mlcc.reps(sim.data$X, numb.clusters = 5, numb.runs = 20, max.dim = 4)
+#' show.clusters(sim.data$X, mlcc.res$segmentation)
 #' }
 mlcc.reps <- function(X, numb.clusters = 2, numb.runs = 30, stop.criterion = 1, max.iter = 30, 
   initial.segmentations = NULL, max.dim = 4, scale = TRUE, numb.cores = NULL, estimate.dimensions = TRUE, 

@@ -77,6 +77,7 @@ initializations. The best partition is choosen with mBIC (see
 \examples{
 \donttest{
 sim.data <- data.simulation(n = 50, SNR = 1, K = 3, numb.vars = 50, max.dim = 3)
-mlcc.bic(sim.data$X, numb.clusters = 1:10, numb.runs = 20, verbose=TRUE)
+mlcc.res <- mlcc.bic(sim.data$X, numb.clusters = 1:5, numb.runs = 20, verbose=TRUE)
+show.clusters(sim.data$X, mlcc.res$segmentation)
 }
 }
