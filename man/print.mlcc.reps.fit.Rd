@@ -9,7 +9,8 @@
 \arguments{
 \item{x}{mlcc.reps.fit class object}
 
-\item{...}{Further arguments to be passed to or from other methods. They are ignored in this function.}
+\item{...}{Further arguments to be passed to or from other methods. They are
+ignored in this function.}
 }
 \description{
 Print mlcc.reps.fit class object

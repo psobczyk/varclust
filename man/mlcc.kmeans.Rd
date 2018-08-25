@@ -4,35 +4,50 @@
 \alias{mlcc.kmeans}
 \title{Multiple Latent Components Clustering - kmeans algorithm}
 \usage{
-mlcc.kmeans(X, number.clusters = 2, stop.criterion = 1, max.iter = 40,
-  max.subspace.dim = 4, initial.segmentation = NULL,
-  estimate.dimensions = FALSE, mode = "random", show.warnings = FALSE)
+mlcc.kmeans(X, number.clusters = 2, stop.criterion = 1,
+  max.iter = 30, max.subspace.dim = 4, initial.segmentation = NULL,
+  estimate.dimensions = TRUE, show.warnings = FALSE)
 }
 \arguments{
-\item{X}{a matrix with only continuous variables}
+\item{X}{A matrix with only continuous variables.}
 
-\item{number.clusters}{an integer, number of clusters to be used}
+\item{number.clusters}{An integer, number of clusters to be used.}
 
-\item{stop.criterion}{an integer indicating how many changes in partitions triggers stopping the algorithm}
+\item{stop.criterion}{An integer indicating how many changes in partitions 
+triggers stopping the algorithm.}
 
-\item{max.iter}{an integer, maximum number of iterations of k-means}
+\item{max.iter}{An integer, maximum number of iterations of k-means loop.}
 
-\item{max.subspace.dim}{an integer, maximum dimension of subspaces}
+\item{max.subspace.dim}{An integer, maximum dimension of subspaces.}
 
-\item{initial.segmentation}{a vector, initial segmentation of variables to clusters}
+\item{initial.segmentation}{A vector, initial segmentation of variables to 
+clusters.}
 
-\item{estimate.dimensions}{a boolean, if TRUE (value set by default) subspaces dimensions are estimated}
+\item{estimate.dimensions}{A boolean, if TRUE (value set by default) 
+subspaces dimensions are estimated.}
 
-\item{mode}{a string, possible values : random, kmeans++, sPCA, determines the intialization mode of the algorithm}
-
-\item{show.warnings}{a boolean - if set to TRUE all warnings are displayed, default value is FALSE}
+\item{show.warnings}{A boolean, if set to TRUE all warnings are displayed, 
+default value is FALSE.}
 }
 \value{
-A list consisting of:
-\item{segmentation}{a vector containing the partition of the variables}
-\item{pcas}{a list of matrices, basis vectors for each cluster (subspace)}
+A list consisting of: \item{segmentation}{a vector containing the 
+  partition of the variables} \item{pcas}{a list of matrices, basis vectors 
+  for each cluster (subspace)}
 }
 \description{
-Performs k-means based subspace clustering. Center of each cluster is some number 
-of principal components. Similarity measure is calculated using BIC.
+Performs k-means based subspace clustering. Center of each cluster is some 
+number of principal components. This number can be fixed or estimated by 
+PESEL. Similarity measure between variable and a cluster is calculated using 
+BIC.
+}
+\examples{
+\donttest{
+sim.data <- data.simulation(n = 50, SNR = 1, K = 5, numb.vars = 50, max.dim = 3)
+mlcc.res <- mlcc.kmeans(sim.data$X, number.clusters = 5, max.iter = 20, max.subspace.dim = 3)
+show.clusters(sim.data$X, mlcc.res$segmentation)
+}
+}
+\references{
+\emph{Bayesian dimensionality reduction with PCA using penalized semi-integrated likelihood},
+Piotr Sobczyk, Malgorzata Bogdan, Julie Josse
 }

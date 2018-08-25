@@ -2,63 +2,69 @@
 % Please edit documentation in R/mlcc.reps.R
 \name{mlcc.reps}
 \alias{mlcc.reps}
-\title{Subspace clustering assuming that the number of clusters is known}
+\title{Multiple Latent Components Clustering - Subspace clustering assuming that the
+number of clusters is known}
 \usage{
-mlcc.reps(X, numb.clusters = 2, numb.runs = 20, stop.criterion = 1,
-  max.iter = 20, initial.segmentations = NULL, max.dim = 4,
+mlcc.reps(X, numb.clusters = 2, numb.runs = 30, stop.criterion = 1,
+  max.iter = 30, initial.segmentations = NULL, max.dim = 4,
   scale = TRUE, numb.cores = NULL, estimate.dimensions = TRUE,
-  flat.prior = FALSE, mode = "random", show.warnings = FALSE)
+  flat.prior = FALSE, show.warnings = FALSE)
 }
 \arguments{
-\item{X}{a data frame or a matrix with only continuous variables}
+\item{X}{A data frame or a matrix with only continuous variables.}
 
-\item{numb.clusters}{an integer, number of cluster}
+\item{numb.clusters}{An integer, number of cluster.}
 
-\item{numb.runs}{an integer, number of runs of \code{\link{mlcc.kmeans} algorithm} with random initialization}
+\item{numb.runs}{An integer, number of runs of \code{\link{mlcc.kmeans} 
+algorithm} with random initialization.}
 
-\item{stop.criterion}{an integer, if an iteration of \code{\link{mlcc.kmeans}} algorithm 
-makes less changes in partitions than \code{stop.criterion}, 
-\code{\link{mlcc.kmeans}} stops.}
+\item{stop.criterion}{An integer, if an iteration of 
+\code{\link{mlcc.kmeans}} algorithm makes less changes in partitions than 
+\code{stop.criterion}, \code{\link{mlcc.kmeans}} stops.}
 
-\item{max.iter}{an integer, maximum number of iterations of \code{\link{mlcc.kmeans}} algorithm}
+\item{max.iter}{max.iter An integer, maximum number of iterations of the loop
+in \code{\link{mlcc.kmeans}} algorithm.}
 
-\item{initial.segmentations}{a list of vectors, segmentations that user wants to be 
-used as an initial segmentation in \code{\link{mlcc.kmeans}} algorithm}
+\item{initial.segmentations}{A list of vectors, segmentations that user wants
+to be used as an initial segmentation in \code{\link{mlcc.kmeans}} 
+algorithm.}
 
-\item{max.dim}{an integer, dimension of subspaces (all are assumed to be equal)}
+\item{max.dim}{An integer, maximal dimension of subspaces.}
 
-\item{scale}{a boolean, if TRUE (value set by default) then variables in 
-dataset are scaled to zero mean and unit variance}
+\item{scale}{A boolean, if TRUE (value set by default) then variables in 
+dataset are scaled to zero mean and unit variance.}
 
-\item{numb.cores}{an integer, number of cores to be used, by default all cores are used}
+\item{numb.cores}{An integer, number of cores to be used, by default all 
+cores are used.}
 
-\item{estimate.dimensions}{a boolean, if TRUE (value set by default) subspaces dimensions are estimated}
+\item{estimate.dimensions}{A boolean, if TRUE (value set by default) 
+subspaces dimensions are estimated.}
 
-\item{flat.prior}{a boolean, if TRUE then, instead of a prior that takes into account
-number of models for a given number of clusters, flat prior is used}
+\item{flat.prior}{A boolean, if TRUE then, instead of a prior that takes into
+account number of models for a given number of clusters, flat prior is 
+used.}
 
-\item{mode}{a string, possible values : random, kmeans++, sPCA, determines the intialization mode of the algorithm}
-
-\item{show.warnings}{a boolean - if set to TRUE all warnings are displayed, default value is FALSE}
+\item{show.warnings}{A boolean, if set to TRUE all warnings are displayed, 
+default value is FALSE.}
 }
 \value{
-A list consisting of
-\item{segmentation}{a vector containing the partition of the variables}
-\item{BIC}{a numeric, value of \code{\link{cluster.pca.BIC}} criterion}
-\item{basis}{a list of matrices, the basis vectors for subspaces}
+A list consisting of \item{segmentation}{a vector containing the 
+  partition of the variables} \item{BIC}{a numeric, value of the mBIC} 
+  \item{basis}{a list of matrices, the factors for each of the subspaces}
 }
 \description{
-For a fixed number of cluster and fixed number of components per cluster
-function returns the best partition and basis for each subspace.
+For a fixed number of cluster function returns the best partition and basis 
+for each subspace.
 }
 \details{
-In more detail, an algorithm \code{\link{mlcc.kmeans}} 
-is run a \emph{numb.runs} of times with random initializations. 
-The best partition is selected according to the BIC.
+In more detail, an algorithm \code{\link{mlcc.kmeans}} is run a 
+\emph{numb.runs} of times with random or custom initializations. The best 
+partition is selected according to the BIC.
 }
 \examples{
 \donttest{
 sim.data <- data.simulation(n = 50, SNR = 1, K = 5, numb.vars = 50, max.dim = 3)
-mlcc.reps(sim.data$X, numb.clusters = 5, numb.runs = 20, max.dim = 4)
+mlcc.res <- mlcc.reps(sim.data$X, numb.clusters = 5, numb.runs = 20, max.dim = 4)
+show.clusters(sim.data$X, mlcc.res$segmentation)
 }
 }

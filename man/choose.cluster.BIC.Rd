@@ -2,23 +2,27 @@
 % Please edit documentation in R/auxiliary.functions.R
 \name{choose.cluster.BIC}
 \alias{choose.cluster.BIC}
-\title{Selects subspace closest to a given variable (according to BIC)}
+\title{Choses a subspace for a variable}
 \usage{
-choose.cluster.BIC(variable, pcas, numberClusters, show.warnings = FALSE)
+choose.cluster.BIC(variable, pcas, number.clusters,
+  show.warnings = FALSE)
 }
 \arguments{
-\item{variable}{variable variable to be assigned}
+\item{variable}{A variable to be assigned.}
 
-\item{pcas}{orthogonal basis for different subspaces}
+\item{pcas}{Orthogonal basis for each of the subspaces.}
 
-\item{numberClusters}{number of subspaces (clusters)}
+\item{number.clusters}{Number of subspaces (clusters).}
 
-\item{show.warnings}{a boolean - if set to TRUE all warnings are displayed, default value is FALSE}
+\item{show.warnings}{A boolean - if set to TRUE all warnings are displayed, default value is FALSE.}
 }
 \value{
-index number of subspace closest to variable
+index Number of most similar subspace to variable.
 }
 \description{
-Selects subspace closest to a given variable (according to BIC)
+Selects a subspace closest to a given variable. To select the subspace, the method 
+considers (for every subspace) a subset of its principal components and tries 
+to fit a linear model with the variable as the response. Then the method chooses 
+the subspace for which the value of BIC was the highest.
 }
 \keyword{internal}

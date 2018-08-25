@@ -1,5 +1,5 @@
 
-[![Build Status](https://api.travis-ci.org/psobczyk/varclust.png)](https://travis-ci.org/psobczyk/varclust)
+[![Build Status](https://travis-ci.org/sjwilczynski/varclust.svg?branch=master)](https://travis-ci.org/sjwilczynski/varclust)   [![codecov](https://codecov.io/gh/sjwilczynski/varclust/branch/master/graph/badge.svg)](https://codecov.io/gh/sjwilczynski/varclust)
 
 [<img src="http://www.ideal.rwth-aachen.de/wp-content/uploads/2013/08/banner1.png">](http://www.ideal.rwth-aachen.de/)
 
@@ -21,19 +21,23 @@ Package **varclust**
 ### How do I get set up? ###
 
 * Install **varclust** package using devtools package
-```
+```R
 install_github("psobczyk/varclust")
 ```
 * Download the package as an archive and install it manually from **R** console
 * You might need to install package dependencies:
-    * **RcppEigen**
-    * **doMC**
     * **parallel**
-* To perform sparse PCA one needs to install package **PMA**. Its dependency **impute** is currently not on CRAN. To install it use the following:
+    * **doParallel**
+    * **foreach**
+    * **doRNG**
+    * **RcppEigen**
+    * **pesel**
+
+* The **pesel** package can be installed using devtools package
+```R
+install_github("psobczyk/pesel")
 ```
-source("https://bioconductor.org/biocLite.R")
-biocLite("impute")
-```
+
 * No additional configuration is needed
 * Read [vignette](https://psobczyk.shinyapps.io/varclust_online/varclustTutorial.html) to get familiar with basic usage
 
