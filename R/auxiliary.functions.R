@@ -37,8 +37,8 @@ cluster.pca.BIC <- function(X, segmentation, dims, numb.clusters, max.dim, flat.
         method = "heterogenous")$vals[1]
     } else {
       warning("The dimensionality of the cluster was greater or equal than max(number of observation, number of variables) in the cluster.
-        This may happen when after reassignemnt the cluster became empty. The mBIC is set to -infinity")
-      formula[k] <- -Inf
+              Ignoring the cluster during mBIC calculation")
+      formula[k] <- 0
     }
   }
   # apriori
