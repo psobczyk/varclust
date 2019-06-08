@@ -55,7 +55,7 @@
 #' @import foreach
 #' @author Piotr Sobczyk, Stanislaw Wilczynski, Julie Josse, Malgorzata Bogdan
 #'   
-#'   Maintainer: Piotr Sobczyk \email{Piotr.Sobczyk@@pwr.edu.pl}
+#'   Maintainer: Piotr Sobczyk \email{pj.sobczyk@@gmail.com}
 #'   
 #' @examples
 #' \donttest{
