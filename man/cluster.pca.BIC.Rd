@@ -16,28 +16,28 @@ cluster.pca.BIC(
 \arguments{
 \item{X}{A matrix with only quantitative variables.}
 
-\item{segmentation}{A vector, segmentation for which likelihood is computed. 
+\item{segmentation}{A vector, segmentation for which likelihood is computed.
 Clusters numbers should be from range [1, numb.clusters].}
 
-\item{dims}{A vector of integers, dimensions of subspaces. Number of 
-principal components (fixed or chosen by PESEL criterion) that span each 
+\item{dims}{A vector of integers, dimensions of subspaces. Number of
+principal components (fixed or chosen by PESEL criterion) that span each
 subspace.}
 
 \item{numb.clusters}{An integer, number of clusters.}
 
 \item{max.dim}{An integer, upper bound for allowed dimension of a subspace.}
 
-\item{flat.prior}{A boolean, if TRUE (default is FALSE) then flat prior on 
+\item{flat.prior}{A boolean, if TRUE (default is FALSE) then flat prior on
 models is used.}
 }
 \value{
 Value of mBIC
 }
 \description{
-Computes the value of modified Bayesian Information Criterion (mBIC) for 
-given data set partition and clusters' dimensionalities. In each cluster we 
-assume that variables are spanned by few factors. Considering maximum 
-likelihood we get that those factors are in fact principal components. 
+Computes the value of modified Bayesian Information Criterion (mBIC) for
+given data set partition and clusters' dimensionalities. In each cluster we
+assume that variables are spanned by few factors. Considering maximum
+likelihood we get that those factors are in fact principal components.
 Additionally, it uses by default an informative prior distribution on models.
 }
 \keyword{internal}

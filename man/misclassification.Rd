@@ -33,15 +33,16 @@ range [1, K].
 \examples{
 \donttest{
 sim.data <- data.simulation(n = 100, SNR = 1, K = 5, numb.vars = 30, max.dim = 2)
-mlcc.fit <- mlcc.reps(sim.data$X, numb.clusters = 5, numb.runs = 20, max.dim = 2, numb.cores=1)
-misclassification(mlcc.fit$segmentation,sim.data$s, 30, 5)
+mlcc.fit <- mlcc.reps(sim.data$X, numb.clusters = 5, numb.runs = 20, max.dim = 2, numb.cores = 1)
+misclassification(mlcc.fit$segmentation, sim.data$s, 30, 5)
 
 
-#one can use this function not only for clusters
+# one can use this function not only for clusters
 partition1 <- sample(10, 300, replace = TRUE)
 partition2 <- sample(10, 300, replace = TRUE)
 misclassification(partition1, partition1, max(table(partition1)), 10)
-misclassification(partition1, partition2, max(table(partition2)), 10)}
+misclassification(partition1, partition2, max(table(partition2)), 10)
+}
 }
 \references{
 {R. Vidal. Subspace clustering. Signal Processing Magazine, IEEE,

@@ -1,21 +1,21 @@
 #' mBIC for subspace clustering
-#' 
-#' Computes the value of modified Bayesian Information Criterion (mBIC) for 
-#' given data set partition and clusters' dimensionalities. In each cluster we 
-#' assume that variables are spanned by few factors. Considering maximum 
-#' likelihood we get that those factors are in fact principal components. 
+#'
+#' Computes the value of modified Bayesian Information Criterion (mBIC) for
+#' given data set partition and clusters' dimensionalities. In each cluster we
+#' assume that variables are spanned by few factors. Considering maximum
+#' likelihood we get that those factors are in fact principal components.
 #' Additionally, it uses by default an informative prior distribution on models.
-#' 
-#' 
+#'
+#'
 #' @param X A matrix with only quantitative variables.
-#' @param segmentation A vector, segmentation for which likelihood is computed. 
+#' @param segmentation A vector, segmentation for which likelihood is computed.
 #'   Clusters numbers should be from range [1, numb.clusters].
-#' @param dims A vector of integers, dimensions of subspaces. Number of 
-#'   principal components (fixed or chosen by PESEL criterion) that span each 
+#' @param dims A vector of integers, dimensions of subspaces. Number of
+#'   principal components (fixed or chosen by PESEL criterion) that span each
 #'   subspace.
 #' @param numb.clusters An integer, number of clusters.
 #' @param max.dim An integer, upper bound for allowed dimension of a subspace.
-#' @param flat.prior A boolean, if TRUE (default is FALSE) then flat prior on 
+#' @param flat.prior A boolean, if TRUE (default is FALSE) then flat prior on
 #'   models is used.
 #' @keywords internal
 #' @return Value of mBIC
@@ -26,15 +26,17 @@ cluster.pca.BIC <- function(X, segmentation, dims, numb.clusters, max.dim, flat.
   }
   D <- dim(X)[1]
   p <- dim(X)[2]
-  
+
   formula <- rep(0, numb.clusters)
   for (k in 1:numb.clusters) {
     # one cluster
     dimk <- dims[k]
     Xk <- X[, segmentation == k, drop = F]
     if (dim(Xk)[2] > dimk && dim(Xk)[1] > dimk) {
-      formula[k] <- pesel(X = Xk, npc.min = dimk, npc.max = dimk, scale = FALSE, 
-        method = "heterogenous")$vals[1]
+      formula[k] <- pesel(
+        X = Xk, npc.min = dimk, npc.max = dimk, scale = FALSE,
+        method = "heterogenous"
+      )$vals[1]
     } else {
       warning("The dimensionality of the cluster was greater or equal than max(number of observation, number of variables) in the cluster.
               Ignoring the cluster during mBIC calculation")
@@ -52,10 +54,10 @@ cluster.pca.BIC <- function(X, segmentation, dims, numb.clusters, max.dim, flat.
 }
 
 #' Choses a subspace for a variable
-#' 
-#' Selects a subspace closest to a given variable. To select the subspace, the method 
-#' considers (for every subspace) a subset of its principal components and tries 
-#' to fit a linear model with the variable as the response. Then the method chooses 
+#'
+#' Selects a subspace closest to a given variable. To select the subspace, the method
+#' considers (for every subspace) a subset of its principal components and tries
+#' to fit a linear model with the variable as the response. Then the method chooses
 #' the subspace for which the value of BIC was the highest.
 #'
 #' @param variable A variable to be assigned.
@@ -63,12 +65,12 @@ cluster.pca.BIC <- function(X, segmentation, dims, numb.clusters, max.dim, flat.
 #' @param number.clusters Number of subspaces (clusters).
 #' @param show.warnings A boolean - if set to TRUE all warnings are displayed, default value is FALSE.
 #' @param common_sigma A boolean - if set to FALSE, seperate sigma is estimated for each cluster,
-#' default value is TRUE  
+#' default value is TRUE
 #' @keywords internal
 #' @return index Number of most similar subspace to variable.
 choose.cluster.BIC <- function(variable, pcas, number.clusters, show.warnings = FALSE, common_sigma = TRUE) {
   BICs <- NULL
-  if(common_sigma) {
+  if (common_sigma) {
     res <- fastLmPure(as.matrix(Matrix::bdiag(pcas)), rep(variable, number.clusters), method = 0L)$residuals
     n <- length(variable)
     sigma.hat <- sqrt(sum(res^2) / (n * number.clusters))
@@ -79,19 +81,19 @@ choose.cluster.BIC <- function(variable, pcas, number.clusters, show.warnings = 
       nparams <- ncol(pcas[[i]])
       res.part <- res[((i - 1) * n + 1):(i * n)]
       loglik <- sum(dnorm(res.part, 0, sigma.hat, log = T))
-      BICs[i] <- loglik - nparams * log(n)/2
+      BICs[i] <- loglik - nparams * log(n) / 2
     }
   } else {
     for (i in 1:number.clusters) {
       nparams <- ncol(pcas[[i]])
       n <- length(variable)
       res <- fastLmPure(pcas[[i]], variable, method = 0L)$residuals
-      sigma.hat <- sqrt(sum(res^2)/n)
+      sigma.hat <- sqrt(sum(res^2) / n)
       if (sigma.hat < 1e-15 && show.warnings) {
         warning("In function choose.cluster.BIC: estimated value of noise in cluster is <1e-15. It might corrupt the result.")
       }
       loglik <- sum(dnorm(res, 0, sigma.hat, log = T))
-      BICs[i] <- loglik - nparams * log(n)/2
+      BICs[i] <- loglik - nparams * log(n) / 2
     }
   }
   which.max(BICs)
@@ -100,7 +102,7 @@ choose.cluster.BIC <- function(variable, pcas, number.clusters, show.warnings = 
 #' Calculates principal components for every cluster
 #'
 #' For given segmentation this function estimates dimensionality of each cluster (or chooses fixed dimensionality)
-#' and for each cluster calculates the number of principal components equal to the this dimensionality 
+#' and for each cluster calculates the number of principal components equal to the this dimensionality
 #'
 #' @param X A data matrix.
 #' @param segmentation A vector, segmentation of variables into clusters.
@@ -118,8 +120,10 @@ calculate.pcas <- function(X, segmentation, number.clusters, max.subspace.dim, e
       a <- summary(prcomp(x = Xk))
       if (estimate.dimensions) {
         max.dim <- min(max.subspace.dim, floor(sqrt(sub.dim[2])), sub.dim[1])
-        cut <- max(1, pesel(X = Xk, npc.min = 1, npc.max = max.dim, scale = FALSE, 
-          method = "heterogenous")$nPCs)
+        cut <- max(1, pesel(
+          X = Xk, npc.min = 1, npc.max = max.dim, scale = FALSE,
+          method = "heterogenous"
+        )$nPCs)
       } else {
         cut <- min(max.subspace.dim, floor(sqrt(sub.dim[2])), sub.dim[1])
       }
@@ -132,7 +136,7 @@ calculate.pcas <- function(X, segmentation, number.clusters, max.subspace.dim, e
 }
 
 #' Plot mlcc.fit class object
-#' 
+#'
 #' @param x mlcc.fit class object
 #' @param ... Further arguments to be passed to or from other methods. They are ignored in this function.
 #' @export
@@ -145,7 +149,7 @@ plot.mlcc.fit <- function(x, ...) {
 }
 
 #' Print mlcc.fit class object
-#' 
+#'
 #' @param x mlcc.fit class object
 #' @param ... Further arguments to be passed to or from other methods. They are ignored in this function.
 #' @export
@@ -159,7 +163,7 @@ print.mlcc.fit <- function(x, ...) {
 }
 
 #' Print mlcc.reps.fit class object
-#' 
+#'
 #' @param x mlcc.reps.fit class object
 #' @param ... Further arguments to be passed to or from other methods. They are
 #'   ignored in this function.
@@ -174,7 +178,7 @@ print.mlcc.reps.fit <- function(x, ...) {
 }
 
 #' Print clusters obtained from MLCC
-#' 
+#'
 #' @param data The original data set.
 #' @param segmentation A vector, segmentation of variables into clusters.
 #' @export
@@ -184,8 +188,10 @@ show.clusters <- function(data, segmentation) {
   clusters <- lapply(1:max(segmentation), function(i) {
     colnames_in_cluster <- colnames(data)[segmentation == i]
     current_cluster_size <- length(colnames_in_cluster)
-    c(colnames_in_cluster,
-      rep("-", times = max_cluster_size - current_cluster_size))
+    c(
+      colnames_in_cluster,
+      rep("-", times = max_cluster_size - current_cluster_size)
+    )
   })
   clusters <- as.data.frame(clusters)
   colnames(clusters) <- paste("cluster", 1:max(segmentation), sep = "_")

@@ -25,50 +25,50 @@ mlcc.reps(
 
 \item{numb.clusters}{An integer, number of cluster.}
 
-\item{numb.runs}{An integer, number of runs of \code{\link{mlcc.kmeans} 
+\item{numb.runs}{An integer, number of runs of \code{\link{mlcc.kmeans}
 algorithm} with random initialization.}
 
-\item{stop.criterion}{An integer, if an iteration of 
-\code{\link{mlcc.kmeans}} algorithm makes less changes in partitions than 
+\item{stop.criterion}{An integer, if an iteration of
+\code{\link{mlcc.kmeans}} algorithm makes less changes in partitions than
 \code{stop.criterion}, \code{\link{mlcc.kmeans}} stops.}
 
 \item{max.iter}{max.iter An integer, maximum number of iterations of the loop
 in \code{\link{mlcc.kmeans}} algorithm.}
 
 \item{initial.segmentations}{A list of vectors, segmentations that user wants
-to be used as an initial segmentation in \code{\link{mlcc.kmeans}} 
+to be used as an initial segmentation in \code{\link{mlcc.kmeans}}
 algorithm.}
 
 \item{max.dim}{An integer, maximal dimension of subspaces.}
 
-\item{scale}{A boolean, if TRUE (value set by default) then variables in 
+\item{scale}{A boolean, if TRUE (value set by default) then variables in
 dataset are scaled to zero mean and unit variance.}
 
-\item{numb.cores}{An integer, number of cores to be used, by default all 
+\item{numb.cores}{An integer, number of cores to be used, by default all
 cores are used.}
 
-\item{estimate.dimensions}{A boolean, if TRUE (value set by default) 
+\item{estimate.dimensions}{A boolean, if TRUE (value set by default)
 subspaces dimensions are estimated.}
 
 \item{flat.prior}{A boolean, if TRUE then, instead of a prior that takes into
-account number of models for a given number of clusters, flat prior is 
+account number of models for a given number of clusters, flat prior is
 used.}
 
-\item{show.warnings}{A boolean, if set to TRUE all warnings are displayed, 
+\item{show.warnings}{A boolean, if set to TRUE all warnings are displayed,
 default value is FALSE.}
 }
 \value{
-A list consisting of \item{segmentation}{a vector containing the 
-  partition of the variables} \item{BIC}{a numeric, value of the mBIC} 
+A list consisting of \item{segmentation}{a vector containing the
+  partition of the variables} \item{BIC}{a numeric, value of the mBIC}
   \item{basis}{a list of matrices, the factors for each of the subspaces}
 }
 \description{
-For a fixed number of cluster function returns the best partition and basis 
+For a fixed number of cluster function returns the best partition and basis
 for each subspace.
 }
 \details{
-In more detail, an algorithm \code{\link{mlcc.kmeans}} is run a 
-\emph{numb.runs} of times with random or custom initializations. The best 
+In more detail, an algorithm \code{\link{mlcc.kmeans}} is run a
+\emph{numb.runs} of times with random or custom initializations. The best
 partition is selected according to the BIC.
 }
 \examples{

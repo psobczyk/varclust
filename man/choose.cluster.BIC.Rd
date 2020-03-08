@@ -28,9 +28,9 @@ default value is TRUE}
 index Number of most similar subspace to variable.
 }
 \description{
-Selects a subspace closest to a given variable. To select the subspace, the method 
-considers (for every subspace) a subset of its principal components and tries 
-to fit a linear model with the variable as the response. Then the method chooses 
+Selects a subspace closest to a given variable. To select the subspace, the method
+considers (for every subspace) a subset of its principal components and tries
+to fit a linear model with the variable as the response. Then the method chooses
 the subspace for which the value of BIC was the highest.
 }
 \keyword{internal}

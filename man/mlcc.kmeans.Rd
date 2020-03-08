@@ -20,31 +20,31 @@ mlcc.kmeans(
 
 \item{number.clusters}{An integer, number of clusters to be used.}
 
-\item{stop.criterion}{An integer indicating how many changes in partitions 
+\item{stop.criterion}{An integer indicating how many changes in partitions
 triggers stopping the algorithm.}
 
 \item{max.iter}{An integer, maximum number of iterations of k-means loop.}
 
 \item{max.subspace.dim}{An integer, maximum dimension of subspaces.}
 
-\item{initial.segmentation}{A vector, initial segmentation of variables to 
+\item{initial.segmentation}{A vector, initial segmentation of variables to
 clusters.}
 
-\item{estimate.dimensions}{A boolean, if TRUE (value set by default) 
+\item{estimate.dimensions}{A boolean, if TRUE (value set by default)
 subspaces dimensions are estimated.}
 
-\item{show.warnings}{A boolean, if set to TRUE all warnings are displayed, 
+\item{show.warnings}{A boolean, if set to TRUE all warnings are displayed,
 default value is FALSE.}
 }
 \value{
-A list consisting of: \item{segmentation}{a vector containing the 
-  partition of the variables} \item{pcas}{a list of matrices, basis vectors 
+A list consisting of: \item{segmentation}{a vector containing the
+  partition of the variables} \item{pcas}{a list of matrices, basis vectors
   for each cluster (subspace)}
 }
 \description{
-Performs k-means based subspace clustering. Center of each cluster is some 
-number of principal components. This number can be fixed or estimated by 
-PESEL. Similarity measure between variable and a cluster is calculated using 
+Performs k-means based subspace clustering. Center of each cluster is some
+number of principal components. This number can be fixed or estimated by
+PESEL. Similarity measure between variable and a cluster is calculated using
 BIC.
 }
 \examples{
