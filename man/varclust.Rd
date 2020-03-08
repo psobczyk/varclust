@@ -3,7 +3,6 @@
 \docType{package}
 \name{varclust}
 \alias{varclust}
-\alias{varclust-package}
 \title{Variable Clustering with Multiple Latent Components Clustering algorithm}
 \description{
 Package varclust performs clustering of variables, according to a 
@@ -46,13 +45,14 @@ partitions. This performance measure is extensively used in image
 segmentation. The other measure is implemented as \code{\link{integration}} 
 function.
 
-Version: 0.9.4
+Version: 0.9.5
 }
 \examples{
 \donttest{
 sim.data <- data.simulation(n = 50, SNR = 1, K = 3, numb.vars = 50, max.dim = 3)
-mlcc.bic(sim.data$X, numb.clusters = 1:5, numb.runs = 20, verbose = TRUE)
-mlcc.reps(sim.data$X, numb.clusters = 3, numb.runs = 20)}
+mlcc.bic(sim.data$X, numb.clusters = 1:5, numb.runs = 20, numb.cores = 1, verbose = TRUE)
+mlcc.reps(sim.data$X, numb.clusters = 3, numb.runs = 20, numb.cores = 1)
+}
 }
 \author{
 Piotr Sobczyk, Stanislaw Wilczynski, Julie Josse, Malgorzata Bogdan

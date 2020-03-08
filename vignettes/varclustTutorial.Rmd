@@ -76,7 +76,7 @@ You should also use **mlcc.reps** function if you have some apriori knowledge re
 You can enforce starting point
 ```{r, warning=FALSE}
 mlcc.fit3 <- mlcc.reps(comp, numb.clusters = 2, numb.runs = 0, max.dim = 8, 
-                       initial.segmentations=list(benchmarkClustering), numb.cores=1)
+                       initial.segmentations = list(benchmarkClustering), numb.cores = 1)
 print(mlcc.fit3)
 mclust::adjustedRandIndex(mlcc.fit3$segmentation, benchmarkClustering)
 misclassification(mlcc.fit3$segmentation, benchmarkClustering, max(table(benchmarkClustering)), 2)

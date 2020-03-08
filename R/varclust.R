@@ -41,7 +41,7 @@
 #' 
 #' @docType package
 #' @name varclust
-#' @details Version: 0.9.4
+#' @details Version: 0.9.5
 #' @importFrom RcppEigen fastLmPure
 #' @importFrom doParallel registerDoParallel
 #' @importFrom parallel makeCluster
@@ -51,6 +51,7 @@
 #' @importFrom graphics axis plot plot.default points
 #' @importFrom stats cov dnorm pnorm prcomp rnorm runif var
 #' @importFrom utils str
+#' @importFrom Matrix bdiag
 #' @import doRNG
 #' @import foreach
 #' @author Piotr Sobczyk, Stanislaw Wilczynski, Julie Josse, Malgorzata Bogdan
@@ -60,6 +61,7 @@
 #' @examples
 #' \donttest{
 #' sim.data <- data.simulation(n = 50, SNR = 1, K = 3, numb.vars = 50, max.dim = 3)
-#' mlcc.bic(sim.data$X, numb.clusters = 1:5, numb.runs = 20, verbose = TRUE)
-#' mlcc.reps(sim.data$X, numb.clusters = 3, numb.runs = 20)}
+#' mlcc.bic(sim.data$X, numb.clusters = 1:5, numb.runs = 20, numb.cores = 1, verbose = TRUE)
+#' mlcc.reps(sim.data$X, numb.clusters = 3, numb.runs = 20, numb.cores = 1)
+#' }
 NULL

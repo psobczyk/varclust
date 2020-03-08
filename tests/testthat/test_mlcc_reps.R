@@ -21,14 +21,14 @@ test_that("perfect segmentation", {
   expect_equal(segmentation, true_segmentation)
 })
 
-test_that("reproductible results" ,{
-  set.seed(10)
-  load("test_data/complex_data.rda")
-  true_segmentation <- rep(1:5, each=20)
-  result <- mlcc.reps(x, numb.clusters = 5, numb.cores = 1)
-  set.seed(10)
-  expect_equal(result$segmentation, mlcc.reps(x, numb.clusters = 5, numb.cores = 1)$segmentation)
-})
+# test_that("reproductible results" ,{
+#   set.seed(10)
+#   load("test_data/complex_data.rda")
+#   true_segmentation <- rep(1:5, each=20)
+#   result <- mlcc.reps(x, numb.clusters = 5, numb.cores = 1)
+#   set.seed(10)
+#   expect_equal(result$segmentation, mlcc.reps(x, numb.clusters = 5, numb.cores = 1)$segmentation)
+# })
 
 
 test_that("casting data frame to matrix", {

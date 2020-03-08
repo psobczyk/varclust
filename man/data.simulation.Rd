@@ -4,8 +4,15 @@
 \alias{data.simulation}
 \title{Simulates subspace clustering data}
 \usage{
-data.simulation(n = 100, SNR = 1, K = 10, numb.vars = 30,
-  max.dim = 2, min.dim = 1, equal.dims = TRUE)
+data.simulation(
+  n = 100,
+  SNR = 1,
+  K = 10,
+  numb.vars = 30,
+  max.dim = 2,
+  min.dim = 1,
+  equal.dims = TRUE
+)
 }
 \arguments{
 \item{n}{An integer, number of individuals.}

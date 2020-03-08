@@ -4,8 +4,13 @@
 \alias{choose.cluster.BIC}
 \title{Choses a subspace for a variable}
 \usage{
-choose.cluster.BIC(variable, pcas, number.clusters,
-  show.warnings = FALSE)
+choose.cluster.BIC(
+  variable,
+  pcas,
+  number.clusters,
+  show.warnings = FALSE,
+  common_sigma = TRUE
+)
 }
 \arguments{
 \item{variable}{A variable to be assigned.}
@@ -15,6 +20,9 @@ choose.cluster.BIC(variable, pcas, number.clusters,
 \item{number.clusters}{Number of subspaces (clusters).}
 
 \item{show.warnings}{A boolean - if set to TRUE all warnings are displayed, default value is FALSE.}
+
+\item{common_sigma}{A boolean - if set to FALSE, seperate sigma is estimated for each cluster,
+default value is TRUE}
 }
 \value{
 index Number of most similar subspace to variable.

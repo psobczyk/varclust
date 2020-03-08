@@ -4,9 +4,17 @@
 \alias{data.simulation.factors}
 \title{Simulates subspace clustering data with shared factors}
 \usage{
-data.simulation.factors(n = 100, SNR = 1, K = 10, numb.vars = 30,
-  numb.factors = 10, min.dim = 1, max.dim = 2, equal.dims = TRUE,
-  separation.parameter = 0.1)
+data.simulation.factors(
+  n = 100,
+  SNR = 1,
+  K = 10,
+  numb.vars = 30,
+  numb.factors = 10,
+  min.dim = 1,
+  max.dim = 2,
+  equal.dims = TRUE,
+  separation.parameter = 0.1
+)
 }
 \arguments{
 \item{n}{An integer, number of individuals.}

@@ -4,9 +4,16 @@
 \alias{mlcc.kmeans}
 \title{Multiple Latent Components Clustering - kmeans algorithm}
 \usage{
-mlcc.kmeans(X, number.clusters = 2, stop.criterion = 1,
-  max.iter = 30, max.subspace.dim = 4, initial.segmentation = NULL,
-  estimate.dimensions = TRUE, show.warnings = FALSE)
+mlcc.kmeans(
+  X,
+  number.clusters = 2,
+  stop.criterion = 1,
+  max.iter = 30,
+  max.subspace.dim = 4,
+  initial.segmentation = NULL,
+  estimate.dimensions = TRUE,
+  show.warnings = FALSE
+)
 }
 \arguments{
 \item{X}{A matrix with only continuous variables.}

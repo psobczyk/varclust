@@ -4,8 +4,14 @@
 \alias{cluster.pca.BIC}
 \title{mBIC for subspace clustering}
 \usage{
-cluster.pca.BIC(X, segmentation, dims, numb.clusters, max.dim,
-  flat.prior = FALSE)
+cluster.pca.BIC(
+  X,
+  segmentation,
+  dims,
+  numb.clusters,
+  max.dim,
+  flat.prior = FALSE
+)
 }
 \arguments{
 \item{X}{A matrix with only quantitative variables.}

@@ -62,20 +62,37 @@ cluster.pca.BIC <- function(X, segmentation, dims, numb.clusters, max.dim, flat.
 #' @param pcas Orthogonal basis for each of the subspaces.
 #' @param number.clusters Number of subspaces (clusters).
 #' @param show.warnings A boolean - if set to TRUE all warnings are displayed, default value is FALSE.
+#' @param common_sigma A boolean - if set to FALSE, seperate sigma is estimated for each cluster,
+#' default value is TRUE  
 #' @keywords internal
 #' @return index Number of most similar subspace to variable.
-choose.cluster.BIC <- function(variable, pcas, number.clusters, show.warnings = FALSE) {
+choose.cluster.BIC <- function(variable, pcas, number.clusters, show.warnings = FALSE, common_sigma = TRUE) {
   BICs <- NULL
-  for (i in 1:number.clusters) {
-    nparams <- ncol(pcas[[i]])
+  if(common_sigma) {
+    res <- fastLmPure(as.matrix(Matrix::bdiag(pcas)), rep(variable, number.clusters), method = 0L)$residuals
     n <- length(variable)
-    res <- fastLmPure(pcas[[i]], variable, method = 0L)$residuals
-    sigma.hat <- sqrt(sum(res^2)/n)
+    sigma.hat <- sqrt(sum(res^2) / (n * number.clusters))
     if (sigma.hat < 1e-15 && show.warnings) {
       warning("In function choose.cluster.BIC: estimated value of noise in cluster is <1e-15. It might corrupt the result.")
     }
-    loglik <- sum(dnorm(res, 0, sigma.hat, log = T))
-    BICs[i] <- loglik - nparams * log(n)/2
+    for (i in 1:number.clusters) {
+      nparams <- ncol(pcas[[i]])
+      res.part <- res[((i - 1) * n + 1):(i * n)]
+      loglik <- sum(dnorm(res.part, 0, sigma.hat, log = T))
+      BICs[i] <- loglik - nparams * log(n)/2
+    }
+  } else {
+    for (i in 1:number.clusters) {
+      nparams <- ncol(pcas[[i]])
+      n <- length(variable)
+      res <- fastLmPure(pcas[[i]], variable, method = 0L)$residuals
+      sigma.hat <- sqrt(sum(res^2)/n)
+      if (sigma.hat < 1e-15 && show.warnings) {
+        warning("In function choose.cluster.BIC: estimated value of noise in cluster is <1e-15. It might corrupt the result.")
+      }
+      loglik <- sum(dnorm(res, 0, sigma.hat, log = T))
+      BICs[i] <- loglik - nparams * log(n)/2
+    }
   }
   which.max(BICs)
 }

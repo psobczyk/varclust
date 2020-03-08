@@ -5,10 +5,20 @@
 \title{Multiple Latent Components Clustering - Subspace clustering assuming that the
 number of clusters is known}
 \usage{
-mlcc.reps(X, numb.clusters = 2, numb.runs = 30, stop.criterion = 1,
-  max.iter = 30, initial.segmentations = NULL, max.dim = 4,
-  scale = TRUE, numb.cores = NULL, estimate.dimensions = TRUE,
-  flat.prior = FALSE, show.warnings = FALSE)
+mlcc.reps(
+  X,
+  numb.clusters = 2,
+  numb.runs = 30,
+  stop.criterion = 1,
+  max.iter = 30,
+  initial.segmentations = NULL,
+  max.dim = 4,
+  scale = TRUE,
+  numb.cores = NULL,
+  estimate.dimensions = TRUE,
+  flat.prior = FALSE,
+  show.warnings = FALSE
+)
 }
 \arguments{
 \item{X}{A data frame or a matrix with only continuous variables.}
@@ -64,7 +74,7 @@ partition is selected according to the BIC.
 \examples{
 \donttest{
 sim.data <- data.simulation(n = 50, SNR = 1, K = 5, numb.vars = 50, max.dim = 3)
-mlcc.res <- mlcc.reps(sim.data$X, numb.clusters = 5, numb.runs = 20, max.dim = 4)
+mlcc.res <- mlcc.reps(sim.data$X, numb.clusters = 5, numb.runs = 20, max.dim = 4, numb.cores = 1)
 show.clusters(sim.data$X, mlcc.res$segmentation)
 }
 }

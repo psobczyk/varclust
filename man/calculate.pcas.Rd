@@ -4,8 +4,13 @@
 \alias{calculate.pcas}
 \title{Calculates principal components for every cluster}
 \usage{
-calculate.pcas(X, segmentation, number.clusters, max.subspace.dim,
-  estimate.dimensions)
+calculate.pcas(
+  X,
+  segmentation,
+  number.clusters,
+  max.subspace.dim,
+  estimate.dimensions
+)
 }
 \arguments{
 \item{X}{A data matrix.}

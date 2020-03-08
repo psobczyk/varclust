@@ -1,15 +1,15 @@
 Package: varclust
 Type: Package
 Title: Variables Clustering
-Version: 0.9.4
-Date: 2019-06-08
+Version: 0.9.5
+Date: 2020-03-08
 Author: Piotr Sobczyk, Stanislaw Wilczynski, Julie Josse, Malgorzata Bogdan
 Maintainer: Piotr Sobczyk <pj.sobczyk@gmail.com>
-Description: Package varclust performs clustering of quantitative variables,
+Description: Performs clustering of quantitative variables,
     assuming that clusters lie in low-dimensional subspaces. Segmentation of
     variables, number of clusters and their dimensions are selected based on
     BIC. Candidate models are identified based on many runs of K-means
-    algorithm with different random initializations of cluser centers.
+    algorithm with different random initializations of cluster centers.
 Encoding: UTF-8
 License: GPL-3
 Depends:
@@ -20,9 +20,8 @@ Imports:
     parallel,
     doParallel,
     doRNG,
-    pesel
-Remotes:
-    psobczyk/pesel
+    pesel,
+    Matrix
 Suggests:
     knitr,
     mclust,
@@ -30,4 +29,4 @@ Suggests:
     testthat
 NeedsCompilation: no
 VignetteBuilder: knitr
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2
