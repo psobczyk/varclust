@@ -64,40 +64,78 @@ cluster.pca.BIC <- function(X, segmentation, dims, numb.clusters, max.dim, flat.
 #' @param pcas Orthogonal basis for each of the subspaces.
 #' @param number.clusters Number of subspaces (clusters).
 #' @param show.warnings A boolean - if set to TRUE all warnings are displayed, default value is FALSE.
-#' @param common_sigma A boolean - if set to FALSE, seperate sigma is estimated for each cluster,
+#' @param common.sigma A boolean - if set to FALSE, seperate sigma is estimated for each cluster,
 #' default value is TRUE
+#' @param known.sigma A boolean - if set to TRUE, then the lm model for each variable uses the same sigma,
+#' computed as a residual from PCA fit to the data
 #' @keywords internal
 #' @return index Number of most similar subspace to variable.
-choose.cluster.BIC <- function(variable, pcas, number.clusters, show.warnings = FALSE, common_sigma = TRUE) {
-  BICs <- NULL
-  if (common_sigma) {
-    res <- fastLmPure(as.matrix(Matrix::bdiag(pcas)), rep(variable, number.clusters), method = 0L)$residuals
-    n <- length(variable)
-    sigma.hat <- sqrt(sum(res^2) / (n * number.clusters))
-    if (sigma.hat < 1e-15 && show.warnings) {
-      warning("In function choose.cluster.BIC: estimated value of noise in cluster is <1e-15. It might corrupt the result.")
-    }
-    for (i in 1:number.clusters) {
-      nparams <- ncol(pcas[[i]])
-      res.part <- res[((i - 1) * n + 1):(i * n)]
-      loglik <- sum(dnorm(res.part, 0, sigma.hat, log = T))
-      BICs[i] <- loglik - nparams * log(n) / 2
-    }
-  } else {
-    for (i in 1:number.clusters) {
-      nparams <- ncol(pcas[[i]])
+choose.cluster.BIC <- function(variable, pcas, number.clusters, show.warnings = FALSE,
+                               common.sigma = FALSE, known.sigma = FALSE) {
+  if (known.sigma) {
+    return(choose.cluster.BIC.known.sigma(variable, pcas, number.clusters, show.warnings))
+  }
+  else {
+    BICs <- NULL
+    if (common.sigma) {
+      res <- fastLmPure(as.matrix(Matrix::bdiag(pcas)), rep(variable, number.clusters), method = 0L)$residuals
       n <- length(variable)
-      res <- fastLmPure(pcas[[i]], variable, method = 0L)$residuals
-      sigma.hat <- sqrt(sum(res^2) / n)
+      sigma.hat <- sqrt(sum(res^2) / (n * number.clusters))
       if (sigma.hat < 1e-15 && show.warnings) {
         warning("In function choose.cluster.BIC: estimated value of noise in cluster is <1e-15. It might corrupt the result.")
       }
-      loglik <- sum(dnorm(res, 0, sigma.hat, log = T))
-      BICs[i] <- loglik - nparams * log(n) / 2
+      for (i in 1:number.clusters) {
+        nparams <- ncol(pcas[[i]])
+        res.part <- res[((i - 1) * n + 1):(i * n)]
+        loglik <- sum(dnorm(res.part, 0, sigma.hat, log = T))
+        BICs[i] <- loglik - nparams * log(n) / 2
+      }
+    } else {
+      for (i in 1:number.clusters) {
+        nparams <- ncol(pcas[[i]])
+        n <- length(variable)
+        res <- fastLmPure(pcas[[i]], variable, method = 0L)$residuals
+        sigma.hat <- sqrt(sum(res^2) / n)
+        if (sigma.hat < 1e-15 && show.warnings) {
+          warning("In function choose.cluster.BIC: estimated value of noise in cluster is <1e-15. It might corrupt the result.")
+        }
+        loglik <- sum(dnorm(res, 0, sigma.hat, log = T))
+        BICs[i] <- loglik - nparams * log(n) / 2
+      }
     }
+    return(which.max(BICs))
+  }
+}
+
+
+#' Choses a subspace for a variable
+#'
+#' Selects a subspace closest to a given variable. To select the subspace, the method
+#' considers (for every subspace) a subset of its principal components and tries
+#' to fit a linear model with the variable as the response. Then the method chooses
+#' the subspace for which the value of BIC was the highest.
+#'
+#' @param variable A variable to be assigned.
+#' @param pcas Orthogonal basis for each of the subspaces.
+#' @param number.clusters Number of subspaces (clusters).
+#' @param show.warnings A boolean - if set to TRUE all warnings are displayed, default value is FALSE.
+#' default value is TRUE
+#' @keywords internal
+#' @return index Number of most similar subspace to variable.
+choose.cluster.BIC.known.sigma <- function(variable, pcas, number.clusters, show.warnings = FALSE) {
+  BICs <- NULL
+  for (i in 1:number.clusters) {
+    cluster.pcas = pcas[[i]]$pcas
+    cluster.sigma = pcas[[i]]$sigma2
+    nparams <- ncol(cluster.pcas)
+    n <- length(variable)
+    res <- fastLmPure(cluster.pcas, variable, method = 0L)$residuals
+    loglik <- sum(dnorm(res, 0, sqrt(cluster.sigma), log = T))
+    BICs[i] <- loglik - nparams * log(n) / 2
   }
   which.max(BICs)
 }
+
 
 #' Calculates principal components for every cluster
 #'
@@ -111,7 +149,8 @@ choose.cluster.BIC <- function(variable, pcas, number.clusters, show.warnings = 
 #' @param estimate.dimensions A boolean, if TRUE subspaces dimensions are estimated using PESEL.
 #' @keywords internal
 #' @return A subset of principal components for every cluster.
-calculate.pcas <- function(X, segmentation, number.clusters, max.subspace.dim, estimate.dimensions) {
+calculate.pcas <- function(X, segmentation, number.clusters, max.subspace.dim, estimate.dimensions,
+                           return.sigmas = FALSE) {
   rowNumb <- dim(X)[1]
   pcas <- lapply(1:number.clusters, function(k) {
     Xk <- X[, segmentation == k, drop = F]
@@ -127,9 +166,21 @@ calculate.pcas <- function(X, segmentation, number.clusters, max.subspace.dim, e
       } else {
         cut <- min(max.subspace.dim, floor(sqrt(sub.dim[2])), sub.dim[1])
       }
-      return(matrix(a$x[, 1:cut], nrow = rowNumb))
+      if (return.sigmas) {
+        reconstructed_matrix <- a$x[, 1:cut, drop = FALSE] %*% t(a$rotation[, 1:cut, drop = FALSE]) + a$center
+        sigma2 = sum((Xk - reconstructed_matrix)^2) / (rowNumb * sub.dim[2])
+        return(list(pcas = matrix(a$x[, 1:cut], nrow = rowNumb),
+                    sigma2 = sigma2))
+      } else {
+        return(matrix(a$x[, 1:cut], nrow = rowNumb))
+      }
     } else {
-      return(matrix(rnorm(rowNumb), nrow = rowNumb, ncol = 1))
+      if (return.sigmas) {
+        return(list(pcas = matrix(rnorm(rowNumb), nrow = rowNumb, ncol = 1),
+                    sigma2 = 1 / rowNumb))
+      } else {
+        return(matrix(rnorm(rowNumb), nrow = rowNumb, ncol = 1))
+      }
     }
   })
   return(pcas)

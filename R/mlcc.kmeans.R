@@ -60,15 +60,11 @@ mlcc.kmeans <- function(X, number.clusters = 2, stop.criterion = 1, max.iter = 3
 
   new.segmentation <- segmentation
   for (iter in 1:max.iter) {
-    pcas <- calculate.pcas(
-      X, segmentation, number.clusters, max.subspace.dim,
-      estimate.dimensions
+      pcas <- calculate.pcas(X, segmentation, number.clusters, max.subspace.dim,
+      estimate.dimensions, return.sigmas = TRUE
     )
     new.segmentation <- sapply(1:numbVars, function(j) {
-      choose.cluster.BIC(X[
-        ,
-        j
-      ], pcas, number.clusters, show.warnings)
+      choose.cluster.BIC(X[, j], pcas, number.clusters, show.warnings, known.sigma = TRUE)
     })
     if (sum(new.segmentation != segmentation) < stop.criterion) {
       break

@@ -9,7 +9,8 @@ calculate.pcas(
   segmentation,
   number.clusters,
   max.subspace.dim,
-  estimate.dimensions
+  estimate.dimensions,
+  return.sigmas = FALSE
 )
 }
 \arguments{
