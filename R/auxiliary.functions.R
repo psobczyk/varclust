@@ -64,8 +64,7 @@ cluster.pca.BIC <- function(X, segmentation, dims, numb.clusters, max.dim, flat.
 #' @param pcas Orthogonal basis for each of the subspaces.
 #' @param number.clusters Number of subspaces (clusters).
 #' @param show.warnings A boolean - if set to TRUE all warnings are displayed, default value is FALSE.
-#' @param common.sigma A boolean - if set to FALSE, seperate sigma is estimated for each cluster,
-#' default value is TRUE
+#' @param common.sigma A boolean - if set to TRUE, for each variable common sigma is estimated for all clusters
 #' @param known.sigma A boolean - if set to TRUE, then the lm model for each variable uses the same sigma,
 #' computed as a residual from PCA fit to the data
 #' @keywords internal
@@ -126,11 +125,11 @@ choose.cluster.BIC.known.sigma <- function(variable, pcas, number.clusters, show
   BICs <- NULL
   for (i in 1:number.clusters) {
     cluster.pcas = pcas[[i]]$pcas
-    cluster.sigma = pcas[[i]]$sigma2
+    cluster.sigma = sqrt(pcas[[i]]$sigma2)
     nparams <- ncol(cluster.pcas)
     n <- length(variable)
     res <- fastLmPure(cluster.pcas, variable, method = 0L)$residuals
-    loglik <- sum(dnorm(res, 0, sqrt(cluster.sigma), log = T))
+    loglik <- sum(dnorm(res, 0, cluster.sigma, log = T))
     BICs[i] <- loglik - nparams * log(n) / 2
   }
   which.max(BICs)

@@ -45,7 +45,7 @@ partitions. This performance measure is extensively used in image
 segmentation. The other measure is implemented as \code{\link{integration}}
 function.
 
-Version: 0.9.5
+Version: 0.9.6
 }
 \examples{
 \donttest{

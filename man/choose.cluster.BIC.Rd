@@ -22,8 +22,7 @@ choose.cluster.BIC(
 
 \item{show.warnings}{A boolean - if set to TRUE all warnings are displayed, default value is FALSE.}
 
-\item{common.sigma}{A boolean - if set to FALSE, seperate sigma is estimated for each cluster,
-default value is TRUE}
+\item{common.sigma}{A boolean - if set to TRUE, for each variable common sigma is estimated for all clusters}
 
 \item{known.sigma}{A boolean - if set to TRUE, then the lm model for each variable uses the same sigma,
 computed as a residual from PCA fit to the data}
