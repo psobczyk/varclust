@@ -129,7 +129,7 @@ calculate.pcas <- function(X, segmentation, number.clusters, max.subspace.dim, e
         cut <- min(max.subspace.dim, floor(sqrt(sub.dim[2])), sub.dim[1])
       }
       return(matrix(a$x[, seq_len(cut)], nrow = rowNumb))
-    } else {
+    } else { #if there are no variables initiate a cluster at random
       return(matrix(rnorm(rowNumb), nrow = rowNumb, ncol = 1))
     }
   })
