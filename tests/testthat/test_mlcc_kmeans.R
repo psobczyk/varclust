@@ -3,11 +3,10 @@ context("Testing mlcc.kmeans")
 library(varclust)
 
 test_that("when data is random we select dimension equal to 0", {
-  X <- with(set.seed(23), matrix(rnorm(1000), ncol=20))
-  mlcc.res <- mlcc.kmeans(X, number.clusters = 2,
+  X <- with(set.seed(10), matrix(rnorm(1000), ncol=20))
+  mlcc.res <- mlcc.kmeans(X, number.clusters = 1,
                           max.iter = 20, max.subspace.dim = 3)
-  expect_equal(length(unique(mlcc.res$segmentation)), 1)
-  expect_equal(ncol(mlcc.res$pcas[[mlcc.res$segmentation[1]]]), 0)
+  expect_equal(ncol(mlcc.res$pcas[[1]]), 0)
 })
 
 

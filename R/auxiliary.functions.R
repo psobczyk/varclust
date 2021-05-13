@@ -97,7 +97,7 @@ choose.cluster.BIC <- function(variable, pcas, number.clusters, show.warnings = 
       BICs[i] <- loglik - nparams * log(n) / 2
     }
   }
-  which.max(BICs)
+  return(which.max(BICs))
 }
 
 #' Calculates principal components for every cluster
