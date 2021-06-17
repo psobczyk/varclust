@@ -38,7 +38,8 @@ cluster.pca.BIC <- function(X, segmentation, dims, numb.clusters, max.dim, flat.
         method = "heterogenous"
       )$vals[1]
     } else {
-      warning("The dimensionality of the cluster was greater or equal than max(number of observation, number of variables) in the cluster.
+      warning("The dimensionality of the cluster was greater or equal than
+              max(number of observation, number of variables) in the cluster.
               Ignoring the cluster during mBIC calculation")
       formula[k] <- 0
     }
@@ -53,7 +54,7 @@ cluster.pca.BIC <- function(X, segmentation, dims, numb.clusters, max.dim, flat.
   return(BIC)
 }
 
-#' Choses a subspace for a variable
+#' Chooses a subspace for a variable
 #'
 #' Selects a subspace closest to a given variable. To select the subspace, the method
 #' considers (for every subspace) a subset of its principal components and tries
@@ -71,7 +72,7 @@ cluster.pca.BIC <- function(X, segmentation, dims, numb.clusters, max.dim, flat.
 choose.cluster.BIC <- function(variable, pcas, number.clusters, show.warnings = FALSE, common_sigma = TRUE) {
   BICs <- NULL
   if (common_sigma) {
-    res <- fastLmPure(as.matrix(Matrix::bdiag(pcas)), rep(variable, number.clusters), method = 0L)$residuals
+    res <- fastLmPure(cbind(1, as.matrix(Matrix::bdiag(pcas))), rep(variable, number.clusters), method = 0L)$residuals
     n <- length(variable)
     sigma.hat <- sqrt(sum(res^2) / (n * number.clusters))
     if (sigma.hat < 1e-15 && show.warnings) {
@@ -96,7 +97,7 @@ choose.cluster.BIC <- function(variable, pcas, number.clusters, show.warnings = 
       BICs[i] <- loglik - nparams * log(n) / 2
     }
   }
-  which.max(BICs)
+  return(which.max(BICs))
 }
 
 #' Calculates principal components for every cluster
@@ -120,15 +121,15 @@ calculate.pcas <- function(X, segmentation, number.clusters, max.subspace.dim, e
       a <- summary(prcomp(x = Xk))
       if (estimate.dimensions) {
         max.dim <- min(max.subspace.dim, floor(sqrt(sub.dim[2])), sub.dim[1])
-        cut <- max(1, pesel(
-          X = Xk, npc.min = 1, npc.max = max.dim, scale = FALSE,
+        cut <- max(0, pesel(
+          X = Xk, npc.min = 0, npc.max = max.dim, scale = FALSE,
           method = "heterogenous"
         )$nPCs)
       } else {
         cut <- min(max.subspace.dim, floor(sqrt(sub.dim[2])), sub.dim[1])
       }
-      return(matrix(a$x[, 1:cut], nrow = rowNumb))
-    } else {
+      return(matrix(a$x[, seq_len(cut)], nrow = rowNumb))
+    } else { #if there are no variables initiate a cluster at random
       return(matrix(rnorm(rowNumb), nrow = rowNumb, ncol = 1))
     }
   })
